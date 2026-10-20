@@ -1,0 +1,603 @@
+#!/usr/bin/env python3
+"""br24-vault — interface com o vault Obsidian do Desafio Vibecode Br24.
+
+Existe para que caminho, nome de arquivo e frontmatter sejam aplicados por código,
+e não pela boa vontade de quem escreve. Ver "99-meta/Protocolo RAG.md" no vault.
+
+Uso:
+  br24-vault search <termos...> [--tipo T] [--repo R] [--tag G] [--limit N]
+  br24-vault tree [<TASK-ID>]
+  br24-vault path <TASK-ID>
+  br24-vault new task <ID> [--pai ID] [--titulo T] [--repos a,b] [--produto P]
+                           [--status S] [--tags t1,t2]
+  br24-vault new note <TASK-ID> <tipo>
+  br24-vault new knowledge <repos|dominios|incidentes|decisoes> <slug> [--titulo T] [--tags t1,t2]
+  br24-vault link <A> <B>
+  br24-vault index
+  br24-vault check
+
+IDs de tarefa: locais e sequenciais, `BR24-001`, `BR24-002`, … Não há tracker externo.
+"""
+import os
+import re
+import sys
+import datetime
+
+VAULT = os.environ.get("BR24_VAULT", "/Users/yuriluz/Documents/Obsidian Vault/Br24 Vibecode")
+TAREFAS = os.path.join(VAULT, "10-tarefas")
+CONHEC = os.path.join(VAULT, "20-conhecimento")
+INFRA = os.path.join(VAULT, "30-infra")
+INDICES = os.path.join(VAULT, "00-indices")
+TEMPLATES = os.path.join(VAULT, "99-meta", "templates")
+HOJE = datetime.date.today().isoformat()
+
+SKIP_DIRS = {TEMPLATES}
+TIPOS_TAREFA = {"handoff", "plano", "review-plano", "execucao", "review-codigo",
+                "po", "pr", "narrativa"}
+CATEGORIAS = {"repos", "dominios", "incidentes", "decisoes"}
+FORMATO_ID = re.compile(r"^BR24-\d{3}$")
+
+
+# ---------------------------------------------------------------- infraestrutura
+
+def die(msg, code=1):
+    print(f"br24-vault: {msg}", file=sys.stderr)
+    sys.exit(code)
+
+
+def escrever(path, texto):
+    """Escrita atômica — o vault fica em ~/Documents, sincronizado por iCloud."""
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    tmp = path + ".tmp"
+    with open(tmp, "w", encoding="utf-8") as fh:
+        fh.write(texto)
+    os.replace(tmp, path)
+
+
+def notas(raiz=None):
+    """Todo .md do vault, exceto os templates."""
+    for base, dirs, files in os.walk(raiz or VAULT):
+        if any(base == s or base.startswith(s + os.sep) for s in SKIP_DIRS):
+            dirs[:] = []
+            continue
+        dirs[:] = [d for d in dirs if not d.startswith(".")]
+        for f in sorted(files):
+            if f.endswith(".md"):
+                yield os.path.join(base, f)
+
+
+def parse_frontmatter(texto):
+    """Subconjunto de YAML que o schema usa: escalares e listas em flow style."""
+    if not texto.startswith("---\n"):
+        return {}, texto
+    fim = texto.find("\n---", 4)
+    if fim == -1:
+        return {}, texto
+    bloco = texto[4:fim]
+    corpo = texto[fim + 4:].lstrip("\n")
+    meta = {}
+    for linha in bloco.split("\n"):
+        if not linha.strip() or linha.lstrip().startswith("#"):
+            continue
+        if ":" not in linha:
+            continue
+        chave, _, valor = linha.partition(":")
+        chave = chave.strip()
+        valor = valor.strip()
+        if valor.startswith("[") and valor.endswith("]"):
+            itens = [v.strip().strip('"').strip("'") for v in valor[1:-1].split(",")]
+            meta[chave] = [i for i in itens if i]
+        else:
+            meta[chave] = valor.strip('"').strip("'")
+    return meta, corpo
+
+
+def ler(path):
+    with open(path, encoding="utf-8") as fh:
+        texto = fh.read()
+    meta, corpo = parse_frontmatter(texto)
+    return meta, corpo, texto
+
+
+def render(tipo, subs):
+    tpl = os.path.join(TEMPLATES, f"{tipo}.md")
+    if not os.path.exists(tpl):
+        die(f"template inexistente: {tpl}")
+    with open(tpl, encoding="utf-8") as fh:
+        texto = fh.read()
+    for k, v in subs.items():
+        texto = texto.replace("{{" + k + "}}", v)
+    # placeholders não preenchidos viram vazio, não literal
+    texto = re.sub(r"\{\{[A-Z_]+\}\}", "", texto)
+    return texto
+
+
+def wikilinks(texto):
+    """Links reais — o que está em bloco de código ou crase é exemplo, não link."""
+    texto = re.sub(r"```.*?```", "", texto, flags=re.S)
+    texto = re.sub(r"`[^`\n]*`", "", texto)
+    saida = []
+    for bruto in re.findall(r"\[\[([^\]]+)\]\]", texto):
+        alvo = bruto.split("|")[0].split("#")[0].strip()
+        if alvo:
+            saida.append(alvo)
+    return saida
+
+
+# ---------------------------------------------------------------- árvore
+
+def pasta_tarefa(task_id):
+    for base, dirs, _ in os.walk(TAREFAS):
+        dirs[:] = [d for d in dirs if not d.startswith(".")]
+        for d in dirs:
+            if d == task_id:
+                return os.path.join(base, d)
+    return None
+
+
+def hub(task_id):
+    p = pasta_tarefa(task_id)
+    return os.path.join(p, f"{task_id}.md") if p else None
+
+
+def filhas(pasta):
+    return sorted(d for d in os.listdir(pasta)
+                  if os.path.isdir(os.path.join(pasta, d)) and not d.startswith("."))
+
+
+def rotulo(task_id):
+    h = hub(task_id)
+    if not h or not os.path.exists(h):
+        return f"{task_id}  (sem nota-hub)"
+    meta, _, _ = ler(h)
+    return f"{task_id}  {meta.get('titulo', '')}  [{meta.get('status', '?')}]"
+
+
+def proximo_id():
+    """Maior BR24-NNN existente + 1 — para sugerir no erro de formato."""
+    usados = []
+    for base, dirs, _ in os.walk(TAREFAS):
+        dirs[:] = [d for d in dirs if not d.startswith(".")]
+        for d in dirs:
+            m = FORMATO_ID.match(d)
+            if m:
+                usados.append(int(d.split("-")[1]))
+    return f"BR24-{(max(usados) + 1) if usados else 1:03d}"
+
+
+# ---------------------------------------------------------------- comandos
+
+def cmd_search(args):
+    termos, filtros, limite = [], {}, 20
+    i = 0
+    while i < len(args):
+        a = args[i]
+        if a in ("--tipo", "--repo", "--tag"):
+            filtros[a[2:]] = args[i + 1].lower()
+            i += 2
+        elif a == "--limit":
+            limite = int(args[i + 1])
+            i += 2
+        else:
+            termos.append(a.lower())
+            i += 1
+    if not termos and not filtros:
+        die("informe termos de busca ou ao menos um filtro")
+
+    resultados = []
+    for path in notas():
+        if path.startswith(INDICES):
+            continue
+        meta, corpo, texto = ler(path)
+        tags = " ".join(meta.get("tags", []) if isinstance(meta.get("tags"), list) else [])
+        repos = " ".join(meta.get("repos", []) if isinstance(meta.get("repos"), list) else [])
+        if "tipo" in filtros and meta.get("tipo", "").lower() != filtros["tipo"]:
+            continue
+        if "repo" in filtros and filtros["repo"] not in repos.lower():
+            continue
+        if "tag" in filtros and filtros["tag"] not in tags.lower():
+            continue
+
+        titulo = meta.get("titulo", os.path.basename(path)[:-3])
+        alvo_titulo = (titulo + " " + os.path.basename(path)).lower()
+        alvo_tags = (tags + " " + repos).lower()
+        alvo_corpo = corpo.lower()
+
+        score, trecho = 0, ""
+        for t in termos:
+            if t in alvo_titulo:
+                score += 5
+            if t in alvo_tags:
+                score += 3
+            n = alvo_corpo.count(t)
+            if n:
+                score += min(n, 5)
+                if not trecho:
+                    for linha in corpo.split("\n"):
+                        if t in linha.lower() and linha.strip():
+                            trecho = linha.strip()[:120]
+                            break
+        if not termos:
+            score = 1
+        if score:
+            resultados.append((score, path, titulo, tags, trecho))
+
+    resultados.sort(key=lambda r: (-r[0], r[1]))
+    if not resultados:
+        print("nenhum resultado — registre o recall como vazio na sua nota")
+        return
+    for score, path, titulo, tags, trecho in resultados[:limite]:
+        rel = os.path.relpath(path, VAULT)
+        nome = os.path.basename(path)[:-3]
+        print(f"[{score:>3}] [[{nome}]]  {titulo}")
+        print(f"       {rel}   {tags}")
+        if trecho:
+            print(f"       … {trecho}")
+    print(f"\n{len(resultados)} nota(s); mostrando {min(limite, len(resultados))}.")
+
+
+def _print_subarvore(pasta, prefixo=""):
+    for f in filhas(pasta):
+        print(f"{prefixo}└─ {rotulo(f)}")
+        _print_subarvore(os.path.join(pasta, f), prefixo + "   ")
+
+
+def cmd_tree(args):
+    if not args:
+        print("Árvore de tarefas")
+        _print_subarvore(TAREFAS)
+        return
+    task_id = args[0]
+    pasta = pasta_tarefa(task_id)
+    if not pasta:
+        die(f"tarefa não encontrada no vault: {task_id}")
+    rel = os.path.relpath(pasta, TAREFAS)
+    ancestrais = rel.split(os.sep)[:-1]
+    print("Ancestrais:")
+    if ancestrais:
+        for n, a in enumerate(ancestrais):
+            print(f"  {'  ' * n}└─ {rotulo(a)}")
+    else:
+        print("  (nenhum — é raiz)")
+    print(f"\nTarefa:\n  {rotulo(task_id)}")
+    irmas = [d for d in filhas(os.path.dirname(pasta)) if d != task_id] if ancestrais else []
+    print("\nIrmãs:")
+    for i in irmas:
+        print(f"  · {rotulo(i)}")
+    if not irmas:
+        print("  (nenhuma)")
+    print("\nFilhas:")
+    sub = filhas(pasta)
+    if sub:
+        _print_subarvore(pasta, "  ")
+    else:
+        print("  (nenhuma)")
+
+
+def cmd_path(args):
+    if not args:
+        die("uso: br24-vault path <TASK-ID>")
+    p = pasta_tarefa(args[0])
+    if not p:
+        die(f"tarefa não encontrada no vault: {args[0]}")
+    print(p)
+
+
+def _opts(args):
+    o, i = {}, 0
+    while i < len(args):
+        if args[i].startswith("--"):
+            o[args[i][2:]] = args[i + 1] if i + 1 < len(args) else ""
+            i += 2
+        else:
+            i += 1
+    return o
+
+
+def cmd_new(args):
+    if not args:
+        die("uso: br24-vault new <task|note|knowledge> …")
+    sub = args[0]
+
+    if sub == "task":
+        if len(args) < 2:
+            die("uso: br24-vault new task <ID> [--pai ID] [--titulo T] …")
+        task_id = args[1]
+        if not FORMATO_ID.match(task_id):
+            die(f"id fora do formato: {task_id} — use BR24-NNN (o próximo livre é {proximo_id()})")
+        o = _opts(args[2:])
+        existente = pasta_tarefa(task_id)
+        if existente:
+            print(existente)
+            return
+        pai = o.get("pai")
+        if pai:
+            pasta_pai = pasta_tarefa(pai)
+            if not pasta_pai:
+                pasta_pai = os.path.join(TAREFAS, pai)
+                os.makedirs(pasta_pai, exist_ok=True)
+                escrever(os.path.join(pasta_pai, f"{pai}.md"),
+                         render("tarefa", {"ID": pai, "TITULO": f"{pai} (stub)", "PAI": "",
+                                           "STATUS": "desconhecido", "REPOS": "", "PRODUTO": "",
+                                           "TAGS": "", "DATA": HOJE}))
+                print(f"aviso: pai {pai} não existia; criado como stub — preencha a nota-hub dele",
+                      file=sys.stderr)
+            destino = os.path.join(pasta_pai, task_id)
+        else:
+            destino = os.path.join(TAREFAS, task_id)
+        os.makedirs(destino, exist_ok=True)
+        tags = [f"repo/{r.strip()}" for r in o.get("repos", "").split(",") if r.strip()]
+        tags += [t.strip() for t in o.get("tags", "").split(",") if t.strip()]
+        status = o.get("status", "to-do")
+        tags.append(f"status/{status}")
+        escrever(os.path.join(destino, f"{task_id}.md"), render("tarefa", {
+            "ID": task_id,
+            "TITULO": o.get("titulo", task_id),
+            "PAI": f'"[[{pai}]]"' if pai else "",
+            "STATUS": status,
+            "REPOS": ", ".join(r.strip() for r in o.get("repos", "").split(",") if r.strip()),
+            "PRODUTO": o.get("produto", ""),
+            "TAGS": ", ".join(tags),
+            "DATA": HOJE,
+        }))
+        print(destino)
+        return
+
+    if sub == "note":
+        if len(args) < 3:
+            die("uso: br24-vault new note <TASK-ID> <tipo>")
+        task_id, tipo = args[1], args[2]
+        if tipo not in TIPOS_TAREFA:
+            die(f"tipo inválido: {tipo} (use: {', '.join(sorted(TIPOS_TAREFA))})")
+        pasta = pasta_tarefa(task_id)
+        if not pasta:
+            die(f"tarefa não existe no vault: {task_id} — rode `br24-vault new task` antes")
+        destino = os.path.join(pasta, f"{task_id}-{tipo}.md")
+        if os.path.exists(destino):
+            print(destino)
+            return
+        escrever(destino, render(tipo, {"ID": task_id, "DATA": HOJE,
+                                        "DISCO": "~/Projects/desafio-vibecode-br24/"}))
+        print(destino)
+        return
+
+    if sub == "knowledge":
+        if len(args) < 3:
+            die("uso: br24-vault new knowledge <categoria> <slug> [--titulo T] [--tags t1,t2]")
+        categoria, slug = args[1], args[2]
+        if categoria not in CATEGORIAS:
+            die(f"categoria inválida: {categoria} (use: {', '.join(sorted(CATEGORIAS))})")
+        o = _opts(args[3:])
+        titulo = o.get("titulo", slug.replace("-", " ").capitalize())
+        tags = ", ".join(t.strip() for t in o.get("tags", "").split(",") if t.strip())
+        pasta = os.path.join(CONHEC, categoria)
+        os.makedirs(pasta, exist_ok=True)
+        if categoria == "decisoes":
+            usados = [int(m.group(1)) for f in os.listdir(pasta)
+                      for m in [re.match(r"ADR-(\d{4})-", f)] if m]
+            numero = f"ADR-{max(usados) + 1 if usados else 1:04d}"
+            nome, tipo = f"{numero}-{slug}", "adr"
+            subs = {"TITULO": titulo, "TAGS": tags, "DATA": HOJE, "NUMERO": numero}
+        else:
+            tipo = {"repos": "repo", "dominios": "dominio", "incidentes": "incidente"}[categoria]
+            nome = slug
+            subs = {"TITULO": titulo, "TAGS": tags, "DATA": HOJE, "SLUG": slug,
+                    "SEVERIDADE": o.get("severidade", ""), "CONFIANCA": o.get("confianca", "")}
+        destino = os.path.join(pasta, f"{nome}.md")
+        if os.path.exists(destino):
+            print(destino)
+            return
+        escrever(destino, render(tipo, subs))
+        print(destino)
+        return
+
+    die(f"subcomando desconhecido: {sub}")
+
+
+def _achar_nota(nome):
+    nome = nome.strip().removesuffix(".md")
+    if os.path.isabs(nome) and os.path.exists(nome + ".md"):
+        return nome + ".md"
+    for path in notas():
+        if os.path.basename(path)[:-3] == nome:
+            return path
+    return None
+
+
+def _add_relacionado(path, alvo):
+    meta, _, texto = ler(path)
+    atual = meta.get("relacionado", [])
+    if not isinstance(atual, list):
+        atual = [atual] if atual else []
+    if f"[[{alvo}]]" in atual:
+        return False
+    atual.append(f"[[{alvo}]]")
+    novo = ", ".join(f'"{a}"' for a in atual)
+    linha = f"relacionado: [{novo}]"
+    if re.search(r"^relacionado:.*$", texto, flags=re.M):
+        texto = re.sub(r"^relacionado:.*$", linha, texto, count=1, flags=re.M)
+    else:
+        texto = texto.replace("---\n", "---\n" + linha + "\n", 1)
+    texto = re.sub(r"^atualizado:.*$", f"atualizado: {HOJE}", texto, count=1, flags=re.M)
+    escrever(path, texto)
+    return True
+
+
+def cmd_link(args):
+    if len(args) < 2:
+        die("uso: br24-vault link <A> <B>")
+    a, b = _achar_nota(args[0]), _achar_nota(args[1])
+    if not a:
+        die(f"nota não encontrada: {args[0]}")
+    if not b:
+        die(f"nota não encontrada: {args[1]}")
+    na, nb = os.path.basename(a)[:-3], os.path.basename(b)[:-3]
+    ma = _add_relacionado(a, nb)
+    mb = _add_relacionado(b, na)
+    print(f"{na} <-> {nb}" + ("" if ma or mb else "  (já estavam ligadas)"))
+
+
+def _linhas_arvore(pasta, nivel=0):
+    out = []
+    for f in filhas(pasta):
+        h = os.path.join(pasta, f, f"{f}.md")
+        if os.path.exists(h):
+            meta, _, _ = ler(h)
+            titulo, status = meta.get("titulo", ""), meta.get("status", "?")
+        else:
+            titulo, status = "(sem nota-hub)", "?"
+        out.append(f"{'    ' * nivel}- [[{f}]] — {titulo} · `{status}`")
+        out += _linhas_arvore(os.path.join(pasta, f), nivel + 1)
+    return out
+
+
+def cmd_index(args=None):
+    cab = ("---\ntipo: indice\ntitulo: \"{t}\"\ntags: [br24/meta, indice]\n"
+           f"atualizado: {HOJE}\n---\n\n> Gerado por `br24-vault index`. Não editar à mão.\n\n")
+
+    escrever(os.path.join(INDICES, "Tarefas.md"),
+             cab.format(t="Tarefas") + "# Tarefas\n\n" +
+             ("\n".join(_linhas_arvore(TAREFAS)) or "_nenhuma tarefa ainda_") + "\n")
+
+    por_repo, notas_repo = {}, []
+    for path in notas(TAREFAS):
+        meta, _, _ = ler(path)
+        if meta.get("tipo") != "tarefa":
+            continue
+        for r in (meta.get("repos") or []):
+            por_repo.setdefault(r, []).append((meta.get("id", ""), meta.get("titulo", "")))
+    for path in notas(os.path.join(CONHEC, "repos")):
+        meta, _, _ = ler(path)
+        notas_repo.append((os.path.basename(path)[:-3], meta.get("titulo", "")))
+    corpo = "# Repos\n\n## Notas de repositório\n\n"
+    corpo += "\n".join(f"- [[{n}]] — {t}" for n, t in sorted(notas_repo)) or "_nenhuma_"
+    corpo += "\n\n## Tarefas por repositório\n\n"
+    for r in sorted(por_repo):
+        corpo += f"### {r}\n\n"
+        corpo += "\n".join(f"- [[{i}]] — {t}" for i, t in sorted(set(por_repo[r]))) + "\n\n"
+    escrever(os.path.join(INDICES, "Repos.md"), cab.format(t="Repos") + corpo)
+
+    def listagem(pasta, titulo, extra=None):
+        linhas = []
+        for path in notas(pasta):
+            meta, _, _ = ler(path)
+            nome = os.path.basename(path)[:-3]
+            suf = f" · {extra}: `{meta.get(extra, '?')}`" if extra else ""
+            linhas.append(f"- [[{nome}]] — {meta.get('titulo', nome)}{suf}")
+        return f"# {titulo}\n\n" + ("\n".join(sorted(linhas)) or "_nenhuma nota ainda_") + "\n"
+
+    escrever(os.path.join(INDICES, "Dominios.md"),
+             cab.format(t="Domínios") + listagem(os.path.join(CONHEC, "dominios"), "Domínios"))
+    escrever(os.path.join(INDICES, "Incidentes.md"),
+             cab.format(t="Incidentes") + listagem(os.path.join(CONHEC, "incidentes"),
+                                                   "Incidentes", "severidade"))
+    escrever(os.path.join(INDICES, "Decisoes.md"),
+             cab.format(t="Decisões") + listagem(os.path.join(CONHEC, "decisoes"),
+                                                 "Decisões", "decisao"))
+    print("índices regenerados: Tarefas, Repos, Dominios, Incidentes, Decisoes")
+
+
+OBRIGATORIOS = {
+    "tarefa": ["tipo", "id", "titulo", "status", "tags", "criado", "atualizado"],
+    "adr": ["tipo", "titulo", "tags", "decisao", "atualizado"],
+    "incidente": ["tipo", "titulo", "tags", "severidade", "atualizado"],
+}
+PADRAO = ["tipo", "titulo", "tags", "atualizado"]
+
+
+# Notas pessoais do usuário dentro da pasta do vault: não são artefato do protocolo
+# e não devem ser editadas nem validadas (ver "Escopo de escrita" no Protocolo RAG).
+# Acrescente o caminho absoluto aqui em vez de "consertar" o frontmatter da nota.
+NAO_GERIDAS = set()
+
+
+def cmd_check(args=None):
+    problemas, avisos = [], []
+    todas, destinos = [], {}
+    for path in notas():
+        if path in NAO_GERIDAS:
+            continue
+        todas.append(path)
+        destinos[os.path.basename(path)[:-3]] = path
+
+    entradas = {n: 0 for n in destinos}
+    for path in todas:
+        meta, corpo, texto = ler(path)
+        rel = os.path.relpath(path, VAULT)
+        if not meta:
+            problemas.append(f"{rel}: sem frontmatter")
+            continue
+        tipo = meta.get("tipo", "")
+        for campo in OBRIGATORIOS.get(tipo, PADRAO):
+            if not meta.get(campo):
+                problemas.append(f"{rel}: frontmatter sem `{campo}`")
+        eu = os.path.basename(path)[:-3]
+        for alvo in wikilinks(texto):
+            if alvo not in destinos:
+                avisos.append(f"{rel}: link pendente [[{alvo}]] (nota ainda não existe)")
+            elif alvo != eu:
+                entradas[alvo] += 1
+
+    for base, dirs, _ in os.walk(TAREFAS):
+        dirs[:] = [d for d in dirs if not d.startswith(".")]
+        for d in dirs:
+            pasta = os.path.join(base, d)
+            h = os.path.join(pasta, f"{d}.md")
+            if not os.path.exists(h):
+                problemas.append(f"10-tarefas/{os.path.relpath(pasta, TAREFAS)}: sem nota-hub {d}.md")
+                continue
+            meta, _, _ = ler(h)
+            pai_real = os.path.basename(base) if base != TAREFAS else None
+            pai_meta = (meta.get("pai") or "").strip("[]\" ")
+            if pai_real and pai_meta != pai_real:
+                problemas.append(f"{d}.md: `pai` é '{pai_meta or 'vazio'}' mas a pasta está sob '{pai_real}'")
+            if not pai_real and pai_meta:
+                problemas.append(f"{d}.md: declara pai '{pai_meta}' mas está na raiz da árvore")
+            if not FORMATO_ID.match(d):
+                problemas.append(f"10-tarefas/{os.path.relpath(pasta, TAREFAS)}: "
+                                 f"id '{d}' fora do formato BR24-NNN")
+
+    readmes = [p for p in todas if os.path.basename(p) == "README.md"]
+    if len(readmes) > 1:
+        for r in readmes:
+            problemas.append(f"{os.path.relpath(r, VAULT)}: README duplicado — "
+                             f"[[README]] fica ambíguo; só a raiz do vault tem um")
+
+    for nome, n in sorted(entradas.items()):
+        if n == 0:
+            path = destinos[nome]
+            meta, _, _ = ler(path)
+            if meta.get("tipo") in ("indice", "meta") or path.startswith(INDICES):
+                continue
+            avisos.append(f"{os.path.relpath(path, VAULT)}: órfã (nenhum link de entrada)")
+
+    if avisos:
+        print("Avisos (não bloqueiam — link pendente é um marcador legítimo no Obsidian):")
+        for a in avisos:
+            print(f"  {a}")
+        print()
+    if problemas:
+        print("Erros:")
+        for p in problemas:
+            print(f"  {p}")
+        print(f"\n{len(problemas)} erro(s) e {len(avisos)} aviso(s) em {len(todas)} nota(s).")
+        sys.exit(1)
+    print(f"vault ok — {len(todas)} nota(s), zero erro, {len(avisos)} aviso(s).")
+
+
+def main():
+    if len(sys.argv) < 2 or sys.argv[1] in ("-h", "--help", "help"):
+        print(__doc__)
+        return
+    if not os.path.isdir(VAULT):
+        die(f"vault inexistente: {VAULT}")
+    cmd, args = sys.argv[1], sys.argv[2:]
+    tabela = {"search": cmd_search, "tree": cmd_tree, "path": cmd_path, "new": cmd_new,
+              "link": cmd_link, "index": cmd_index, "check": cmd_check}
+    if cmd not in tabela:
+        die(f"comando desconhecido: {cmd}\n{__doc__}")
+    tabela[cmd](args)
+
+
+if __name__ == "__main__":
+    main()

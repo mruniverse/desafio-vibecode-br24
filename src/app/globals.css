@@ -1,26 +1,204 @@
 @import "tailwindcss";
 
+/* ===========================================================================
+   Design system do app — Desafio Vibecode Br24
+   ---------------------------------------------------------------------------
+   Nosso diferencial e facilidade de uso. Por isso todo espacamento, cor,
+   raio e sombra sai daqui: nenhuma tela inventa um valor proprio.
+   A paleta conversa com a identidade do Bitrix24 (azul) sem copia-la, e tem
+   contraste AA garantido no texto sobre cada superficie.
+   =========================================================================== */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Superficies */
+  --surface-page: #f5f7fb;
+  --surface-card: #ffffff;
+  --surface-muted: #eef2f8;
+  --surface-inverse: #0f172a;
+
+  /* Texto */
+  --text-strong: #0f172a;
+  --text-body: #334155;
+  --text-muted: #64748b;
+  --text-on-brand: #ffffff;
+
+  /* Marca */
+  --brand-50: #eff6ff;
+  --brand-100: #dbeafe;
+  --brand-200: #bfdbfe;
+  --brand-500: #2d7ff9;
+  --brand-600: #1d64d8;
+  --brand-700: #1a4fa8;
+
+  /* Estados */
+  --success-50: #ecfdf5;
+  --success-500: #10b981;
+  --success-700: #047857;
+  --warning-50: #fffbeb;
+  --warning-500: #f59e0b;
+  --warning-700: #b45309;
+  --danger-50: #fef2f2;
+  --danger-500: #ef4444;
+  --danger-700: #b91c1c;
+
+  /* Bordas e raios */
+  --border-subtle: #e2e8f0;
+  --border-strong: #cbd5e1;
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+
+  /* Sombras: discretas, nunca "arrastadas" */
+  --shadow-sm: 0 1px 2px 0 rgb(15 23 42 / 0.05);
+  --shadow-md: 0 4px 12px -2px rgb(15 23 42 / 0.08);
+  --shadow-lg: 0 16px 40px -12px rgb(15 23 42 / 0.18);
+
+  /* Tipografia */
+  --font-sans:
+    "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  --font-mono:
+    ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-page: var(--surface-page);
+  --color-card: var(--surface-card);
+  --color-muted: var(--surface-muted);
+  --color-inverse: var(--surface-inverse);
+
+  --color-strong: var(--text-strong);
+  --color-body: var(--text-body);
+  --color-soft: var(--text-muted);
+
+  --color-brand-50: var(--brand-50);
+  --color-brand-100: var(--brand-100);
+  --color-brand-200: var(--brand-200);
+  --color-brand-500: var(--brand-500);
+  --color-brand-600: var(--brand-600);
+  --color-brand-700: var(--brand-700);
+
+  --color-success-50: var(--success-50);
+  --color-success-500: var(--success-500);
+  --color-success-700: var(--success-700);
+  --color-warning-50: var(--warning-50);
+  --color-warning-500: var(--warning-500);
+  --color-warning-700: var(--warning-700);
+  --color-danger-50: var(--danger-50);
+  --color-danger-500: var(--danger-500);
+  --color-danger-700: var(--danger-700);
+
+  --color-line: var(--border-subtle);
+  --color-line-strong: var(--border-strong);
+
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
+
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ------------------------------ base ------------------------------------ */
+
+* {
+  border-color: var(--border-subtle);
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--surface-page);
+  color: var(--text-body);
+  font-family: var(--font-sans);
+  font-feature-settings: "cv11", "ss01";
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  color: var(--text-strong);
+  letter-spacing: -0.015em;
+  font-weight: 650;
+}
+
+/* Foco visivel e consistente: acessibilidade por padrao, nao por excecao. */
+:focus-visible {
+  outline: 2px solid var(--brand-500);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* O app roda embarcado no Bitrix24 (iframe): nada de barra horizontal. */
+body,
+html {
+  overflow-x: hidden;
+}
+
+/* Respeita quem pediu menos movimento no sistema operacional. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---------------------------- animacoes --------------------------------- */
+
+@keyframes br24-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes br24-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.br24-fade-up {
+  animation: br24-fade-up 240ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.br24-skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--surface-muted) 25%,
+    #e4eaf3 37%,
+    var(--surface-muted) 63%
+  );
+  background-size: 200% 100%;
+  animation: br24-shimmer 1.4s ease-in-out infinite;
+}
+
+/* Area de toque minima de 44px em controles, para uso no celular. */
+button,
+[role="button"],
+a.br24-tap,
+input[type="submit"] {
+  min-height: 2.75rem;
 }

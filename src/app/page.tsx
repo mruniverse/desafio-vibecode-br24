@@ -1,103 +1,90 @@
-import Image from "next/image";
+/**
+ * Porta de entrada do aplicativo.
+ *
+ * Enquanto o tema sorteado nao define as telas, esta pagina so faz o
+ * roteamento essencial: sem portal conectado, leva o cliente ao assistente de
+ * configuracao; com portal conectado, mostra a casca onde as telas do app
+ * entram (src/app/(app)/).
+ */
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import { Badge, Card, CardBody, CardHeader, EmptyState } from "@/components/ui";
+import { estadoConfiguracao } from "@/lib/setup";
+import { dataHoraBr } from "@/lib/utils";
 
-export default function Home() {
+export const dynamic = "force-dynamic";
+
+function IconePainel() {
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.5}
+      aria-hidden="true"
+      className="size-7"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 8.25V6Zm9.75 0A2.25 2.25 0 0 1 15.75 3.75H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6Zm-9.75 9.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 8.25 20.25H6A2.25 2.25 0 0 1 3.75 18v-2.25Zm9.75 0A2.25 2.25 0 0 1 15.75 13.5H18A2.25 2.25 0 0 1 20.25 15.75V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z"
+      />
+    </svg>
+  );
+}
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+export default async function Home() {
+  const estado = estadoConfiguracao();
+
+  // Sem portal conectado nao ha nada util a mostrar: o lugar certo e o wizard.
+  if (!estado.configurado || !estado.portal) {
+    redirect("/setup");
+  }
+
+  const portal = estado.portal;
+
+  return (
+    <div className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
+      <header className="br24-fade-up mb-8 flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <h1 className="text-2xl sm:text-3xl">Aplicativo Br24</h1>
+          <p className="mt-1 text-sm text-soft">
+            Conectado a {portal.domain} desde {dataHoraBr(portal.conectadoEm)}
+          </p>
         </div>
+        <div className="flex items-center gap-2">
+          <Badge tom="sucesso" pontinho>
+            Portal conectado
+          </Badge>
+          <Badge tom="neutro">
+            {portal.modo === "WEBHOOK" ? "Webhook" : "OAuth"}
+          </Badge>
+        </div>
+      </header>
+
+      <main id="conteudo">
+        <Card className="br24-fade-up">
+          <CardHeader
+            titulo="Pronto para receber as funcionalidades"
+            descricao="A integracao com o Bitrix24, o banco de dados e a configuracao inicial ja estao funcionando. As telas do aplicativo entram aqui."
+          />
+          <CardBody>
+            <EmptyState
+              icone={<IconePainel />}
+              titulo="Nenhuma funcionalidade publicada ainda"
+              descricao="Esta e a base do aplicativo. Enquanto isso, voce pode revisar a conexao com o seu portal no assistente de configuracao."
+              acao={
+                <Link
+                  href="/setup"
+                  className="br24-tap inline-flex items-center justify-center rounded-md border border-line-strong bg-card px-4 py-2 text-sm font-medium text-strong shadow-sm transition-colors hover:bg-muted"
+                >
+                  Revisar configuracao
+                </Link>
+              }
+            />
+          </CardBody>
+        </Card>
       </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
     </div>
   );
 }
