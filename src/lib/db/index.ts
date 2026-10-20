@@ -40,7 +40,14 @@ const MIGRACOES: { nome: string; sql: string }[] = [
         scope             TEXT,
         -- Preenchido somente no modo WEBHOOK: a URL completa do webhook de
         -- entrada, cifrada (ela e, na pratica, um segredo de acesso total).
+        -- ATENCAO: no modo WEBHOOK, client_endpoint NUNCA pode conter a URL
+        -- completa — ela carrega o codigo de autenticacao. Guarda-se ali
+        -- apenas a base publica (https://dominio/rest), que nao e segredo.
         webhook_url_enc   TEXT,
+        -- application_token enviado pelo Bitrix24 nos eventos (OAuth).
+        -- Usado para autenticar o POST de evento e impedir que um terceiro
+        -- dispare ONAPPUNINSTALL e apague os dados de um portal.
+        app_token_enc     TEXT,
         installed_at      TEXT NOT NULL DEFAULT (datetime('now')),
         updated_at        TEXT NOT NULL DEFAULT (datetime('now')),
         setup_completed   INTEGER NOT NULL DEFAULT 0

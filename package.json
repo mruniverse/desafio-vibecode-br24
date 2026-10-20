@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test:seguranca": "node --experimental-strip-types --no-warnings --import ./tests/registrar-alias.mjs --test tests/seguranca.test.ts"
   },
   "dependencies": {
     "better-sqlite3": "^13.0.3",

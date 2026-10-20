@@ -3,6 +3,7 @@
  *
  * Toda leitura/escrita de segredo passa por aqui, sempre cifrada em repouso.
  */
+import { timingSafeEqual } from "node:crypto";
 import { getDb } from "@/lib/db";
 import { decrypt, encrypt } from "@/lib/crypto";
 
@@ -89,8 +90,11 @@ export function salvarPortal(dados: {
 /**
  * Conecta um portal pelo webhook de entrada.
  *
- * A URL do webhook ja carrega o codigo de autenticacao, entao ela e tratada
- * como segredo: cifrada em repouso e nunca devolvida inteira para a UI.
+ * SEGURANCA: a URL do webhook carrega o codigo de autenticacao e vale acesso
+ * ao portal — ela e tratada como senha. Vai cifrada em `webhook_url_enc` e
+ * SOMENTE lá. Em `client_endpoint` guardamos apenas a base publica
+ * (https://dominio/rest), que nao e segredo; gravar a URL completa ali
+ * anularia a cifragem, porque um dump do banco entregaria o acesso.
  * Formato esperado: https://<portal>.bitrix24.com.br/rest/<userId>/<codigo>/
  */
 export function salvarWebhook(args: {
@@ -99,6 +103,8 @@ export function salvarWebhook(args: {
   webhookUrl: string;
 }) {
   const normalizada = args.webhookUrl.trim().replace(/\/+$/, "") + "/";
+  // Base publica, sem o par <userId>/<codigo>.
+  const endpointPublico = `https://${args.domain}/rest`;
   getDb()
     .prepare(
       `INSERT INTO portal (member_id, domain, client_endpoint, auth_mode, webhook_url_enc)
@@ -113,7 +119,7 @@ export function salvarWebhook(args: {
          expires_at = NULL,
          updated_at = datetime('now')`,
     )
-    .run(args.memberId, args.domain, normalizada, encrypt(normalizada));
+    .run(args.memberId, args.domain, endpointPublico, encrypt(normalizada));
 }
 
 /** URL do webhook de entrada em claro (uso interno do cliente REST). */
@@ -122,6 +128,41 @@ export function obterWebhookUrl(memberId: string): string | null {
     .prepare("SELECT webhook_url_enc FROM portal WHERE member_id = ?")
     .get(memberId) as Record<string, unknown> | undefined;
   return r?.webhook_url_enc ? decrypt(String(r.webhook_url_enc)) : null;
+}
+
+/**
+ * application_token dos eventos (OAuth): guardado cifrado para autenticar o
+ * POST que o Bitrix24 manda em ONAPPINSTALL/ONAPPUNINSTALL.
+ */
+export function salvarAppToken(memberId: string, appToken: string) {
+  getDb()
+    .prepare(
+      "UPDATE portal SET app_token_enc = ?, updated_at = datetime('now') WHERE member_id = ?",
+    )
+    .run(encrypt(appToken), memberId);
+}
+
+/**
+ * Compara o application_token recebido num evento com o guardado.
+ * Comparacao em tempo constante: evita vazar o token por analise de tempo.
+ */
+export function appTokenConfere(memberId: string, recebido: string): boolean {
+  const r = getDb()
+    .prepare("SELECT app_token_enc FROM portal WHERE member_id = ?")
+    .get(memberId) as Record<string, unknown> | undefined;
+  if (!r?.app_token_enc) return false;
+
+  let esperado: string;
+  try {
+    esperado = decrypt(String(r.app_token_enc));
+  } catch {
+    return false;
+  }
+
+  const a = Buffer.from(esperado, "utf8");
+  const b = Buffer.from(recebido, "utf8");
+  if (a.length !== b.length) return false;
+  return timingSafeEqual(a, b);
 }
 
 export function salvarTokens(memberId: string, t: TokensPortal & { scope?: string }) {

@@ -23,9 +23,11 @@
  * Em ambos os casos a verdade e sempre validada contra o portal real: nunca
  * marcamos a configuracao como concluida sem uma chamada REST bem-sucedida.
  */
+import { randomBytes } from "node:crypto";
 import { z } from "zod";
 import { AppError } from "@/lib/errors";
 import { logger } from "@/lib/logger";
+import { getDb } from "@/lib/db";
 import {
   definirParametro,
   listarPortais,
@@ -200,7 +202,18 @@ export function iniciarOauth(entrada: unknown): {
   redirectUri: string;
 } {
   const dados = schemaCredenciaisOauth.parse(entrada);
-  const memberId = `pendente:${dados.domain}`;
+
+  // Descarta tentativas antigas antes de criar outra: credencial de cliente
+  // nao fica acumulada no banco esperando ser vazada.
+  limparTentativasPendentes();
+
+  // SEGURANCA: o `state` precisa ser imprevisivel. Se ele fosse derivado do
+  // dominio (ex.: "pendente:<dominio>"), um terceiro poderia adivinha-lo e
+  // completar o fluxo com um `code` proprio, associando o portal dele as
+  // credenciais desta instalacao (CSRF no OAuth). Usamos um nonce aleatorio
+  // que amarra o callback a ESTA tentativa.
+  const nonce = randomBytes(24).toString("base64url");
+  const memberId = `pendente:${nonce}`;
 
   // Guarda as credenciais antes do redirect: o callback precisa delas para
   // trocar o `code` por tokens.
@@ -225,6 +238,25 @@ export function iniciarOauth(entrada: unknown): {
   });
 
   return { memberId, urlAutorizar, redirectUri };
+}
+
+/**
+ * Descarta tentativas de OAuth que nunca foram concluidas.
+ *
+ * Um registro `pendente:*` guarda client_id/client_secret do cliente: deixar
+ * isso acumulado no banco e superficie de ataque sem beneficio nenhum.
+ * Chamado no inicio de cada nova tentativa e pela rota de manutencao.
+ */
+export function limparTentativasPendentes(maxIdadeHoras = 1): number {
+  const r = getDb()
+    .prepare(
+      `DELETE FROM portal
+       WHERE member_id LIKE 'pendente:%'
+         AND setup_completed = 0
+         AND installed_at < datetime('now', ?)`,
+    )
+    .run(`-${maxIdadeHoras} hours`);
+  return r.changes;
 }
 
 function salvarPortalPendente(memberId: string, domain: string) {

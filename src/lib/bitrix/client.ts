@@ -86,6 +86,7 @@ interface RespostaToken {
   member_id?: string;
   client_endpoint?: string;
   domain?: string;
+  application_token?: string;
   error?: string;
   error_description?: string;
 }

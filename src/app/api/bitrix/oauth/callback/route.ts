@@ -17,6 +17,7 @@ import {
   marcarSetupConcluido,
   obterCredenciais,
   removerPortal,
+  salvarAppToken,
   salvarCredenciais,
   salvarPortal,
   salvarTokens,
@@ -93,6 +94,12 @@ export async function GET(requisicao: Request) {
       scope: tokens.scope,
     });
     marcarSetupConcluido(memberIdReal);
+
+    // Guarda o application_token para autenticar os eventos que o portal
+    // enviar depois (ONAPPUNINSTALL apaga dados: nao pode ser forjavel).
+    if (tokens.application_token) {
+      salvarAppToken(memberIdReal, tokens.application_token);
+    }
 
     // Limpa o registro temporario, se a chave mudou.
     if (memberIdReal !== state) removerPortal(state);
