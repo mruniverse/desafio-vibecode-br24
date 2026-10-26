@@ -32,6 +32,11 @@ function resolverArquivo(base) {
 }
 
 export function resolve(especificador, contexto, proximo) {
+  // `next` nao tem mapa de exports: o ESM do Node exige a extensao.
+  if (especificador === "next/server") {
+    return proximo("next/server.js", contexto);
+  }
+
   if (especificador.startsWith("@/")) {
     const alvo = resolverArquivo(path.join(RAIZ_SRC, especificador.slice(2)));
     if (alvo) return proximo(pathToFileURL(alvo).href, contexto);

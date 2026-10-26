@@ -55,3 +55,6 @@ next-env.d.ts
 
 # artefatos de deploy
 /*.zip
+
+# evidencias do spike Bitrix (dados de portal real; nunca versionar nem empacotar)
+/spike/

@@ -7,7 +7,13 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test:seguranca": "node --experimental-strip-types --no-warnings --import ./tests/registrar-alias.mjs --test tests/seguranca.test.ts"
+    "test:seguranca": "node --experimental-strip-types --no-warnings --import ./tests/registrar-alias.mjs --test tests/seguranca.test.ts",
+    "test:dominio": "node --experimental-strip-types --no-warnings --import ./tests/registrar-alias.mjs --test tests/dominio.test.ts",
+    "test:servicos": "node --experimental-strip-types --no-warnings --import ./tests/registrar-alias.mjs --test tests/servicos.test.ts",
+    "test:bitrix": "node --experimental-strip-types --no-warnings --import ./tests/registrar-alias.mjs --test tests/bitrix.test.ts",
+    "test:api": "node --experimental-strip-types --no-warnings --import ./tests/registrar-alias.mjs --test tests/api.test.ts",
+    "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tests/tsconfig.json",
+    "test": "node --experimental-strip-types --no-warnings --import ./tests/registrar-alias.mjs --test tests/*.test.ts"
   },
   "dependencies": {
     "better-sqlite3": "^13.0.3",

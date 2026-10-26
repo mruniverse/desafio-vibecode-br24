@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head>
+<meta charset="utf-8">
+<title>Revezza · Pedidos para aprovar</title>
+<script src="6c759e6d-5385-416c-90db-066495858080"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<style>/* cyrillic-ext */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/plusjakartasans/v12/LDIoaomQNQcsA88c7O9yZ4KMCoOg4Ko70yygg_vbd-E.woff2) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/plusjakartasans/v12/LDIoaomQNQcsA88c7O9yZ4KMCoOg4Ko50yygg_vbd-E.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/plusjakartasans/v12/LDIoaomQNQcsA88c7O9yZ4KMCoOg4Ko40yygg_vbd-E.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("9979c2fc-1890-4985-8858-ee016ce6adf5") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/plusjakartasans/v12/LDIoaomQNQcsA88c7O9yZ4KMCoOg4Ko70yygg_vbd-E.woff2) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/plusjakartasans/v12/LDIoaomQNQcsA88c7O9yZ4KMCoOg4Ko50yygg_vbd-E.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/plusjakartasans/v12/LDIoaomQNQcsA88c7O9yZ4KMCoOg4Ko40yygg_vbd-E.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("9979c2fc-1890-4985-8858-ee016ce6adf5") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/plusjakartasans/v12/LDIoaomQNQcsA88c7O9yZ4KMCoOg4Ko70yygg_vbd-E.woff2) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/plusjakartasans/v12/LDIoaomQNQcsA88c7O9yZ4KMCoOg4Ko50yygg_vbd-E.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/plusjakartasans/v12/LDIoaomQNQcsA88c7O9yZ4KMCoOg4Ko40yygg_vbd-E.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("9979c2fc-1890-4985-8858-ee016ce6adf5") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/plusjakartasans/v12/LDIoaomQNQcsA88c7O9yZ4KMCoOg4Ko70yygg_vbd-E.woff2) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/plusjakartasans/v12/LDIoaomQNQcsA88c7O9yZ4KMCoOg4Ko50yygg_vbd-E.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/plusjakartasans/v12/LDIoaomQNQcsA88c7O9yZ4KMCoOg4Ko40yygg_vbd-E.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("9979c2fc-1890-4985-8858-ee016ce6adf5") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/plusjakartasans/v12/LDIoaomQNQcsA88c7O9yZ4KMCoOg4Ko70yygg_vbd-E.woff2) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/plusjakartasans/v12/LDIoaomQNQcsA88c7O9yZ4KMCoOg4Ko50yygg_vbd-E.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/plusjakartasans/v12/LDIoaomQNQcsA88c7O9yZ4KMCoOg4Ko40yygg_vbd-E.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url("9979c2fc-1890-4985-8858-ee016ce6adf5") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+</style>
+<style>
+body{margin:0;background:#F6F7FB}
+a{color:#2F5BEA}a:hover{color:#2449C4}
+.app{font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;color:#111827;background:#F6F7FB;min-height:100vh;font-size:15px;line-height:1.5;display:flex;flex-wrap:wrap;align-items:stretch}
+.side{flex:1 1 240px;max-width:260px;background:#FFFFFF;border-right:1px solid #EDEFF4;padding:22px 14px;display:flex;flex-direction:column;gap:4px;box-sizing:border-box}
+.brand{display:flex;align-items:center;gap:10px;padding:0 10px 22px;font-weight:800;font-size:18px;letter-spacing:-0.01em}
+.logo{width:34px;height:34px;border-radius:10px;background:#2F5BEA;display:flex;align-items:center;justify-content:center}
+.nav{display:flex;align-items:center;gap:12px;min-height:44px;padding:0 12px;border-radius:12px;color:#3D4555;font-weight:600;text-decoration:none}
+.nav:hover{background:#F3F5F9;color:#111827}
+.nav.on{background:#EEF2FE;color:#2449C4}
+.count{margin-left:auto;min-width:22px;height:22px;padding:0 7px;border-radius:11px;background:#2F5BEA;color:#FFFFFF;font-size:12px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box}
+.demo{margin-top:auto;padding:16px 8px 0;border-top:1px solid #EDEFF4;display:flex;flex-direction:column;gap:10px}
+.demo-l{font-size:11px;font-weight:700;color:#6B7280;letter-spacing:.06em;text-transform:uppercase}
+.seg{display:flex;padding:4px;background:#F1F3F7;border-radius:12px;gap:2px}
+.seg a,.seg button{flex:1;text-align:center;padding:7px 4px;border-radius:9px;font-size:13px;font-weight:600;color:#5B6475;text-decoration:none;border:0;background:transparent;font-family:inherit;cursor:pointer}
+.seg .on{background:#FFFFFF;color:#111827;box-shadow:0 1px 3px rgba(17,24,39,.12)}
+.me{display:flex;align-items:center;gap:10px}
+.av{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0}
+.main{flex:999 1 560px;min-width:0;padding:36px 44px 64px;display:flex;flex-direction:column;gap:24px;box-sizing:border-box;max-width:1180px}
+.h1{margin:0;font-size:30px;font-weight:800;letter-spacing:-0.02em;line-height:1.2}
+.h2{margin:0;font-size:18px;font-weight:800;letter-spacing:-0.01em}
+.h3{margin:0;font-size:15px;font-weight:700}
+.sub{margin:6px 0 0;color:#5B6475}
+.small{font-size:13px;color:#5B6475}
+.card{background:#FFFFFF;border:1px solid #EDEFF4;border-radius:20px;padding:24px;box-shadow:0 1px 2px rgba(17,24,39,.04);box-sizing:border-box}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 24px;border-radius:14px;border:0;background:#2F5BEA;color:#FFFFFF;font-family:inherit;font-size:15px;font-weight:700;text-decoration:none;cursor:pointer;box-sizing:border-box}
+.btn:hover{background:#2449C4;color:#FFFFFF}
+.btn:disabled{background:#DDE1E9;color:#5B6475;cursor:not-allowed}
+.btn2{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 20px;border-radius:14px;border:1px solid #D9DEE7;background:#FFFFFF;color:#111827;font-family:inherit;font-size:15px;font-weight:700;text-decoration:none;cursor:pointer;box-sizing:border-box}
+.btn2:hover{background:#F6F7FB;color:#111827}
+.danger{color:#A92B22}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:999px;font-size:13px;font-weight:700;white-space:nowrap}
+.ok{background:#E6F6EF;color:#0E6B4C}.wait{background:#FFF4E2;color:#8A4B00}.no{background:#FDECEA;color:#A92B22}.neutral{background:#F1F3F7;color:#3D4555}.info{background:#EEF2FE;color:#2449C4}
+.note{display:flex;gap:12px;padding:16px;border-radius:16px;font-size:15px;align-items:flex-start}
+.warn{background:#FFF7EB;color:#6B3A00}.good{background:#E9F7F0;color:#0B5940}.tip{background:#EEF2FE;color:#1E3A9C}
+.fact{padding:16px;border-radius:16px;background:#F6F7FB;display:flex;flex-direction:column;gap:2px}
+.input{width:100%;min-height:48px;padding:12px 14px;border:1px solid #D5DAE3;border-radius:12px;font-family:inherit;font-size:15px;background:#FFFFFF;color:#111827;box-sizing:border-box}
+.req{display:flex;flex-direction:column;gap:10px;padding:16px;border-radius:18px;border:2px solid #EDEFF4;background:#FFFFFF;font-family:inherit;font-size:15px;color:#111827;text-align:left;cursor:pointer;width:100%}
+.req:hover{border-color:#C7D3F8}
+.opt{display:flex;justify-content:space-between;align-items:center;gap:12px;min-height:52px;padding:0 16px;border-radius:14px;border:1px solid #D9DEE7;background:#FFFFFF;font-family:inherit;font-size:15px;color:#111827;cursor:pointer}
+.opt:hover{border-color:#2F5BEA}
+@media (max-width:720px){.main{padding:24px 16px 48px}.side{max-width:none}}
+.tip{position:relative;display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;margin-left:8px;border-radius:50%;border:0;background:#E9ECF2;color:#3D4555;font-family:Georgia,serif;font-style:italic;font-size:12px;font-weight:700;line-height:1;cursor:help;vertical-align:middle;padding:0;flex-shrink:0;letter-spacing:0}
+.tip:hover,.tip:focus-visible{background:#2F5BEA;color:#FFFFFF;outline:none}
+.tip .tt{position:absolute;top:calc(100% + 10px);left:50%;transform:translateX(-50%);width:max-content;max-width:280px;padding:10px 12px;border-radius:12px;background:#111827;color:#FFFFFF;font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-style:normal;font-size:13px;font-weight:500;line-height:1.45;text-align:left;text-transform:none;white-space:normal;opacity:0;visibility:hidden;transition:opacity .15s;pointer-events:none;z-index:30;box-shadow:0 8px 24px rgba(17,24,39,.18)}
+.tip:hover .tt,.tip:focus .tt{opacity:1;visibility:visible}
+.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);display:flex;align-items:center;gap:12px;max-width:calc(100% - 32px);padding:14px 16px 14px 18px;border-radius:16px;background:#111827;color:#FFFFFF;font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:14px;font-weight:600;box-shadow:0 12px 32px rgba(17,24,39,.25);z-index:60;box-sizing:border-box}
+.toast-act{border:0;background:transparent;color:#A9BEFF;font-family:inherit;font-size:14px;font-weight:800;cursor:pointer;padding:6px 8px;border-radius:8px}
+.toast-act:hover{background:rgba(255,255,255,.12)}
+</style>
+</helmet>
+<div class="app">
+  <aside class="side">
+    <div class="brand">
+      <span class="logo"><svg width="18" height="18" sc-camel-view-box="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 0 0-14.3-4.9L4 8"></path><path d="M4 3v5h5"></path><path d="M4 13a8 8 0 0 0 14.3 4.9L20 16"></path><path d="M20 21v-5h-5"></path></svg></span>
+      Revezza
+    </div>
+    <nav aria-label="Menu" style="display: flex; flex-direction: column; gap: 4px">
+      <a class="nav on" href="Gestor.dc.html"><svg width="20" height="20" sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 12h-6l-2 3h-4l-2-3H2"></path><path d="M5.5 5.1 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.5-6.9A2 2 0 0 0 16.8 4H7.2a2 2 0 0 0-1.7 1.1z"></path></svg>Para aprovar<span class="count">{{pendentes}}</span></a>
+      <a class="nav" href="Calendario.dc.html"><svg width="20" height="20" sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg>Calendário da equipe</a>
+      <a class="nav" href="Capacidade.dc.html"><svg width="20" height="20" sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"></circle><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4.5a3.5 3.5 0 0 1 0 7M21.5 20a6.5 6.5 0 0 0-4-6"></path></svg>Equipe disponível</a>
+      <a class="nav" href="MinhasGestor.dc.html"><svg width="20" height="20" sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21a8 8 0 0 1 16 0"></path></svg>Meus pedidos</a>
+    </nav>
+    <div class="demo">
+      <span class="demo-l">Ver demonstração como</span>
+      <div class="seg"><a href="Main.dc.html">Colaborador</a><a class="on" href="Gestor.dc.html">Gestor</a><a href="Painel.dc.html">Admin</a></div>
+      <div class="me"><span class="av" style="background: #E6F6EF; color: #0E6B4C">CM</span><span><strong style="display: block; font-size: 14px">Carlos Mendes</strong><span class="small">Gestor · Tecnologia</span></span></div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div>
+      <h1 class="h1">Pedidos para aprovar <button type="button" class="tip" aria-label="Cada pedido já chega com o que você precisa para decidir."><span aria-hidden="true">i</span><span class="tt" aria-hidden="true">Cada pedido já chega com o que você precisa para decidir.</span></button></h1>
+    </div>
+
+    <section aria-labelledby="deleg" class="card" style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; padding: 18px 24px">
+      <div style="flex: 1 1 320px">
+        <h2 id="deleg" class="h3" style="font-size: 16px">Quando você estiver fora, quem aprova por você?<button type="button" class="tip" aria-label="Suas férias de 15/02 a 24/02 estão pedidas. Os pedidos da equipe nesse período vão para a pessoa escolhida."><span aria-hidden="true">i</span><span class="tt" aria-hidden="true">Suas férias de 15/02 a 24/02 estão pedidas. Os pedidos da equipe nesse período vão para a pessoa escolhida.</span></button></h2>
+      </div>
+      <sc-raw-select class="input" aria-labelledby="deleg" value="{{sub}}" sc-camel-on-change="{{onSub}}" style="width: auto; min-width: 260px">
+        <option value="ra">Renata Alves (sua gestora)</option>
+        <option value="pf">Paula Freitas</option>
+        <option value="bt">Bruno Teixeira</option>
+      </sc-raw-select>
+    </section>
+
+    <div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start">
+      <section aria-label="Pedidos" style="flex: 1 1 260px; max-width: 320px; display: flex; flex-direction: column; gap: 10px">
+        <div style="display: flex; align-items: center">
+          <div class="seg" role="group" aria-label="Equipe" style="flex: 1">
+            <sc-for list="{{equipes}}" as="q" hint-placeholder-count="2"><button class="{{q.cls}}" sc-camel-on-click="{{q.pick}}" aria-pressed="{{q.on}}">{{q.t}}</button></sc-for>
+          </div><button type="button" class="tip" aria-label="O administrador liberou para você visualizar a equipe de Produto. Quem aprova os pedidos dela continua sendo o gestor da equipe."><span aria-hidden="true">i</span><span class="tt" aria-hidden="true">O administrador liberou para você visualizar a equipe de Produto. Quem aprova os pedidos dela continua sendo o gestor da equipe.</span></button>
+        </div>
+        <sc-for list="{{lista}}" as="r" hint-placeholder-count="3">
+          <button class="req" sc-camel-on-click="{{r.pick}}" aria-pressed="{{r.sel}}" style="border-color: {{r.border}}; background: {{r.bg}}">
+            <span style="display: flex; align-items: center; gap: 12px; width: 100%">
+              <span class="av" style="background: {{r.avBg}}; color: {{r.avFg}}">{{r.ini}}</span>
+              <span style="flex: 1; min-width: 0">
+                <span style="display: block; font-weight: 800">{{r.nome}}</span>
+                <span style="display: flex; align-items: center; gap: 6px; font-size: 13px; color: #5B6475"><span aria-hidden="true" style="width: 22px; height: 22px; border-radius: 7px; background: {{r.tBg}}; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="14" height="14" sc-camel-view-box="0 0 24 24" fill="none" stroke="{{r.tFg}}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="{{r.tIcon}}"></path></svg></span>{{r.tipo}} · {{r.curto}}</span>
+              </span>
+            </span>
+            <span class="pill {{r.cls}}">{{r.status}}</span>
+          </button>
+        </sc-for>
+      </section>
+
+      <section aria-labelledby="nm" class="card" style="flex: 3 1 520px; min-width: 0; display: flex; flex-direction: column; gap: 22px; padding: 28px">
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; align-items: flex-start">
+          <div style="display: flex; gap: 14px; align-items: center">
+            <span class="av" style="width: 52px; height: 52px; font-size: 16px; background: {{cur.avBg}}; color: {{cur.avFg}}">{{cur.ini}}</span>
+            <div>
+              <h2 id="nm" class="h2" style="font-size: 22px">{{cur.nome}}</h2>
+              <div class="small" style="font-size: 14px">{{cur.papel}}</div>
+            </div>
+          </div>
+          <div style="text-align: right">
+            <div style="display: flex; align-items: center; justify-content: flex-end; gap: 8px; font-weight: 700; color: #5B6475; font-size: 14px"><span aria-hidden="true" style="width: 28px; height: 28px; border-radius: 9px; background: {{cur.tBg}}; display: inline-flex; align-items: center; justify-content: center"><svg width="16" height="16" sc-camel-view-box="0 0 24 24" fill="none" stroke="{{cur.tFg}}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="{{cur.tIcon}}"></path></svg></span>{{cur.tipo}}</div>
+            <div style="font-size: 20px; font-weight: 800; font-variant-numeric: tabular-nums">{{cur.periodo}}</div>
+            <div class="small">{{cur.dias}}</div>
+          </div>
+        </div>
+
+        <div class="note {{cur.notaCls}}">
+          <svg width="22" height="22" sc-camel-view-box="0 0 24 24" fill="none" stroke="{{cur.notaIc}}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="{{cur.notaIcon}}"></path></svg>
+          <span><strong>{{cur.notaT}}</strong> {{cur.notaX}}</span>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px">
+          <sc-for list="{{cur.fatos}}" as="f" hint-placeholder-count="3">
+            <div class="fact">
+              <span class="small" style="font-weight: 600">{{f.l}}</span>
+              <span style="font-size: 20px; font-weight: 800; font-variant-numeric: tabular-nums">{{f.v}}</span>
+              <span class="small">{{f.d}}</span>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="display: flex; flex-wrap: wrap; gap: 24px">
+          <figure style="flex: 3 1 320px; min-width: 0; margin: 0; display: flex; flex-direction: column; gap: 12px">
+            <figcaption style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; align-items: baseline">
+              <span class="h3">Pessoas trabalhando no pior dia de cada semana</span>
+            </figcaption>
+            <div style="display: flex; gap: 14px; font-size: 12px; color: #3D4555; flex-wrap: wrap">
+              <span style="display: inline-flex; align-items: center; gap: 6px"><span aria-hidden="true" style="width: 12px; height: 12px; border-radius: 4px; background: #D5DCEA"></span>Sem este pedido</span>
+              <span style="display: inline-flex; align-items: center; gap: 6px"><span aria-hidden="true" style="width: 12px; height: 12px; border-radius: 4px; background: #2F5BEA"></span>Se aprovar</span>
+              <span style="display: inline-flex; align-items: center; gap: 6px"><span aria-hidden="true" style="width: 16px; border-top: 2px dashed #A15C07"></span>Mínimo: {{cur.min}} pessoas</span>
+            </div>
+            <div role="img" aria-label="{{cur.chartAria}}" style="position: relative; height: 168px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; align-items: end; border-bottom: 1px solid #DDE2EA">
+              <div aria-hidden="true" style="position: absolute; left: 0; right: 0; bottom: {{cur.minPx}}px; border-top: 2px dashed #A15C07"></div>
+              <sc-for list="{{cur.semanas}}" as="w" hint-placeholder-count="4">
+                <div style="display: flex; justify-content: center; align-items: flex-end; gap: 6px">
+                  <div style="display: flex; flex-direction: column; align-items: center; gap: 4px"><span style="font-size: 12px; color: #5B6475; font-weight: 600">{{w.sem}}</span><div style="width: 22px; height: {{w.hS}}px; background: #D5DCEA; border-radius: 6px 6px 0 0"></div></div>
+                  <div style="display: flex; flex-direction: column; align-items: center; gap: 4px"><span style="font-size: 12px; font-weight: 800; color: {{w.fg}}">{{w.com}}</span><div style="width: 22px; height: {{w.hC}}px; background: {{w.bg}}; border-radius: 6px 6px 0 0"></div></div>
+                </div>
+              </sc-for>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; text-align: center" class="small">
+              <sc-for list="{{cur.semanas}}" as="w" hint-placeholder-count="4"><span>{{w.l}}</span></sc-for>
+            </div>
+          </figure>
+          <div style="flex: 2 1 220px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+            <div>
+              <h3 class="h3" style="margin-bottom: 8px">Também fora nesse período</h3>
+              <sc-for list="{{cur.fora}}" as="f" hint-placeholder-count="2">
+                <div style="display: flex; justify-content: space-between; gap: 8px; padding: 8px 0; border-bottom: 1px solid #F0F2F6; font-size: 14px"><span style="font-weight: 600">{{f.n}}</span><span class="small">{{f.p}}</span></div>
+              </sc-for>
+              <sc-if value="{{cur.ninguem}}" hint-placeholder-val="{{false}}"><span class="small">Ninguém.</span></sc-if>
+            </div>
+            <div>
+              <h3 class="h3" style="margin-bottom: 8px">Motivo informado</h3>
+              <p style="margin: 0; padding: 12px 14px; border-radius: 14px; background: #F6F7FB; font-size: 14px">{{cur.just}}</p>
+            </div>
+          </div>
+        </div>
+
+        <div style="border-top: 1px solid #EDEFF4; padding-top: 20px; display: flex; flex-direction: column; gap: 14px">
+          <sc-if value="{{somenteVer}}" hint-placeholder-val="{{false}}">
+            <div style="display: flex; align-items: center; gap: 10px; padding: 14px 16px; border-radius: 14px; background: #F1F3F7; font-size: 14px; color: #3D4555">
+              <svg width="20" height="20" sc-camel-view-box="0 0 24 24" fill="none" stroke="#3D4555" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+              <span>Você só visualiza esta equipe. Quem aprova é <strong>{{cur.aprovador}}</strong>.</span>
+            </div>
+          </sc-if>
+          <sc-if value="{{showActions}}" hint-placeholder-val="{{true}}">
+            <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-end">
+              <button class="btn2 danger" sc-camel-on-click="{{modoRecusar}}">Recusar</button>
+              <button class="btn2" sc-camel-on-click="{{modoSugerir}}">Sugerir outra data</button>
+              <button class="btn" sc-camel-on-click="{{aprovar}}">Aprovar</button>
+            </div>
+          </sc-if>
+          <sc-if value="{{showRecusar}}" hint-placeholder-val="{{false}}">
+            <label for="mot" style="font-weight: 700">Conte para {{cur.primeiro}} por que o pedido foi recusado</label>
+            <textarea id="mot" class="input" rows="3" value="{{motivo}}" sc-camel-on-change="{{onMotivo}}" style="resize: vertical"></textarea>
+            <div style="display: flex; gap: 10px; justify-content: flex-end">
+              <button class="btn2" sc-camel-on-click="{{cancelar}}">Cancelar</button>
+              <button class="btn" sc-camel-on-click="{{recusar}}" disabled="{{semMotivo}}" style="background: {{recBg}}">Recusar pedido</button>
+            </div>
+          </sc-if>
+          <sc-if value="{{showSugerir}}" hint-placeholder-val="{{false}}">
+            <span style="font-weight: 700">Escolha uma data sem conflito para sugerir a {{cur.primeiro}}</span>
+            <sc-for list="{{alternativas}}" as="p" hint-placeholder-count="2">
+              <button class="opt" sc-camel-on-click="{{p.send}}"><span><strong>{{p.periodo}}</strong> <span class="small">· {{p.motivo}}</span></span><span style="color: #2F5BEA; font-weight: 700">Sugerir</span></button>
+            </sc-for>
+            <div style="display: flex; justify-content: flex-end"><button class="btn2" sc-camel-on-click="{{cancelar}}">Cancelar</button></div>
+          </sc-if>
+          <sc-if value="{{showRes}}" hint-placeholder-val="{{false}}">
+            <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px">
+              <strong style="color: {{resIc}}; font-size: 16px">{{resT}}</strong>
+              <button class="btn2" sc-camel-on-click="{{desfazer}}">Desfazer</button>
+            </div>
+          </sc-if>
+        </div>
+      </section>
+    </div>
+  </main>
+  <sc-if value="{{toastOn}}" hint-placeholder-val="{{false}}">
+    <div class="toast" role="status" aria-live="polite">
+      <svg width="18" height="18" sc-camel-view-box="0 0 24 24" fill="none" stroke="#6EE7B7" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>
+      <span>{{toastMsg}}</span>
+      <sc-if value="{{toastAct}}" hint-placeholder-val="{{false}}"><button class="toast-act" sc-camel-on-click="{{toastDo}}">{{toastActLbl}}</button></sc-if>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script="" data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:1150}}">
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { sel: 'cn', modo: null, motivo: '', dec: {}, sub: 'ra', eq: 'tec' };
+  }
+  toast(msg, lbl, fn) {
+    var self = this;
+    clearTimeout(this._tt);
+    this.setState({ toast: { msg: msg, lbl: lbl || '', fn: fn || null } });
+    this._tt = setTimeout(function () { self.setState({ toast: null }); }, 4500);
+  }
+  renderVals() {
+    var self = this, S = this.state;
+    var IC = {
+      warn: 'M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0zM12 9v4M12 17h.01',
+      check: 'M12 3a9 9 0 1 0 0 18a9 9 0 0 0 0-18zM8 12l3 3 5-6'
+    };
+    var sem = function (arr, min) {
+      min = min || 5;
+      return arr.map(function (w) {
+        var low = w[2] < min;
+        return { l: w[0], sem: w[1], com: w[2], hS: w[1] * 20, hC: w[2] * 20, bg: low ? '#D9822B' : '#2F5BEA', fg: low ? '#A15C07' : '#2449C4' };
+      });
+    };
+    var TM = { 'Férias anuais': ['M3 11a9 9 0 0 1 18 0zM7.5 11C7.5 7 9.5 3.8 12 2M16.5 11C16.5 7 14.5 3.8 12 2M12 11l-2.5 9.5M4 21h16', '#EEF7D9', '#4D7C0F', '#B9DB6B'], 'Outro': ['M5 10V8a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v2M3 12a2 2 0 0 1 4 0v2h10v-2a2 2 0 0 1 4 0v5H3zM5 17v2M19 17v2', '#E3F6F3', '#0F766E', '#7FD3C7'], 'Viagem de negócios': ['M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z', '#F7E8F4', '#9D2F86', '#E3A8D6'], 'Licença por doença': ['M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0zM12 9v7', '#FDEBE4', '#B4441C', '#F2A27E'], 'Licença de maternidade': ['M13 3a8 8 0 0 1 8 8h-8zM3 6h2.5l2 7H21a4 4 0 0 1-4 4H9.5M8 21a1.5 1.5 0 1 0 0-3a1.5 1.5 0 0 0 0 3zM18 21a1.5 1.5 0 1 0 0-3a1.5 1.5 0 0 0 0 3z', '#EAF0FD', '#2F56B0', '#A9C4F5'], 'Licença sem vencimento': ['M6 2h12M6 22h12M17 2v4.2a2 2 0 0 1-.6 1.4L12 12l-4.4-4.4A2 2 0 0 1 7 6.2V2M7 22v-4.2a2 2 0 0 1 .6-1.4L12 12l4.4 4.4a2 2 0 0 1 .6 1.4V22', '#F1F3F7', '#3D4555', '#C3C9D2'], 'Ausência sem permissão': ['M8 2v4M16 2v4M4 6h16v15H4zM4 10h16M10 14l4 4M14 14l-4 4', '#FDECEA', '#A92B22', '#F09A91'], 'Calendários pessoais': ['M8 2v4M16 2v4M4 6h16v15H4zM4 10h16M12 18.5s-3-1.8-3-3.6a1.5 1.5 0 0 1 3-.6a1.5 1.5 0 0 1 3 .6c0 1.8-3 3.6-3 3.6z', '#F1F3F7', '#5B6475', '#E3E6EA'] };
+    var reqs = [
+      { id: 'cn', ini: 'CN', avBg: '#FDEBE4', avFg: '#B4441C', nome: 'Camila Nogueira', primeiro: 'Camila', papel: 'Back-end · Tecnologia', tipo: 'Férias anuais', curto: '18/01 a 29/01',
+        periodo: '18/01 a 29/01/2027', dias: '12 dias · 10 úteis',
+        notaCls: 'warn', notaIc: '#A15C07', notaIcon: IC.warn, notaT: 'Se aprovar, a equipe fica abaixo do mínimo por 3 dias.', notaX: 'De 26/01 a 28/01, só 4 das 7 pessoas estarão trabalhando.',
+        fatos: [{ l: 'Saldo de férias', v: '30 → 18', d: 'dias' }, { l: 'Fora nos últimos 12 meses', v: '7 dias', d: 'férias e 2 do tipo Outro' }, { l: 'Back-end no período', v: 'Coberto', d: 'Ana estará trabalhando' }],
+        semanas: sem([['04/01', 5, 5], ['11/01', 5, 5], ['18/01', 6, 5], ['25/01', 5, 4]]),
+        chartAria: 'Se aprovar, a semana de 25/01 cai de 5 para 4 pessoas trabalhando no pior dia, abaixo do mínimo de 5.',
+        fora: [{ n: 'Bruno Teixeira', p: '11/01 a 22/01' }, { n: 'Elisa Prado', p: '25/01 a 05/02' }, { n: 'Helena Costa', p: '26/01 a 28/01' }],
+        just: 'Viagem com a família já comprada para essas datas.',
+        alt: [{ periodo: '18/01 a 25/01/2027', motivo: 'equipe sempre acima do mínimo' }, { periodo: '01/02 a 12/02/2027', motivo: 'sem conflitos' }] },
+      { id: 'ar', ini: 'AR', avBg: '#EEF2FE', avFg: '#2449C4', nome: 'Ana Ribeiro', primeiro: 'Ana', papel: 'Back-end · Tecnologia', tipo: 'Férias anuais', curto: '04/01 a 13/01',
+        periodo: '04/01 a 13/01/2027', dias: '10 dias · 8 úteis',
+        notaCls: 'good', notaIc: '#0E6B4C', notaIcon: IC.check, notaT: 'Sem conflito.', notaX: 'A equipe continua com pelo menos 5 pessoas em todos os dias.',
+        fatos: [{ l: 'Saldo de férias', v: '20 → 10', d: 'dias' }, { l: 'Fora nos últimos 12 meses', v: '13 dias', d: 'férias e 3 do tipo Outro' }, { l: 'Back-end no período', v: 'Coberto', d: 'Camila estará trabalhando' }],
+        semanas: sem([['04/01', 6, 5], ['11/01', 6, 5], ['18/01', 6, 6], ['25/01', 5, 5]]),
+        chartAria: 'Se aprovar, as semanas de 04/01 e 11/01 ficam com 5 pessoas no pior dia, no mínimo exigido.',
+        fora: [{ n: 'Diego Martins', p: '04/01 a 08/01' }, { n: 'Bruno Teixeira', p: '11/01 a 22/01' }],
+        just: 'Férias programadas com a família.',
+        alt: [{ periodo: '01/02 a 10/02/2027', motivo: 'sem conflitos' }] },
+      { id: 'fa', ini: 'FA', avBg: '#E3F6F3', avFg: '#0F766E', nome: 'Felipe Araújo', primeiro: 'Felipe', papel: 'Front-end · Tecnologia', tipo: 'Outro', curto: '15/01',
+        periodo: 'Sexta, 15/01/2027', dias: '1 dia',
+        notaCls: 'good', notaIc: '#0E6B4C', notaIcon: IC.check, notaT: 'Sem conflito.', notaX: 'Nesse dia, 5 das 7 pessoas estarão trabalhando.',
+        fatos: [{ l: 'Saldo', v: 'Não usa', d: 'pedido do tipo Outro' }, { l: 'Fora nos últimos 12 meses', v: '3 dias', d: '3 pedidos do tipo Outro' }, { l: 'Front-end no dia', v: 'Coberto', d: 'Diego e Helena' }],
+        semanas: sem([['04/01', 5, 5], ['11/01', 6, 5], ['18/01', 6, 6], ['25/01', 5, 5]]),
+        chartAria: 'Se aprovar, a semana de 11/01 fica com 5 pessoas no pior dia, no mínimo exigido.',
+        fora: [{ n: 'Bruno Teixeira', p: '11/01 a 22/01' }],
+        just: 'Não informado.',
+        alt: [{ periodo: 'Segunda, 18/01/2027', motivo: 'sem conflitos' }] }
+    ];
+    reqs.forEach(function (r) { r.eq = 'tec'; r.min = 5; r.aprovador = 'você'; });
+    reqs.push({ id: 'sl', eq: 'prod', min: 2, aprovador: 'Rafael Souza', ini: 'SL', avBg: '#F7E8F4', avFg: '#9D2F86', nome: 'Sofia Lima', primeiro: 'Sofia', papel: 'Design · Produto', tipo: 'Férias anuais', curto: '25/01 a 31/01',
+      periodo: '25/01 a 31/01/2027', dias: '7 dias · 5 úteis',
+      notaCls: 'warn', notaIc: '#A15C07', notaIcon: IC.warn, notaT: 'Se aprovar, Design fica sem ninguém por 5 dias.', notaX: 'Júlia Ramos está de licença o mês todo.',
+      fatos: [{ l: 'Saldo de férias', v: '22 → 15', d: 'dias' }, { l: 'Fora nos últimos 12 meses', v: '9 dias', d: 'férias' }, { l: 'Design no período', v: 'Descoberto', d: 'Júlia em licença' }],
+      semanas: sem([['04/01', 2, 2], ['11/01', 2, 2], ['18/01', 1, 1], ['25/01', 2, 1]], 2),
+      chartAria: 'Equipe de Produto: se aprovar, a semana de 25/01 cai de 2 para 1 pessoa trabalhando no pior dia, abaixo do mínimo de 2.',
+      fora: [{ n: 'Júlia Ramos', p: 'licença o mês todo' }], just: 'Viagem marcada com antecedência.', alt: [{ periodo: '08/02 a 14/02/2027', motivo: 'sem conflitos' }] });
+    var visiveis = reqs.filter(function (r) { return r.eq === S.eq; });
+    var cur = visiveis.filter(function (r) { return r.id === S.sel; })[0] || visiveis[0];
+    var d = S.dec[cur.id];
+    var ST = { aprovada: ['Aprovado', 'ok'], recusada: ['Recusado', 'no'], sugerida: ['Nova data sugerida', 'info'] };
+    var lista = visiveis.map(function (r) {
+      var sel = r.id === cur.id, st = S.dec[r.id] ? ST[S.dec[r.id]] : (r.eq !== 'tec' ? ['Só visualizar', 'neutral'] : (r.notaCls === 'warn' ? ['Atenção: conflito', 'wait'] : ['Sem conflito', 'neutral']));
+      return { tIcon: TM[r.tipo][0], tBg: TM[r.tipo][1], tFg: TM[r.tipo][2], ini: r.ini, avBg: r.avBg, avFg: r.avFg, nome: r.nome, tipo: r.tipo, curto: r.curto, sel: sel, border: sel ? '#2F5BEA' : '#EDEFF4', bg: sel ? '#F7F9FF' : '#FFFFFF', status: st[0], cls: st[1],
+        pick: function () { self.setState({ sel: r.id, modo: null, motivo: '' }); } };
+    });
+    var setDec = function (v) { var x = Object.assign({}, self.state.dec); x[cur.id] = v; self.setState({ dec: x, modo: null }); self.toast({ aprovada: 'Aprovado. ' + cur.primeiro + ' foi avisado(a) no chat do Bitrix24 e a ausência já está no Gráfico de Ausência.', recusada: 'Recusado. Sua explicação foi enviada para ' + cur.primeiro + '.', sugerida: 'Sugestão enviada para ' + cur.primeiro + '.' }[v]); };
+    var res = { aprovada: ['Pedido aprovado.', 'Aviso enviado para ' + cur.primeiro + ' no chat do Bitrix24. A ausência já foi registrada no Gráfico de Ausência.', 'good', '#0E6B4C'],
+      recusada: ['Pedido recusado.', 'Sua explicação foi enviada para ' + cur.primeiro + ' no chat do Bitrix24.', 'tip', '#2449C4'],
+      sugerida: ['Sugestão enviada.', cur.primeiro + ' pode aceitar a nova data com um toque. Se aceitar, o pedido volta aprovado.', 'tip', '#2449C4'] }[d] || ['', '', 'good', '#0E6B4C'];
+    var curOut = Object.assign({}, cur, { ninguem: cur.fora.length === 0, minPx: cur.min * 20, tIcon: TM[cur.tipo][0], tBg: TM[cur.tipo][1], tFg: TM[cur.tipo][2] });
+    var TS = this.state.toast;
+    return {
+      toastOn: !!TS, toastMsg: TS ? TS.msg : '', toastAct: !!(TS && TS.lbl), toastActLbl: TS ? TS.lbl : '',
+      toastDo: function () { var fn = TS && TS.fn; self.setState({ toast: null }); if (fn) fn(); },
+      sub: S.sub, onSub: function (e) { var nm = { ra: 'Renata Alves', pf: 'Paula Freitas', bt: 'Bruno Teixeira' }[e.target.value]; self.setState({ sub: e.target.value }); self.toast(nm + ' vai aprovar por você de 15/02 a 24/02.'); },
+      lista: lista, cur: curOut, pendentes: reqs.filter(function (r) { return r.eq === 'tec' && !S.dec[r.id]; }).length,
+      somenteVer: cur.eq !== 'tec',
+      equipes: [['tec', 'Minha equipe'], ['prod', 'Produto']].map(function (q) { var on = S.eq === q[0]; return { t: q[1], on: on, cls: on ? 'on' : '', pick: function () { self.setState({ eq: q[0], sel: null, modo: null }); } }; }),
+      alternativas: cur.alt.map(function (a) { return { periodo: a.periodo, motivo: a.motivo, send: function () { setDec('sugerida'); } }; }),
+      showActions: !d && !S.modo && cur.eq === 'tec', showRecusar: !d && S.modo === 'recusar', showSugerir: !d && S.modo === 'sugerir', showRes: !!d,
+      resT: res[0], resX: res[1], resCls: res[2], resIc: res[3],
+      aprovar: function () { setDec('aprovada'); }, recusar: function () { setDec('recusada'); },
+      modoRecusar: function () { self.setState({ modo: 'recusar' }); }, modoSugerir: function () { self.setState({ modo: 'sugerir' }); },
+      cancelar: function () { self.setState({ modo: null, motivo: '' }); },
+      desfazer: function () { var x = Object.assign({}, self.state.dec); delete x[cur.id]; self.setState({ dec: x }); },
+      motivo: S.motivo, onMotivo: function (e) { self.setState({ motivo: e.target.value }); },
+      semMotivo: !S.motivo.trim(), recBg: S.motivo.trim() ? '#C0362C' : '#DDE1E9'
+    };
+  }
+}
+</script>
+
+
+</body></html>

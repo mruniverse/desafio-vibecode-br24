@@ -8,6 +8,7 @@
  *   ONNIRA_API_KEY=onnira_sk_... node scripts/onnira-deploy.mjs status <APP_ID>
  *   ONNIRA_API_KEY=onnira_sk_... node scripts/onnira-deploy.mjs logs <APP_ID>
  *   ONNIRA_API_KEY=onnira_sk_... node scripts/onnira-deploy.mjs listar
+ *   ONNIRA_API_KEY=onnira_sk_... node scripts/onnira-deploy.mjs modelos
  *
  * A chave NUNCA fica no codigo: vem sempre da variavel de ambiente.
  * Doc da API: https://onnira.com/docs
@@ -92,6 +93,8 @@ function montarZip() {
       ".git/*",
       "-x",
       "data/*",
+      "-x",
+      "spike/*",
       "-x",
       ".env",
       "-x",
@@ -178,6 +181,11 @@ const comandos = {
 
   async me() {
     const r = await chamar("/me");
+    console.log(JSON.stringify(r, null, 2));
+  },
+
+  async modelos() {
+    const r = await chamar("/models");
     console.log(JSON.stringify(r, null, 2));
   },
 };

@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head>
+<meta charset="utf-8">
+<title>Revezza · Calendário da equipe</title>
+<script src="c9f02b77-200c-42e9-85ce-90784fd7bb06"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<style>/* cyrillic-ext */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/plusjakartasans/v12/LDIoaomQNQcsA88c7O9yZ4KMCoOg4Ko70yygg_vbd-E.woff2) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/plusjakartasans/v12/LDIoaomQNQcsA88c7O9yZ4KMCoOg4Ko50yygg_vbd-E.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/plusjakartasans/v12/LDIoaomQNQcsA88c7O9yZ4KMCoOg4Ko40yygg_vbd-E.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("1c2bb6de-9b55-4346-9b0f-317b690f9126") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/plusjakartasans/v12/LDIoaomQNQcsA88c7O9yZ4KMCoOg4Ko70yygg_vbd-E.woff2) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/plusjakartasans/v12/LDIoaomQNQcsA88c7O9yZ4KMCoOg4Ko50yygg_vbd-E.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/plusjakartasans/v12/LDIoaomQNQcsA88c7O9yZ4KMCoOg4Ko40yygg_vbd-E.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("1c2bb6de-9b55-4346-9b0f-317b690f9126") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/plusjakartasans/v12/LDIoaomQNQcsA88c7O9yZ4KMCoOg4Ko70yygg_vbd-E.woff2) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/plusjakartasans/v12/LDIoaomQNQcsA88c7O9yZ4KMCoOg4Ko50yygg_vbd-E.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/plusjakartasans/v12/LDIoaomQNQcsA88c7O9yZ4KMCoOg4Ko40yygg_vbd-E.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("1c2bb6de-9b55-4346-9b0f-317b690f9126") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/plusjakartasans/v12/LDIoaomQNQcsA88c7O9yZ4KMCoOg4Ko70yygg_vbd-E.woff2) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/plusjakartasans/v12/LDIoaomQNQcsA88c7O9yZ4KMCoOg4Ko50yygg_vbd-E.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/plusjakartasans/v12/LDIoaomQNQcsA88c7O9yZ4KMCoOg4Ko40yygg_vbd-E.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("1c2bb6de-9b55-4346-9b0f-317b690f9126") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/plusjakartasans/v12/LDIoaomQNQcsA88c7O9yZ4KMCoOg4Ko70yygg_vbd-E.woff2) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/plusjakartasans/v12/LDIoaomQNQcsA88c7O9yZ4KMCoOg4Ko50yygg_vbd-E.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/plusjakartasans/v12/LDIoaomQNQcsA88c7O9yZ4KMCoOg4Ko40yygg_vbd-E.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url("1c2bb6de-9b55-4346-9b0f-317b690f9126") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+</style>
+<style>
+body{margin:0;background:#F6F7FB}
+a{color:#2F5BEA}a:hover{color:#2449C4}
+.app{font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;color:#111827;background:#F6F7FB;min-height:100vh;font-size:15px;line-height:1.5;display:flex;flex-wrap:wrap;align-items:stretch}
+.side{flex:1 1 240px;max-width:260px;background:#FFFFFF;border-right:1px solid #EDEFF4;padding:22px 14px;display:flex;flex-direction:column;gap:4px;box-sizing:border-box}
+.brand{display:flex;align-items:center;gap:10px;padding:0 10px 22px;font-weight:800;font-size:18px;letter-spacing:-0.01em}
+.logo{width:34px;height:34px;border-radius:10px;background:#2F5BEA;display:flex;align-items:center;justify-content:center}
+.nav{display:flex;align-items:center;gap:12px;min-height:44px;padding:0 12px;border-radius:12px;color:#3D4555;font-weight:600;text-decoration:none}
+.nav:hover{background:#F3F5F9;color:#111827}
+.nav.on{background:#EEF2FE;color:#2449C4}
+.demo{margin-top:auto;padding:16px 8px 0;border-top:1px solid #EDEFF4;display:flex;flex-direction:column;gap:10px}
+.demo-l{font-size:11px;font-weight:700;color:#6B7280;letter-spacing:.06em;text-transform:uppercase}
+.seg{display:flex;padding:4px;background:#F1F3F7;border-radius:12px;gap:2px}
+.seg a,.seg button{flex:1;text-align:center;padding:7px 4px;border-radius:9px;font-size:13px;font-weight:600;color:#5B6475;text-decoration:none;border:0;background:transparent;font-family:inherit;cursor:pointer}
+.seg .on{background:#FFFFFF;color:#111827;box-shadow:0 1px 3px rgba(17,24,39,.12)}
+.me{display:flex;align-items:center;gap:10px}
+.av{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0}
+.main{flex:999 1 560px;min-width:0;padding:36px 44px 64px;display:flex;flex-direction:column;gap:20px;box-sizing:border-box;max-width:1180px}
+.h1{margin:0;font-size:30px;font-weight:800;letter-spacing:-0.02em;line-height:1.2}
+.sub{margin:6px 0 0;color:#5B6475}
+.small{font-size:13px;color:#5B6475}
+.card{background:#FFFFFF;border:1px solid #EDEFF4;border-radius:20px;padding:24px;box-shadow:0 1px 2px rgba(17,24,39,.04);box-sizing:border-box}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 22px;border-radius:14px;border:0;background:#2F5BEA;color:#FFFFFF;font-family:inherit;font-size:15px;font-weight:700;text-decoration:none;cursor:pointer;box-sizing:border-box}
+.btn:hover{background:#2449C4;color:#FFFFFF}
+.btn2{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 18px;border-radius:14px;border:1px solid #D9DEE7;background:#FFFFFF;color:#111827;font-family:inherit;font-size:14px;font-weight:700;text-decoration:none;cursor:pointer;box-sizing:border-box}
+.arrow{width:40px;height:40px;border-radius:12px;border:1px solid #D9DEE7;background:#FFFFFF;cursor:pointer;font-size:18px;font-family:inherit;color:#111827}
+.select{min-height:44px;padding:0 12px;border:1px solid #D5DAE3;border-radius:12px;font-family:inherit;font-size:15px;background:#FFFFFF;color:#111827}
+.legend{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:#3D4555;font-weight:600}
+.sw{width:14px;height:14px;border-radius:5px}
+@media (max-width:720px){.main{padding:24px 16px 48px}.side{max-width:none}}
+.tip{position:relative;display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;margin-left:8px;border-radius:50%;border:0;background:#E9ECF2;color:#3D4555;font-family:Georgia,serif;font-style:italic;font-size:12px;font-weight:700;line-height:1;cursor:help;vertical-align:middle;padding:0;flex-shrink:0;letter-spacing:0}
+.tip:hover,.tip:focus-visible{background:#2F5BEA;color:#FFFFFF;outline:none}
+.tip .tt{position:absolute;top:calc(100% + 10px);left:50%;transform:translateX(-50%);width:max-content;max-width:280px;padding:10px 12px;border-radius:12px;background:#111827;color:#FFFFFF;font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-style:normal;font-size:13px;font-weight:500;line-height:1.45;text-align:left;text-transform:none;white-space:normal;opacity:0;visibility:hidden;transition:opacity .15s;pointer-events:none;z-index:30;box-shadow:0 8px 24px rgba(17,24,39,.18)}
+.tip:hover .tt,.tip:focus .tt{opacity:1;visibility:visible}
+.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);display:flex;align-items:center;gap:12px;max-width:calc(100% - 32px);padding:14px 16px 14px 18px;border-radius:16px;background:#111827;color:#FFFFFF;font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:14px;font-weight:600;box-shadow:0 12px 32px rgba(17,24,39,.25);z-index:60;box-sizing:border-box}
+.toast-act{border:0;background:transparent;color:#A9BEFF;font-family:inherit;font-size:14px;font-weight:800;cursor:pointer;padding:6px 8px;border-radius:8px}
+.toast-act:hover{background:rgba(255,255,255,.12)}
+</style>
+</helmet>
+<div class="app">
+  <aside class="side">
+    <div class="brand">
+      <span class="logo"><svg width="18" height="18" sc-camel-view-box="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 0 0-14.3-4.9L4 8"></path><path d="M4 3v5h5"></path><path d="M4 13a8 8 0 0 0 14.3 4.9L20 16"></path><path d="M20 21v-5h-5"></path></svg></span>
+      Revezza
+    </div>
+    <nav aria-label="Menu" style="display: flex; flex-direction: column; gap: 4px">
+      <a class="nav" href="{{homeHref}}"><svg width="20" height="20" sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>{{homeLabel}}</a>
+      <a class="nav on" href="Calendario.dc.html"><svg width="20" height="20" sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg>Calendário</a>
+      <a class="nav" href="Capacidade.dc.html"><svg width="20" height="20" sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"></circle><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4.5a3.5 3.5 0 0 1 0 7M21.5 20a6.5 6.5 0 0 0-4-6"></path></svg>Equipe disponível</a>
+      <a class="nav" href="{{minhasHref}}"><svg width="20" height="20" sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21a8 8 0 0 1 16 0"></path></svg>Meus pedidos</a>
+    </nav>
+    <div class="demo">
+      <span class="demo-l">Ver demonstração como</span>
+      <div class="seg"><a href="Main.dc.html">Colaborador</a><button class="{{gCls}}" sc-camel-on-click="{{verGestor}}">Gestor</button><button class="{{pCls}}" sc-camel-on-click="{{verPeople}}">Admin</button></div>
+      <div class="me"><span class="av" style="background: {{avBg}}; color: {{avFg}}">{{userIni}}</span><span><strong style="display: block; font-size: 14px">{{userNome}}</strong><span class="small">{{userPapel}}</span></span></div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px">
+      <div>
+        <h1 class="h1">Calendário <button type="button" class="tip" aria-label="{{escopo}}"><span aria-hidden="true">i</span><span class="tt" aria-hidden="true">{{escopo}}</span></button></h1>
+      </div>
+      <sc-if value="{{isPeople}}" hint-placeholder-val="{{false}}">
+        <button class="btn"><svg width="18" height="18" sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>Lançar ausência</button>
+      </sc-if>
+    </div>
+
+    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px">
+      <div style="display: flex; align-items: center; gap: 10px">
+        <button class="arrow" sc-camel-on-click="{{prev}}" aria-label="Anterior">‹</button>
+        <span style="min-width: 170px; text-align: center; font-weight: 800; font-size: 17px">{{rangeLabel}}</span>
+        <button class="arrow" sc-camel-on-click="{{nextR}}" aria-label="Próximo">›</button>
+      </div>
+      <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap">
+        <label for="dep" class="small" style="font-weight: 700">Equipe</label>
+        <sc-raw-select id="dep" class="select" value="{{dep}}" sc-camel-on-change="{{onDep}}">
+          <sc-for list="{{depOpts}}" as="o" hint-placeholder-count="3"><option value="{{o.id}}">{{o.t}}</option></sc-for>
+        </sc-raw-select>
+        <div class="seg" role="group" aria-label="Visualização" style="min-width: 180px">
+          <button class="{{sCls}}" sc-camel-on-click="{{verSemana}}" aria-pressed="{{isSemana}}">Semana</button>
+          <button class="{{mCls}}" sc-camel-on-click="{{verMes}}" aria-pressed="{{isMes}}">Mês</button>
+        </div>
+      </div>
+    </div>
+
+    <section aria-label="Ausências por pessoa" class="card" style="padding: 0; overflow: hidden">
+      <div style="overflow-x: auto">
+        <div style="min-width: 980px; font-size: 13px">
+          <div style="display: grid; grid-template-columns: 210px 1fr; border-bottom: 1px solid #EDEFF4">
+            <div style="padding: 12px 20px; font-weight: 700; color: #5B6475; font-size: 12px; letter-spacing: .04em; position: sticky; left: 0; background: #FFFFFF">PESSOA</div>
+            <div style="display: grid; grid-template-columns: repeat({{n}}, minmax(0, 1fr))">
+              <sc-for list="{{head}}" as="h" hint-placeholder-count="31">
+                <div title="{{h.title}}" style="padding: 8px 0; text-align: center; background: {{h.bg}}">
+                  <div style="font-weight: 800; color: {{h.fg}}">{{h.d}}</div>
+                  <div style="color: #6B7280; font-size: 11px; font-weight: 600">{{h.wd}}</div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+          <sc-for list="{{grupos}}" as="g" hint-placeholder-count="1">
+            <sc-if value="{{g.mostrar}}" hint-placeholder-val="{{false}}">
+              <div style="padding: 10px 20px; background: #F6F7FB; font-weight: 800; font-size: 13px; color: #3D4555">{{g.nome}}</div>
+            </sc-if>
+            <sc-for list="{{g.rows}}" as="r" hint-placeholder-count="7">
+              <div style="display: grid; grid-template-columns: 210px 1fr; border-bottom: 1px solid #F0F2F6">
+                <div style="padding: 0 20px; display: flex; flex-direction: column; justify-content: center; height: 52px; position: sticky; left: 0; background: #FFFFFF; z-index: 1">
+                  <span style="font-weight: 700; font-size: 14px">{{r.nome}}</span>
+                  <span style="color: #6B7280; font-size: 12px">{{r.sub}}</span>
+                </div>
+                <div style="position: relative; height: 52px">
+                  <div style="position: absolute; inset: 0; display: grid; grid-template-columns: repeat({{n}}, minmax(0, 1fr))">
+                    <sc-for list="{{bgCells}}" as="c" hint-placeholder-count="31"><div style="background: {{c}}"></div></sc-for>
+                  </div>
+                  <sc-for list="{{r.bars}}" as="b" hint-placeholder-count="1">
+                    <button sc-camel-on-click="{{b.pick}}" aria-label="{{b.aria}}" title="{{b.aria}}" style="position: absolute; top: 10px; height: 32px; left: calc({{b.left}}% + 2px); width: calc({{b.width}}% - 4px); border-radius: 10px; border: {{b.borda}}; background: {{b.bg}}; color: #111827; font-family: inherit; font-size: 12px; font-weight: 700; text-align: left; padding: 0 6px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; display: flex; align-items: center; gap: 6px"><svg width="14" height="14" sc-camel-view-box="0 0 24 24" fill="none" stroke="#1F2937" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="{{b.icon}}"></path></svg><span style="overflow: hidden; text-overflow: ellipsis">{{b.label}}</span></button>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-for>
+          </sc-for>
+        </div>
+      </div>
+    </section>
+
+    <div style="display: flex; flex-wrap: wrap; gap: 18px; align-items: center">
+      <sc-for list="{{legenda}}" as="l" hint-placeholder-count="6">
+        <span class="legend"><span aria-hidden="true" style="width: 24px; height: 24px; border-radius: 8px; background: {{l.c}}; border: {{l.b}}; display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box"><svg width="14" height="14" sc-camel-view-box="0 0 24 24" fill="none" stroke="#1F2937" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="{{l.icon}}"></path></svg></span>{{l.t}}</span>
+      </sc-for>
+    </div>
+
+    <sc-if value="{{hasSel}}" hint-placeholder-val="{{false}}">
+      <section aria-labelledby="selt" class="card" style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px">
+        <div style="display: flex; flex-direction: column; gap: 4px">
+          <h2 id="selt" style="margin: 0; font-size: 18px; font-weight: 800">{{sel.nome}}</h2>
+          <span style="display: inline-flex; align-items: center; gap: 8px; font-weight: 700"><span class="sw" aria-hidden="true" style="background: {{sel.cor}}"></span>{{sel.tipo}} · {{sel.periodo}}</span>
+          <span class="small">{{sel.status}}</span>
+        </div>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap">
+          <sc-if value="{{sel.pendente}}" hint-placeholder-val="{{false}}"><a class="btn" href="Gestor.dc.html">Abrir pedido</a></sc-if>
+          <sc-if value="{{isPeople}}" hint-placeholder-val="{{false}}"><button class="btn2">Editar</button></sc-if>
+          <button class="btn2" sc-camel-on-click="{{fechar}}">Fechar</button>
+        </div>
+      </section>
+    </sc-if>
+  </main>
+  <sc-if value="{{toastOn}}" hint-placeholder-val="{{false}}">
+    <div class="toast" role="status" aria-live="polite">
+      <svg width="18" height="18" sc-camel-view-box="0 0 24 24" fill="none" stroke="#6EE7B7" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>
+      <span>{{toastMsg}}</span>
+      <sc-if value="{{toastAct}}" hint-placeholder-val="{{false}}"><button class="toast-act" sc-camel-on-click="{{toastDo}}">{{toastActLbl}}</button></sc-if>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script="" data-props="{&quot;perfil&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Gestor&quot;,&quot;People&quot;],&quot;default&quot;:&quot;Gestor&quot;,&quot;section&quot;:&quot;Protótipo&quot;},&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:950}}">
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { perfil: null, dep: null, view: 'mes', wk: 11, sel: null };
+  }
+  toast(msg, lbl, fn) {
+    var self = this;
+    clearTimeout(this._tt);
+    this.setState({ toast: { msg: msg, lbl: lbl || '', fn: fn || null } });
+    this._tt = setTimeout(function () { self.setState({ toast: null }); }, 4500);
+  }
+  renderVals() {
+    var self = this, S = this.state;
+    var perfil = S.perfil || this.props.perfil || 'Gestor', isPeople = perfil === 'People';
+    var dow = function (d) { return (d + 4) % 7; };
+    var WD = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'], WDL = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+    var isOff = function (d) { var w = dow(d); return w === 0 || w === 6 || d === 1; };
+    var f2 = function (d) { return (d < 10 ? '0' : '') + d; };
+    var T = {
+      ferias: ['Férias anuais', '#B9DB6B', 'M3 11a9 9 0 0 1 18 0zM7.5 11C7.5 7 9.5 3.8 12 2M16.5 11C16.5 7 14.5 3.8 12 2M12 11l-2.5 9.5M4 21h16'], folga: ['Outro', '#7FD3C7', 'M5 10V8a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v2M3 12a2 2 0 0 1 4 0v2h10v-2a2 2 0 0 1 4 0v5H3zM5 17v2M19 17v2'], viagem: ['Viagem de negócios', '#E3A8D6', 'M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z'],
+      licenca: ['Licença de maternidade', '#A9C4F5', 'M13 3a8 8 0 0 1 8 8h-8zM3 6h2.5l2 7H21a4 4 0 0 1-4 4H9.5M8 21a1.5 1.5 0 1 0 0-3a1.5 1.5 0 0 0 0 3zM18 21a1.5 1.5 0 1 0 0-3a1.5 1.5 0 0 0 0 3z'], atestado: ['Licença por doença', '#F2A27E', 'M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0zM12 9v7'], falta: ['Ausência sem permissão', '#F09A91', 'M8 2v4M16 2v4M4 6h16v15H4zM4 10h16M10 14l4 4M14 14l-4 4']
+    };
+    var people = [
+      { id: 'ar', nome: 'Ana Ribeiro', dep: ['tec'], papel: 'Back-end', abs: [{ i: 4, f: 13, t: 'ferias', p: 1 }] },
+      { id: 'bt', nome: 'Bruno Teixeira', dep: ['tec'], papel: 'Back-end', abs: [{ i: 11, f: 22, t: 'ferias' }] },
+      { id: 'cn', nome: 'Camila Nogueira', dep: ['tec'], papel: 'Back-end', abs: [{ i: 18, f: 29, t: 'ferias', p: 1 }] },
+      { id: 'dm', nome: 'Diego Martins', dep: ['tec'], papel: 'Front-end', abs: [{ i: 4, f: 8, t: 'folga' }] },
+      { id: 'ep', nome: 'Elisa Prado', dep: ['tec'], papel: 'QA', abs: [{ i: 25, f: 31, t: 'ferias' }] },
+      { id: 'fa', nome: 'Felipe Araújo', dep: ['tec'], papel: 'Front-end', abs: [{ i: 14, f: 14, t: 'folga', meio: 1 }, { i: 15, f: 15, t: 'folga', p: 1 }] },
+      { id: 'hc', nome: 'Helena Costa', dep: ['tec'], papel: 'Front-end', abs: [{ i: 26, f: 28, t: 'viagem' }] },
+      { id: 'pf', nome: 'Paula Freitas', dep: ['prod', 'tec'], papel: 'Produto', abs: [{ i: 19, f: 21, t: 'viagem' }] },
+      { id: 'jr', nome: 'Júlia Ramos', dep: ['prod'], papel: 'Design', abs: [{ i: 1, f: 31, t: 'licenca' }] },
+      { id: 'sl', nome: 'Sofia Lima', dep: ['prod'], papel: 'Design', abs: [{ i: 25, f: 31, t: 'ferias', p: 1 }] },
+      { id: 'br', nome: 'Bianca Rocha', dep: ['com'], papel: 'Vendas', abs: [{ i: 11, f: 22, t: 'ferias' }] },
+      { id: 'lm', nome: 'Larissa Moura', dep: ['com'], papel: 'Vendas', abs: [{ i: 12, f: 13, t: 'atestado' }] },
+      { id: 'or', nome: 'Otávio Reis', dep: ['com'], papel: 'Vendas', abs: [{ i: 5, f: 5, t: 'falta' }] },
+      { id: 'gl', nome: 'Gustavo Lemos', dep: ['com'], papel: 'Pré-vendas', abs: [{ i: 8, f: 8, t: 'folga' }] }
+    ];
+    var DEPN = { tec: 'Tecnologia', prod: 'Produto', com: 'Comercial' };
+    var view = S.view, rs = view === 'mes' ? 1 : S.wk, re = view === 'mes' ? 31 : Math.min(31, S.wk + 6), n = re - rs + 1;
+    var head = [], bgCells = [];
+    for (var d = rs; d <= re; d++) {
+      head.push({ d: view === 'mes' ? d : WDL[dow(d)] + ' ' + f2(d), wd: view === 'mes' ? WD[dow(d)] : '', bg: isOff(d) ? '#F6F7FB' : '#FFFFFF', fg: isOff(d) ? '#9AA1AE' : '#111827', title: d === 1 ? 'Feriado' : '' });
+      bgCells.push(isOff(d) ? '#F6F7FB' : 'transparent');
+    }
+    var hatch = function (c) { return 'repeating-linear-gradient(135deg, ' + c + ' 0 6px, #FFFFFF 6px 11px)'; };
+    var dep = S.dep || (isPeople ? 'todos' : 'tec');
+    var depKeys = dep === 'todos' ? (isPeople ? ['tec', 'prod', 'com'] : ['tec', 'prod']) : [dep];
+    var grupos = depKeys.map(function (dk) {
+      var rows = people.filter(function (p) { return p.dep.indexOf(dk) > -1; }).map(function (p) {
+        var bars = [];
+        p.abs.forEach(function (a, ai) {
+          var i = Math.max(a.i, rs), f = Math.min(a.f, re);
+          if (i > f) return;
+          var len = (f - i + 1) - (a.meio ? 0.5 : 0);
+          var per = f2(a.i) + (a.f !== a.i ? ' a ' + f2(a.f) : '');
+          var nomeT = T[a.t][0] + (a.meio ? ' (manhã)' : '');
+          bars.push({
+            left: ((i - rs) / n * 100).toFixed(3), width: (len / n * 100).toFixed(3),
+            bg: a.p ? hatch(T[a.t][1]) : T[a.t][1], borda: a.p ? '2px dashed #8A93A3' : '0', icon: T[a.t][2],
+            label: (view === 'semana' || a.f - a.i >= 2) ? nomeT + (a.p ? ' · aguardando' : '') : '',
+            aria: p.nome + ': ' + nomeT + ', ' + per + ' de janeiro' + (a.p ? ', aguardando aprovação' : ''),
+            pick: function () { self.setState({ sel: { p: p.id, a: ai } }); }
+          });
+        });
+        var outros = p.dep.filter(function (x) { return x !== dk; }).map(function (x) { return 'também em ' + DEPN[x]; });
+        return { nome: p.nome, sub: p.papel + (outros.length ? ' · ' + outros.join(', ') : ''), bars: bars };
+      });
+      return { nome: DEPN[dk], mostrar: depKeys.length > 1 || isPeople, rows: rows };
+    });
+    var sel = { nome: '', tipo: '', cor: '#FFFFFF', periodo: '', status: '', pendente: false };
+    if (S.sel) {
+      var sp = people.filter(function (p) { return p.id === S.sel.p; })[0], sa = sp.abs[S.sel.a];
+      sel = { nome: sp.nome, tipo: T[sa.t][0], cor: T[sa.t][1], periodo: f2(sa.i) + (sa.f !== sa.i ? ' a ' + f2(sa.f) : '') + ' de janeiro' + (sa.meio ? ', manhã' : ''),
+        status: sa.p ? 'Aguardando aprovação' : 'Aprovado e registrado no Bitrix24', pendente: !!sa.p };
+    }
+    var legenda = Object.keys(T).map(function (k) { return { t: T[k][0], c: T[k][1], b: '0', icon: T[k][2] }; });
+    legenda.push({ t: 'Aguardando aprovação', c: hatch('#C3C9D2'), b: '2px dashed #8A93A3', icon: '' });
+    var TS = this.state.toast;
+    return {
+      toastOn: !!TS, toastMsg: TS ? TS.msg : '', toastAct: !!(TS && TS.lbl), toastActLbl: TS ? TS.lbl : '',
+      toastDo: function () { var fn = TS && TS.fn; self.setState({ toast: null }); if (fn) fn(); },
+      isPeople: isPeople, gCls: isPeople ? '' : 'on', pCls: isPeople ? 'on' : '',
+      verGestor: function () { self.setState({ perfil: 'Gestor', sel: null, dep: null }); }, verPeople: function () { self.setState({ perfil: 'People', sel: null, dep: null }); },
+      userIni: isPeople ? 'ML' : 'CM', userNome: isPeople ? 'Marina Lopes' : 'Carlos Mendes', userPapel: isPeople ? 'Administradora' : 'Gestor · Tecnologia',
+      avBg: isPeople ? '#F7E8F4' : '#E6F6EF', avFg: isPeople ? '#9D2F86' : '#0E6B4C',
+      homeHref: isPeople ? 'Painel.dc.html' : 'Gestor.dc.html', minhasHref: isPeople ? 'MinhasAdmin.dc.html' : 'MinhasGestor.dc.html', homeLabel: isPeople ? 'Painel' : 'Para aprovar',
+      escopo: isPeople ? 'Todas as equipes. Você pode lançar e editar ausências.' : 'Sua equipe de Tecnologia, incluindo quem também está em outros times. O administrador também liberou para você visualizar a equipe de Produto.',
+      dep: dep, onDep: function (e) { self.setState({ dep: e.target.value, sel: null }); },
+      depOpts: isPeople ? [{ id: 'todos', t: 'Todas' }, { id: 'tec', t: 'Tecnologia' }, { id: 'prod', t: 'Produto' }, { id: 'com', t: 'Comercial' }]
+        : [{ id: 'tec', t: 'Tecnologia (sua equipe)' }, { id: 'prod', t: 'Produto (acesso liberado)' }, { id: 'todos', t: 'Todas que você acessa' }],
+      isMes: view === 'mes', isSemana: view === 'semana', mCls: view === 'mes' ? 'on' : '', sCls: view === 'semana' ? 'on' : '',
+      verMes: function () { self.setState({ view: 'mes' }); }, verSemana: function () { self.setState({ view: 'semana' }); },
+      rangeLabel: view === 'mes' ? 'Janeiro de 2027' : f2(rs) + ' a ' + f2(re) + ' de janeiro',
+      prev: function () { if (self.state.view === 'semana') self.setState({ wk: Math.max(4, self.state.wk - 7) }); },
+      nextR: function () { if (self.state.view === 'semana') self.setState({ wk: Math.min(25, self.state.wk + 7) }); },
+      n: n, head: head, bgCells: bgCells, grupos: grupos, legenda: legenda,
+      hasSel: !!S.sel, sel: sel, fechar: function () { self.setState({ sel: null }); }
+    };
+  }
+}
+</script>
+
+
+</body></html>

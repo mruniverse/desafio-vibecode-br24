@@ -1,0 +1,666 @@
+
+===== TELA 1: Revezza · Meus pedidos (25785 bytes) =====
+Revezza · Meus pedidos
+Revezza
+Meus pedidos
+Pedir ausência
+Ver demonstração como
+Colaborador
+Gestor
+Admin
+AR
+Ana Ribeiro Tecnologia
+Meus pedidos i
+Aqui você pede e acompanha suas ausências. Seus pedidos vão para o seu gestor direto.
+Pedir ausência
+Pedido em andamento
+i
+Você recebe cada atualização no chat do Bitrix24 e aqui no app.
+Aguardando aprovação do seu gestor
+Carlos Mendes responde até amanhã, 25/10, às 9h
+Em análise
+Outro · consulta médica
+Sexta, 06/11/2026 · das 8h às 12h
+{{e.t}}
+Neste horário já há outra ausência na sua equipe. i
+Seu pedido continua valendo. Explicar o motivo ajuda seu gestor a decidir.
+Explicar o motivo
+Por que você precisa desse horário?
+Enviar ao gestor
+Cancelar
+{{s.alertaTxt}}
+{{s.titulo}}
+{{s.valor}}
+Pedidos anteriores
+{{p.tipo}}
+{{p.periodo}}{{p.extra}}
+{{p.status}}
+{{toastMsg}}
+{{toastActLbl}}
+
+===== TELA 2: Revezza · Pedir ausência (41435 bytes) =====
+Revezza · Pedir ausência
+Revezza
+Meus pedidos
+Pedir ausência
+Ver demonstração como
+Colaborador
+Gestor
+Admin
+AR
+Ana Ribeiro Tecnologia
+Passo {{step}} de 3
+Cancelar
+O que você precisa? i
+Estes são os tipos do Gráfico de Ausência do Bitrix24 que você pode pedir. Outros, como Ausência sem permissão, são lançados pelo administrador.
+{{t.nome}}
+{{t.desc}}
+{{t.saldo}}
+Quando? i
+Toque no dia em que começa. Depois ajuste quantos dias.
+‹
+Janeiro de 2027
+›
+DOM
+SEG
+TER
+QUA
+QUI
+SEX
+SÁB
+{{c.n}}
+{{c.tag}}
+Quantos dias?
+−
+{{dur}}
++
+Saída {{saida}}
+Volta ao trabalho {{retorno}}
+Dias úteis {{uteis}}
+Seu saldo
+{{saldoTxt}}
+{{a.titulo}} {{a.texto}}
+Datas livres com {{dur}} dias:
+{{l.t}}
+Confira e envie i
+Seu gestor recebe o pedido assim que você enviar e você acompanha tudo em Meus pedidos.
+{{tipo.nome}} · {{dur}} dias
+{{periodoLongo}}
+Volta ao trabalho {{retorno}}
+Saldo depois da aprovação {{saldoApos}}
+Quem aprova Carlos Mendes
+Essas datas têm conflito com a agenda da equipe. Conte por que você precisa delas.
+{{justLabel}}
+i
+Seu gestor lê isso antes de decidir.
+Avisar quem marcou reuniões comigo nesses dias i
+{{reunioesTxt}}
+Pedido enviado!
+Seu pedido de {{tipoMin}} ({{periodoCurto}}) está com o Carlos. Você recebe cada atualização no chat do Bitrix24 e aqui no app.
+Acompanhar meu pedido
+Demo: ver como o gestor recebe
+Voltar
+{{hint}}
+{{nextLabel}}
+{{toastMsg}}
+{{toastActLbl}}
+
+===== TELA 3: Revezza · Pedidos para aprovar (41212 bytes) =====
+Revezza · Pedidos para aprovar
+Revezza
+Para aprovar {{pendentes}}
+Calendário da equipe
+Equipe disponível
+Meus pedidos
+Ver demonstração como
+Colaborador
+Gestor
+Admin
+CM
+Carlos Mendes Gestor · Tecnologia
+Pedidos para aprovar i
+Cada pedido já chega com o que você precisa para decidir.
+Quando você estiver fora, quem aprova por você? i
+Suas férias de 15/02 a 24/02 estão pedidas. Os pedidos da equipe nesse período vão para a pessoa escolhida.
+Renata Alves (sua gestora)
+Paula Freitas
+Bruno Teixeira
+{{q.t}}
+i
+O administrador liberou para você visualizar a equipe de Produto. Quem aprova os pedidos dela continua sendo o gestor da equipe.
+{{r.ini}}
+{{r.nome}}
+{{r.tipo}} · {{r.curto}}
+{{r.status}}
+{{cur.ini}}
+{{cur.nome}}
+{{cur.papel}}
+{{cur.tipo}}
+{{cur.periodo}}
+{{cur.dias}}
+{{cur.notaT}} {{cur.notaX}}
+{{f.l}}
+{{f.v}}
+{{f.d}}
+Pessoas trabalhando no pior dia de cada semana
+Sem este pedido
+Se aprovar
+Mínimo: {{cur.min}} pessoas
+{{w.sem}}
+{{w.com}}
+{{w.l}}
+Também fora nesse período
+{{f.n}}
+{{f.p}}
+Ninguém.
+Motivo informado
+{{cur.just}}
+Você só visualiza esta equipe. Quem aprova é {{cur.aprovador}} .
+Recusar
+Sugerir outra data
+Aprovar
+Conte para {{cur.primeiro}} por que o pedido foi recusado
+Cancelar
+Recusar pedido
+Escolha uma data sem conflito para sugerir a {{cur.primeiro}}
+{{p.periodo}} · {{p.motivo}}
+Sugerir
+Cancelar
+{{resT}}
+Desfazer
+{{toastMsg}}
+{{toastActLbl}}
+
+===== TELA 4: Revezza · Calendário da equipe (32319 bytes) =====
+Revezza · Calendário da equipe
+Revezza
+{{homeLabel}}
+Calendário
+Equipe disponível
+Meus pedidos
+Ver demonstração como
+Colaborador
+Gestor
+Admin
+{{userIni}}
+{{userNome}} {{userPapel}}
+Calendário i
+{{escopo}}
+Lançar ausência
+‹
+{{rangeLabel}}
+›
+Equipe
+{{o.t}}
+Semana
+Mês
+PESSOA
+{{h.d}}
+{{h.wd}}
+{{g.nome}}
+{{r.nome}}
+{{r.sub}}
+{{b.label}}
+{{l.t}}
+{{sel.nome}}
+{{sel.tipo}} · {{sel.periodo}}
+{{sel.status}}
+Abrir pedido
+Editar
+Fechar
+{{toastMsg}}
+{{toastActLbl}}
+
+===== TELA 5: Revezza · Equipe disponível (26135 bytes) =====
+Revezza · Equipe disponível
+Revezza
+Para aprovar
+Calendário da equipe
+Equipe disponível
+Meus pedidos
+Ver demonstração como
+Colaborador
+Gestor
+Admin
+CM
+Carlos Mendes Gestor · Tecnologia
+Equipe disponível i
+Quantas pessoas estarão trabalhando em cada dia de janeiro. Equipe de Tecnologia, 7 pessoas.
+Dias abaixo do mínimo
+{{k1}}
+de {{uteis}} dias úteis
+Pior dia
+{{k2}}
+{{k2d}}
+Funções sem ninguém
+{{k3}}
+em algum dia do mês
+Pessoas trabalhando por dia
+Ok
+Abaixo do mínimo
+Mínimo: {{min}}
+{{d.l}}
+Ajustes
+Mínimo de pessoas trabalhando
+−
+{{min}}
++
+Contar pedidos ainda não aprovados i
+Mostra como fica a equipe se você aprovar tudo o que está pendente.
+Me avisar no chat do Bitrix24 i
+Quando um pedido deixar a equipe abaixo do mínimo.
+O que precisa de atenção
+{{p.t}} {{p.x}}
+Tudo certo. A equipe fica acima do mínimo em todos os dias.
+{{toastMsg}}
+{{toastActLbl}}
+
+===== TELA 6: Revezza · Meus pedidos (26681 bytes) =====
+Revezza · Meus pedidos
+Revezza
+Para aprovar 3
+Calendário da equipe
+Equipe disponível
+Meus pedidos
+Ver demonstração como
+Colaborador
+Gestor
+Admin
+CM
+Carlos Mendes Gestor · Tecnologia
+Meus pedidos i
+Aqui você pede e acompanha suas ausências. Seus pedidos vão para o seu gestor direto.
+Pedir ausência
+Pedido em andamento
+i
+Você recebe cada atualização no chat do Bitrix24 e aqui no app.
+Aguardando aprovação do seu gestor
+Renata Alves responde até 26/10, às 18h
+Em análise
+Férias anuais · 10 dias
+Segunda, 15/02 até quarta, 24/02/2027
+{{e.t}}
+Neste horário já há outra ausência na sua equipe. i
+Seu pedido continua valendo. Explicar o motivo ajuda seu gestor a decidir.
+Explicar o motivo
+Por que você precisa desse horário?
+Enviar ao gestor
+Cancelar
+{{s.alertaTxt}}
+{{s.titulo}}
+{{s.valor}}
+Pedidos anteriores
+{{p.tipo}}
+{{p.periodo}}{{p.extra}}
+{{p.status}}
+{{toastMsg}}
+{{toastActLbl}}
+
+===== TELA 7: Revezza · Gestor pede ausência (42553 bytes) =====
+Revezza · Gestor pede ausência
+Revezza
+Para aprovar
+Calendário da equipe
+Equipe disponível
+Meus pedidos
+Ver demonstração como
+Colaborador
+Gestor
+Admin
+CM
+Carlos Mendes Gestor · Tecnologia
+Passo {{step}} de 3
+Cancelar
+O que você precisa? i
+Estes são os tipos do Gráfico de Ausência do Bitrix24 que você pode pedir. Outros, como Ausência sem permissão, são lançados pelo administrador.
+{{t.nome}}
+{{t.desc}}
+{{t.saldo}}
+Quando? i
+Toque no dia em que começa. Depois ajuste quantos dias.
+‹
+Janeiro de 2027
+›
+DOM
+SEG
+TER
+QUA
+QUI
+SEX
+SÁB
+{{c.n}}
+{{c.tag}}
+Quantos dias?
+−
+{{dur}}
++
+Saída {{saida}}
+Volta ao trabalho {{retorno}}
+Dias úteis {{uteis}}
+Seu saldo
+{{saldoTxt}}
+{{a.titulo}} {{a.texto}}
+Datas livres com {{dur}} dias:
+{{l.t}}
+Confira e envie i
+Seu gestor recebe o pedido assim que você enviar e você acompanha tudo em Meus pedidos.
+{{tipo.nome}} · {{dur}} dias
+{{periodoLongo}}
+Volta ao trabalho {{retorno}}
+Saldo depois da aprovação {{saldoApos}}
+Quem aprova Renata Alves, sua gestora
+Essas datas têm conflito com a agenda da equipe. Conte por que você precisa delas.
+{{justLabel}}
+i
+Seu gestor lê isso antes de decidir.
+Avisar quem marcou reuniões comigo nesses dias i
+{{reunioesTxt}}
+Pedido enviado!
+Seu pedido de {{tipoMin}} ({{periodoCurto}}) está com a Renata. Você recebe cada atualização no chat do Bitrix24 e aqui no app.
+Acompanhar meu pedido
+Voltar para os pedidos da equipe
+Voltar
+{{hint}}
+{{nextLabel}}
+{{toastMsg}}
+{{toastActLbl}}
+
+===== TELA 8: Revezza · Painel (27553 bytes) =====
+Revezza · Painel
+Revezza
+Painel
+Calendário
+Etapas do pedido
+Configurações
+Meus pedidos
+Ver demonstração como
+Colaborador
+Gestor
+Admin
+ML
+Marina Lopes Administradora
+Painel i
+Pedidos, aprovações e ausências da empresa nos próximos 90 dias.
+Equipe
+Todas
+Tecnologia
+Produto
+Comercial
+{{k.l}} i
+{{k.d}}
+{{k.v}}
+Pedidos aguardando o gestor i
+Quando aprovados, vão direto para o Gráfico de Ausência do Bitrix24.
+{{r.ini}}
+{{r.nome}} · {{r.eq}}
+{{r.tipo}} · {{r.per}} · gestor: {{r.g}}
+{{r.chk}}
+Lembrar gestor
+Lembrete enviado
+Nenhum pedido aguardando nesta equipe.
+Dias de ausência por tipo
+{{t.n}}
+{{t.v}}
+Férias vencendo
+{{v.n}}
+{{v.dias}} dias · vencem em {{v.data}}
+{{v.st}}
+{{toastMsg}}
+{{toastActLbl}}
+
+===== TELA 9: Revezza · Etapas do pedido (30463 bytes) =====
+Revezza · Etapas do pedido
+Revezza
+Painel
+Calendário
+Etapas do pedido
+Configurações
+Meus pedidos
+Ver demonstração como
+Colaborador
+Gestor
+Admin
+ML
+Marina Lopes Administradora
+Etapas do pedido i
+Defina por onde cada pedido passa, o status que o colaborador acompanha e o aviso que ele recebe. Adicione, remova ou reordene etapas quando quiser.
+{{salvarTxt}}
+Etapas
+{{e.n}}
+{{e.nome}}
+{{e.resumo}}
+↑
+↓
++ Adicionar etapa
+Etapa {{cur.n}}
+Remover
+Nome da etapa
+Status que o colaborador vê
+Quem age
+Ninguém, é automático
+Gestor da pessoa
+Gestores de todos os times da pessoa
+Administrador
+Prazo para responder
+Sem prazo
+1 dia
+2 dias
+3 dias
+Como avisar a pessoa
+{{c.n}}
+Mensagem
+Inserir:
+{{v.t}}
+Como o colaborador acompanha i
+Prévia com o pedido parado na etapa selecionada. As mudanças valem para os próximos pedidos.
+Férias · 04/01 a 13/01
+{{cur.status}}
+{{p.t}}
+Aviso que a pessoa recebe
+Revezza · {{canalNome}}
+{{preview}}
+{{toastMsg}}
+{{toastActLbl}}
+
+===== TELA 10: Revezza · Configurações (49360 bytes) =====
+Revezza · Configurações
+Revezza
+Painel
+Calendário
+Etapas do pedido
+Configurações
+Meus pedidos
+Ver demonstração como
+Colaborador
+Gestor
+Admin
+ML
+Marina Lopes Administradora
+Configurações i
+Conexão com o Bitrix24, quem vê o quê e os tipos de ausência.
+{{t.n}}
+Bitrix24
+empresa-exemplo.bitrix24.com.br
+Plano
+Sem integração (Free ou Essencial)
+Basic ou Standard Vibe+
+Professional Vibe+ ou superior
+{{r.n}}
+{{r.d}}
+Últimas sincronizações
+{{syncTxt}}
+{{l.dir}}
+{{l.reg}}
+{{l.q}}
+Google Agenda i
+Avisa quem marcar reunião com alguém que estará ausente.
+Conectado
+Quem vê o quê i
+Os perfis seguem as Permissões de Acesso do Bitrix24. Gestores vêm da Estrutura da Empresa.
+O que pode fazer Colaborador Gestor Administrador
+{{m.f}} {{c.t}}
+Gestores com acesso a outras equipes i
+Libere para um gestor ver, ou também aprovar, os pedidos, o calendário e a disponibilidade da equipe de outro gestor. Útil para substituições, diretorias e equipes que trabalham juntas.
++ Dar acesso
+Gestor
+{{g.label}}
+O que pode fazer
+Só visualizar
+Visualizar e aprovar
+Equipes que poderá acessar
+{{e.label}}
+Cancelar
+Dar acesso
+{{x.ini}}
+{{x.nome}}
+Acessa: {{x.equipes}}
+{{x.nivelTxt}}
+Remover
+Nenhum gestor tem acesso extra. Cada um vê só a própria equipe.
+Tipos de ausência i
+A lista começa com os tipos padrão do Gráfico de Ausência do Bitrix24. Você pode editar, remover e criar novos.
++ Novo tipo
+{{formTitulo}}
+Nome que as pessoas veem
+No Gráfico de Ausência do Bitrix24, entra como
+{{o}}
+Quem pode pedir
+Todas as pessoas
+Só o administrador lança
+Saldo
+Usa saldo de férias
+Não usa saldo
+Ícone
+Cor
+Pedir anexo (ex.: atestado)
+Cancelar
+Salvar tipo
+{{t.nome}} {{t.tag}}
+No Bitrix24: {{t.b24}} · {{t.quemTxt}} · {{t.saldoTxt}}{{t.anexoTxt}}
+Editar
+Excluir
+Regras de férias i
+Padrão da CLT. Confirme com o seu jurídico ou contabilidade.
+{{r.t}}
+Pessoas
+{{pessoasResumo}}
+Adicionar pessoa
+Trazer do Bitrix24
+{{p.ini}}
+{{p.n}}
+{{p.eq}} · gestor: {{p.g}}
+{{p.o}}
+{{toastMsg}}
+{{toastActLbl}}
+
+===== TELA 11: Revezza · Meus pedidos (27045 bytes) =====
+Revezza · Meus pedidos
+Revezza
+Painel
+Calendário
+Etapas do pedido
+Configurações
+Meus pedidos
+Ver demonstração como
+Colaborador
+Gestor
+Admin
+ML
+Marina Lopes Administradora
+Meus pedidos i
+Aqui você pede e acompanha suas ausências. Seus pedidos vão para o seu gestor direto.
+Pedir ausência
+Pedido em andamento
+i
+Você recebe cada atualização no chat do Bitrix24 e aqui no app.
+Aguardando aprovação do seu gestor
+Henrique Barros responde até 26/10, às 12h
+Em análise
+Outro · 1 dia
+Sexta, 20/11/2026
+{{e.t}}
+Neste horário já há outra ausência na sua equipe. i
+Seu pedido continua valendo. Explicar o motivo ajuda seu gestor a decidir.
+Explicar o motivo
+Por que você precisa desse horário?
+Enviar ao gestor
+Cancelar
+{{s.alertaTxt}}
+{{s.titulo}}
+{{s.valor}}
+Pedidos anteriores
+{{p.tipo}}
+{{p.periodo}}{{p.extra}}
+{{p.status}}
+{{toastMsg}}
+{{toastActLbl}}
+
+===== TELA 12: Revezza · Administrador pede ausência (42961 bytes) =====
+Revezza · Administrador pede ausência
+Revezza
+Painel
+Calendário
+Etapas do pedido
+Configurações
+Meus pedidos
+Ver demonstração como
+Colaborador
+Gestor
+Admin
+ML
+Marina Lopes Administradora
+Passo {{step}} de 3
+Cancelar
+O que você precisa? i
+Estes são os tipos do Gráfico de Ausência do Bitrix24 que você pode pedir. Outros, como Ausência sem permissão, são lançados pelo administrador.
+{{t.nome}}
+{{t.desc}}
+{{t.saldo}}
+Quando? i
+Toque no dia em que começa. Depois ajuste quantos dias.
+‹
+Janeiro de 2027
+›
+DOM
+SEG
+TER
+QUA
+QUI
+SEX
+SÁB
+{{c.n}}
+{{c.tag}}
+Quantos dias?
+−
+{{dur}}
++
+Saída {{saida}}
+Volta ao trabalho {{retorno}}
+Dias úteis {{uteis}}
+Seu saldo
+{{saldoTxt}}
+{{a.titulo}} {{a.texto}}
+Datas livres com {{dur}} dias:
+{{l.t}}
+Confira e envie i
+Seu gestor recebe o pedido assim que você enviar e você acompanha tudo em Meus pedidos.
+{{tipo.nome}} · {{dur}} dias
+{{periodoLongo}}
+Volta ao trabalho {{retorno}}
+Saldo depois da aprovação {{saldoApos}}
+Quem aprova Henrique Barros, seu gestor
+Essas datas têm conflito com a agenda da equipe. Conte por que você precisa delas.
+{{justLabel}}
+i
+Seu gestor lê isso antes de decidir.
+Avisar quem marcou reuniões comigo nesses dias i
+{{reunioesTxt}}
+Pedido enviado!
+Seu pedido de {{tipoMin}} ({{periodoCurto}}) está com o Henrique. Você recebe cada atualização no chat do Bitrix24 e aqui no app.
+Acompanhar meu pedido
+Voltar ao painel
+Voltar
+{{hint}}
+{{nextLabel}}
+{{toastMsg}}
+{{toastActLbl}}

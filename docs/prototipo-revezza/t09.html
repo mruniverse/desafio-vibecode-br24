@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head>
+<meta charset="utf-8">
+<title>Revezza · Configurações</title>
+<script src="8a273e91-bf1a-48cf-b829-1cb7af1f8007"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<style>/* cyrillic-ext */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/plusjakartasans/v12/LDIoaomQNQcsA88c7O9yZ4KMCoOg4Ko70yygg_vbd-E.woff2) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/plusjakartasans/v12/LDIoaomQNQcsA88c7O9yZ4KMCoOg4Ko50yygg_vbd-E.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/plusjakartasans/v12/LDIoaomQNQcsA88c7O9yZ4KMCoOg4Ko40yygg_vbd-E.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("a030f144-8e99-4969-8c82-ac3728e294f1") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/plusjakartasans/v12/LDIoaomQNQcsA88c7O9yZ4KMCoOg4Ko70yygg_vbd-E.woff2) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/plusjakartasans/v12/LDIoaomQNQcsA88c7O9yZ4KMCoOg4Ko50yygg_vbd-E.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/plusjakartasans/v12/LDIoaomQNQcsA88c7O9yZ4KMCoOg4Ko40yygg_vbd-E.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("a030f144-8e99-4969-8c82-ac3728e294f1") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/plusjakartasans/v12/LDIoaomQNQcsA88c7O9yZ4KMCoOg4Ko70yygg_vbd-E.woff2) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/plusjakartasans/v12/LDIoaomQNQcsA88c7O9yZ4KMCoOg4Ko50yygg_vbd-E.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/plusjakartasans/v12/LDIoaomQNQcsA88c7O9yZ4KMCoOg4Ko40yygg_vbd-E.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("a030f144-8e99-4969-8c82-ac3728e294f1") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/plusjakartasans/v12/LDIoaomQNQcsA88c7O9yZ4KMCoOg4Ko70yygg_vbd-E.woff2) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/plusjakartasans/v12/LDIoaomQNQcsA88c7O9yZ4KMCoOg4Ko50yygg_vbd-E.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/plusjakartasans/v12/LDIoaomQNQcsA88c7O9yZ4KMCoOg4Ko40yygg_vbd-E.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("a030f144-8e99-4969-8c82-ac3728e294f1") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/plusjakartasans/v12/LDIoaomQNQcsA88c7O9yZ4KMCoOg4Ko70yygg_vbd-E.woff2) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/plusjakartasans/v12/LDIoaomQNQcsA88c7O9yZ4KMCoOg4Ko50yygg_vbd-E.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/plusjakartasans/v12/LDIoaomQNQcsA88c7O9yZ4KMCoOg4Ko40yygg_vbd-E.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url("a030f144-8e99-4969-8c82-ac3728e294f1") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+</style>
+<style>
+body{margin:0;background:#F6F7FB}
+a{color:#2F5BEA}a:hover{color:#2449C4}
+.app{font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;color:#111827;background:#F6F7FB;min-height:100vh;font-size:15px;line-height:1.5;display:flex;flex-wrap:wrap;align-items:stretch}
+.side{flex:1 1 240px;max-width:260px;background:#FFFFFF;border-right:1px solid #EDEFF4;padding:22px 14px;display:flex;flex-direction:column;gap:4px;box-sizing:border-box}
+.brand{display:flex;align-items:center;gap:10px;padding:0 10px 22px;font-weight:800;font-size:18px;letter-spacing:-0.01em}
+.logo{width:34px;height:34px;border-radius:10px;background:#2F5BEA;display:flex;align-items:center;justify-content:center}
+.nav{display:flex;align-items:center;gap:12px;min-height:44px;padding:0 12px;border-radius:12px;color:#3D4555;font-weight:600;text-decoration:none}
+.nav:hover{background:#F3F5F9;color:#111827}
+.nav.on{background:#EEF2FE;color:#2449C4}
+.demo{margin-top:auto;padding:16px 8px 0;border-top:1px solid #EDEFF4;display:flex;flex-direction:column;gap:10px}
+.demo-l{font-size:11px;font-weight:700;color:#6B7280;letter-spacing:.06em;text-transform:uppercase}
+.seg{display:flex;padding:4px;background:#F1F3F7;border-radius:12px;gap:2px}
+.seg a,.seg button{flex:1;text-align:center;padding:7px 4px;border-radius:9px;font-size:13px;font-weight:600;color:#5B6475;text-decoration:none;border:0;background:transparent;font-family:inherit;cursor:pointer}
+.seg .on{background:#FFFFFF;color:#111827;box-shadow:0 1px 3px rgba(17,24,39,.12)}
+.me{display:flex;align-items:center;gap:10px}
+.av{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0}
+.main{flex:999 1 560px;min-width:0;padding:36px 44px 64px;display:flex;flex-direction:column;gap:24px;box-sizing:border-box;max-width:1120px}
+.h1{margin:0;font-size:30px;font-weight:800;letter-spacing:-0.02em;line-height:1.2}
+.h2{margin:0;font-size:18px;font-weight:800;letter-spacing:-0.01em}
+.sub{margin:6px 0 0;color:#5B6475}
+.small{font-size:13px;color:#5B6475}
+.card{background:#FFFFFF;border:1px solid #EDEFF4;border-radius:20px;padding:24px;box-shadow:0 1px 2px rgba(17,24,39,.04);box-sizing:border-box}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 18px;border-radius:12px;border:0;background:#2F5BEA;color:#FFFFFF;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;box-sizing:border-box}
+.btn:hover{background:#2449C4}
+.btn:disabled{background:#DDE1E9;color:#5B6475;cursor:not-allowed}
+.btn2{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 18px;border-radius:12px;border:1px solid #D9DEE7;background:#FFFFFF;color:#111827;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;box-sizing:border-box}
+.tab{min-height:44px;padding:0 16px;border-radius:12px;border:0;background:transparent;font-family:inherit;font-size:15px;font-weight:700;color:#5B6475;cursor:pointer}
+.tab.on{background:#FFFFFF;color:#111827;box-shadow:0 1px 3px rgba(17,24,39,.1)}
+.select{min-height:44px;padding:0 12px;border:1px solid #D5DAE3;border-radius:12px;font-family:inherit;font-size:15px;background:#FFFFFF;color:#111827}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:999px;font-size:13px;font-weight:700;white-space:nowrap}
+.ok{background:#E6F6EF;color:#0E6B4C}.wait{background:#FFF4E2;color:#8A4B00}.neutral{background:#F1F3F7;color:#3D4555}.info{background:#EEF2FE;color:#2449C4}
+.feat{display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border-radius:16px}
+.item{display:flex;align-items:center;gap:14px;padding:14px 0;border-top:1px solid #F0F2F6;flex-wrap:wrap}
+table.t{width:100%;border-collapse:collapse}
+.t th{text-align:center;font-size:12px;font-weight:700;color:#5B6475;padding:10px 8px;border-bottom:1px solid #EDEFF4}
+.t th:first-child{text-align:left}
+.t td{padding:14px 8px;border-bottom:1px solid #F0F2F6;font-size:14px;text-align:center}
+.t td:first-child{text-align:left;font-weight:600}
+@media (max-width:720px){.main{padding:24px 16px 48px}.side{max-width:none}}
+.tip{position:relative;display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;margin-left:8px;border-radius:50%;border:0;background:#E9ECF2;color:#3D4555;font-family:Georgia,serif;font-style:italic;font-size:12px;font-weight:700;line-height:1;cursor:help;vertical-align:middle;padding:0;flex-shrink:0;letter-spacing:0}
+.tip:hover,.tip:focus-visible{background:#2F5BEA;color:#FFFFFF;outline:none}
+.tip .tt{position:absolute;top:calc(100% + 10px);left:50%;transform:translateX(-50%);width:max-content;max-width:280px;padding:10px 12px;border-radius:12px;background:#111827;color:#FFFFFF;font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-style:normal;font-size:13px;font-weight:500;line-height:1.45;text-align:left;text-transform:none;white-space:normal;opacity:0;visibility:hidden;transition:opacity .15s;pointer-events:none;z-index:30;box-shadow:0 8px 24px rgba(17,24,39,.18)}
+.tip:hover .tt,.tip:focus .tt{opacity:1;visibility:visible}
+.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);display:flex;align-items:center;gap:12px;max-width:calc(100% - 32px);padding:14px 16px 14px 18px;border-radius:16px;background:#111827;color:#FFFFFF;font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:14px;font-weight:600;box-shadow:0 12px 32px rgba(17,24,39,.25);z-index:60;box-sizing:border-box}
+.toast-act{border:0;background:transparent;color:#A9BEFF;font-family:inherit;font-size:14px;font-weight:800;cursor:pointer;padding:6px 8px;border-radius:8px}
+.toast-act:hover{background:rgba(255,255,255,.12)}
+</style>
+</helmet>
+<div class="app">
+  <aside class="side">
+    <div class="brand">
+      <span class="logo"><svg width="18" height="18" sc-camel-view-box="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 0 0-14.3-4.9L4 8"></path><path d="M4 3v5h5"></path><path d="M4 13a8 8 0 0 0 14.3 4.9L20 16"></path><path d="M20 21v-5h-5"></path></svg></span>
+      Revezza
+    </div>
+    <nav aria-label="Menu" style="display: flex; flex-direction: column; gap: 4px">
+      <a class="nav" href="Painel.dc.html"><svg width="20" height="20" sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="9" rx="2"></rect><rect x="14" y="3" width="7" height="5" rx="2"></rect><rect x="14" y="12" width="7" height="9" rx="2"></rect><rect x="3" y="16" width="7" height="5" rx="2"></rect></svg>Painel</a>
+      <a class="nav" href="Calendario.dc.html"><svg width="20" height="20" sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg>Calendário</a>
+      <a class="nav" href="Fluxo.dc.html"><svg width="20" height="20" sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="6" r="3"></circle><circle cx="18" cy="18" r="3"></circle><path d="M6 9v3a3 3 0 0 0 3 3h6"></path></svg>Etapas do pedido</a>
+      <a class="nav on" href="Configuracoes.dc.html"><svg width="20" height="20" sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"></path></svg>Configurações</a>
+      <a class="nav" href="MinhasAdmin.dc.html"><svg width="20" height="20" sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21a8 8 0 0 1 16 0"></path></svg>Meus pedidos</a>
+    </nav>
+    <div class="demo">
+      <span class="demo-l">Ver demonstração como</span>
+      <div class="seg"><a href="Main.dc.html">Colaborador</a><a href="Gestor.dc.html">Gestor</a><a class="on" href="Painel.dc.html">Admin</a></div>
+      <div class="me"><span class="av" style="background: #F7E8F4; color: #9D2F86">ML</span><span><strong style="display: block; font-size: 14px">Marina Lopes</strong><span class="small">Administradora</span></span></div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div>
+      <h1 class="h1">Configurações <button type="button" class="tip" aria-label="Conexão com o Bitrix24, quem vê o quê e os tipos de ausência."><span aria-hidden="true">i</span><span class="tt" aria-hidden="true">Conexão com o Bitrix24, quem vê o quê e os tipos de ausência.</span></button></h1>
+    </div>
+
+    <div role="tablist" aria-label="Seções" style="display: flex; flex-wrap: wrap; gap: 4px; padding: 4px; background: #ECEFF4; border-radius: 14px; align-self: flex-start">
+      <sc-for list="{{tabs}}" as="t" hint-placeholder-count="4">
+        <button role="tab" class="tab {{t.cls}}" aria-selected="{{t.sel}}" sc-camel-on-click="{{t.go}}">{{t.n}}</button>
+      </sc-for>
+    </div>
+
+    <sc-if value="{{tB}}" hint-placeholder-val="{{true}}">
+      <section aria-labelledby="b24" class="card" style="display: flex; flex-direction: column; gap: 20px">
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; align-items: center">
+          <div>
+            <h2 id="b24" class="h2">Bitrix24</h2>
+            <p class="small" style="margin: 2px 0 0">empresa-exemplo.bitrix24.com.br</p>
+          </div>
+          <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap">
+            <label for="plano" class="small" style="font-weight: 700">Plano</label>
+            <sc-raw-select id="plano" class="select" value="{{plano}}" sc-camel-on-change="{{onPlano}}">
+              <option value="sem">Sem integração (Free ou Essencial)</option>
+              <option value="vibe">Basic ou Standard Vibe+</option>
+              <option value="pro">Professional Vibe+ ou superior</option>
+            </sc-raw-select>
+          </div>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+          <sc-for list="{{recursos}}" as="r" hint-placeholder-count="4">
+            <div class="feat" style="background: {{r.bg}}">
+              <svg width="22" height="22" sc-camel-view-box="0 0 24 24" fill="none" stroke="{{r.ic}}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="{{r.icon}}"></path></svg>
+              <div><div style="font-weight: 800; color: {{r.fg}}">{{r.n}}</div><div class="small">{{r.d}}</div></div>
+            </div>
+          </sc-for>
+        </div>
+        <sc-if value="{{temSync}}" hint-placeholder-val="{{true}}">
+          <div style="border-top: 1px solid #F0F2F6; padding-top: 18px">
+            <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px">
+              <span style="font-weight: 800">Últimas sincronizações</span>
+              <button class="btn2" sc-camel-on-click="{{sync}}">{{syncTxt}}</button>
+            </div>
+            <sc-for list="{{log}}" as="l" hint-placeholder-count="3">
+              <div class="item">
+                <span class="pill {{l.cls}}">{{l.dir}}</span>
+                <span style="flex: 1 1 260px; min-width: 0; font-size: 14px">{{l.reg}}</span>
+                <span class="small">{{l.q}}</span>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+      </section>
+      <section class="card" style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; align-items: center">
+        <div>
+          <h2 class="h2">Google Agenda<button type="button" class="tip" aria-label="Avisa quem marcar reunião com alguém que estará ausente."><span aria-hidden="true">i</span><span class="tt" aria-hidden="true">Avisa quem marcar reunião com alguém que estará ausente.</span></button></h2>
+        </div>
+        <span class="pill ok">Conectado</span>
+      </section>
+    </sc-if>
+
+    <sc-if value="{{tP}}" hint-placeholder-val="{{false}}">
+      <section aria-labelledby="pp" class="card" style="padding: 24px 24px 8px">
+        <h2 id="pp" class="h2" style="margin-bottom: 12px">Quem vê o quê<button type="button" class="tip" aria-label="Os perfis seguem as Permissões de Acesso do Bitrix24. Gestores vêm da Estrutura da Empresa."><span aria-hidden="true">i</span><span class="tt" aria-hidden="true">Os perfis seguem as Permissões de Acesso do Bitrix24. Gestores vêm da Estrutura da Empresa.</span></button></h2>
+        <div style="overflow-x: auto">
+          <sc-raw-table class="t" style="min-width: 640px">
+            <sc-raw-thead><sc-raw-tr><sc-raw-th scope="col">O que pode fazer</sc-raw-th><sc-raw-th scope="col">Colaborador</sc-raw-th><sc-raw-th scope="col">Gestor</sc-raw-th><sc-raw-th scope="col">Administrador</sc-raw-th></sc-raw-tr></sc-raw-thead>
+            <sc-raw-tbody>
+              <sc-for list="{{matriz}}" as="m" hint-placeholder-count="6">
+                <sc-raw-tr><sc-raw-td>{{m.f}}</sc-raw-td><sc-for list="{{m.c}}" as="c" hint-placeholder-count="3"><sc-raw-td style="color: {{c.fg}}; font-weight: 700">{{c.t}}</sc-raw-td></sc-for></sc-raw-tr>
+              </sc-for>
+            </sc-raw-tbody>
+          </sc-raw-table>
+        </div>
+      </section>
+
+      <section aria-labelledby="ac" class="card" style="display: flex; flex-direction: column; gap: 4px">
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 8px">
+          <h2 id="ac" class="h2">Gestores com acesso a outras equipes<button type="button" class="tip" aria-label="Libere para um gestor ver, ou também aprovar, os pedidos, o calendário e a disponibilidade da equipe de outro gestor. Útil para substituições, diretorias e equipes que trabalham juntas."><span aria-hidden="true">i</span><span class="tt" aria-hidden="true">Libere para um gestor ver, ou também aprovar, os pedidos, o calendário e a disponibilidade da equipe de outro gestor. Útil para substituições, diretorias e equipes que trabalham juntas.</span></button></h2>
+          <button class="btn" sc-camel-on-click="{{novoAcesso}}" disabled="{{aAberto}}">+ Dar acesso</button>
+        </div>
+        <sc-if value="{{aAberto}}" hint-placeholder-val="{{false}}">
+          <div style="padding: 20px; border-radius: 16px; background: #F6F7FB; display: flex; flex-direction: column; gap: 16px; margin-bottom: 8px">
+            <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px">
+              <div style="display: flex; flex-direction: column; gap: 6px">
+                <label for="ag" style="font-weight: 700; font-size: 14px">Gestor</label>
+                <sc-raw-select id="ag" class="select" value="{{aForm.gestor}}" sc-camel-on-change="{{onAGestor}}">
+                  <sc-for list="{{gestoresOpts}}" as="g" hint-placeholder-count="3"><option value="{{g.id}}">{{g.label}}</option></sc-for>
+                </sc-raw-select>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 6px">
+                <label for="an" style="font-weight: 700; font-size: 14px">O que pode fazer</label>
+                <sc-raw-select id="an" class="select" value="{{aForm.nivel}}" sc-camel-on-change="{{onANivel}}">
+                  <option value="ver">Só visualizar</option>
+                  <option value="aprovar">Visualizar e aprovar</option>
+                </sc-raw-select>
+              </div>
+            </div>
+            <fieldset style="border: 0; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 10px; align-items: center">
+              <legend style="font-weight: 700; font-size: 14px; margin-bottom: 8px">Equipes que poderá acessar</legend>
+              <sc-for list="{{equipesOpts}}" as="e" hint-placeholder-count="2">
+                <label style="display: inline-flex; gap: 8px; align-items: center; min-height: 44px; padding: 0 14px; border-radius: 12px; border: 1px solid {{e.border}}; background: #FFFFFF; cursor: pointer; font-weight: 600">
+                  <input type="checkbox" checked="{{e.on}}" sc-camel-on-change="{{e.toggle}}" style="width: 18px; height: 18px; accent-color: #2F5BEA">{{e.label}}
+                </label>
+              </sc-for>
+            </fieldset>
+            <div style="display: flex; gap: 10px; justify-content: flex-end">
+              <button class="btn2" sc-camel-on-click="{{cancelarAcesso}}">Cancelar</button>
+              <button class="btn" sc-camel-on-click="{{salvarAcesso}}" disabled="{{aSemEquipe}}">Dar acesso</button>
+            </div>
+          </div>
+        </sc-if>
+        <sc-for list="{{acessos}}" as="x" hint-placeholder-count="1">
+          <div class="item">
+            <span class="av" style="background: #E6F6EF; color: #0E6B4C">{{x.ini}}</span>
+            <div style="flex: 1 1 240px; min-width: 0">
+              <div style="font-weight: 800">{{x.nome}}</div>
+              <div class="small">Acessa: {{x.equipes}}</div>
+            </div>
+            <span class="pill {{x.cls}}">{{x.nivelTxt}}</span>
+            <button class="btn2" sc-camel-on-click="{{x.remover}}" aria-label="Remover acesso de {{x.nome}}" style="min-height: 40px; padding: 0 14px; color: #A92B22">Remover</button>
+          </div>
+        </sc-for>
+        <sc-if value="{{semAcessos}}" hint-placeholder-val="{{false}}"><p class="small" style="margin: 4px 0 0">Nenhum gestor tem acesso extra. Cada um vê só a própria equipe.</p></sc-if>
+      </section>
+    </sc-if>
+
+    <sc-if value="{{tT}}" hint-placeholder-val="{{false}}">
+      <section aria-labelledby="tt" class="card" style="display: flex; flex-direction: column; gap: 4px">
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 8px">
+          <div>
+            <h2 id="tt" class="h2">Tipos de ausência<button type="button" class="tip" aria-label="A lista começa com os tipos padrão do Gráfico de Ausência do Bitrix24. Você pode editar, remover e criar novos."><span aria-hidden="true">i</span><span class="tt" aria-hidden="true">A lista começa com os tipos padrão do Gráfico de Ausência do Bitrix24. Você pode editar, remover e criar novos.</span></button></h2>
+          </div>
+          <button class="btn" sc-camel-on-click="{{novo}}" disabled="{{formAberto}}">+ Novo tipo</button>
+        </div>
+
+        <sc-if value="{{formAberto}}" hint-placeholder-val="{{false}}">
+          <div style="padding: 20px; border-radius: 16px; background: #F6F7FB; display: flex; flex-direction: column; gap: 16px; margin-bottom: 8px">
+            <strong style="font-size: 16px">{{formTitulo}}</strong>
+            <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px">
+              <div style="display: flex; flex-direction: column; gap: 6px">
+                <label for="tn" style="font-weight: 700; font-size: 14px">Nome que as pessoas veem</label>
+                <input id="tn" class="select" value="{{form.nome}}" sc-camel-on-change="{{onNome}}" placeholder="Ex.: Folga de aniversário">
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 6px">
+                <label for="tb" style="font-weight: 700; font-size: 14px">No Gráfico de Ausência do Bitrix24, entra como</label>
+                <sc-raw-select id="tb" class="select" value="{{form.b24}}" sc-camel-on-change="{{onB24}}">
+                  <sc-for list="{{b24opts}}" as="o" hint-placeholder-count="8"><option value="{{o}}">{{o}}</option></sc-for>
+                </sc-raw-select>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 6px">
+                <label for="tq" style="font-weight: 700; font-size: 14px">Quem pode pedir</label>
+                <sc-raw-select id="tq" class="select" value="{{form.quem}}" sc-camel-on-change="{{onQuem}}">
+                  <option value="todos">Todas as pessoas</option>
+                  <option value="admin">Só o administrador lança</option>
+                </sc-raw-select>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 6px">
+                <label for="ts" style="font-weight: 700; font-size: 14px">Saldo</label>
+                <sc-raw-select id="ts" class="select" value="{{form.saldo}}" sc-camel-on-change="{{onSaldo}}">
+                  <option value="ferias">Usa saldo de férias</option>
+                  <option value="nao">Não usa saldo</option>
+                </sc-raw-select>
+              </div>
+            </div>
+            <div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: center">
+              <div role="radiogroup" aria-label="Ícone" style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap; flex-basis: 100%">
+                <span style="font-weight: 700; font-size: 14px; margin-right: 4px">Ícone</span>
+                <sc-for list="{{icones}}" as="ic" hint-placeholder-count="11">
+                  <button role="radio" aria-checked="{{ic.sel}}" aria-label="{{ic.nome}}" title="{{ic.nome}}" sc-camel-on-click="{{ic.pick}}" style="width: 40px; height: 40px; border-radius: 12px; background: {{ic.bg}}; border: 2px solid {{ic.ring}}; cursor: pointer; padding: 0; display: inline-flex; align-items: center; justify-content: center"><svg width="20" height="20" sc-camel-view-box="0 0 24 24" fill="none" stroke="#1F2937" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{ic.d}}"></path></svg></button>
+                </sc-for>
+              </div>
+              <div role="radiogroup" aria-label="Cor no calendário" style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap">
+                <span style="font-weight: 700; font-size: 14px; margin-right: 4px">Cor</span>
+                <sc-for list="{{cores}}" as="c" hint-placeholder-count="9">
+                  <button role="radio" aria-checked="{{c.sel}}" aria-label="{{c.nome}}" sc-camel-on-click="{{c.pick}}" style="width: 30px; height: 30px; border-radius: 9px; background: {{c.hex}}; border: 3px solid {{c.ring}}; cursor: pointer; padding: 0"></button>
+                </sc-for>
+              </div>
+              <label style="display: flex; gap: 8px; align-items: center; cursor: pointer; font-size: 14px; font-weight: 600">
+                <input type="checkbox" checked="{{form.anexo}}" sc-camel-on-change="{{onAnexo}}" style="width: 20px; height: 20px; accent-color: #2F5BEA">
+                Pedir anexo (ex.: atestado)
+              </label>
+            </div>
+            <div style="display: flex; gap: 10px; justify-content: flex-end">
+              <button class="btn2" sc-camel-on-click="{{cancelarForm}}">Cancelar</button>
+              <button class="btn" sc-camel-on-click="{{salvarForm}}" disabled="{{semNome}}">Salvar tipo</button>
+            </div>
+          </div>
+        </sc-if>
+
+
+        <sc-for list="{{tipos}}" as="t" hint-placeholder-count="8">
+          <div class="item">
+            <span aria-hidden="true" style="width: 40px; height: 40px; border-radius: 12px; background: {{t.cor}}; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center"><svg width="20" height="20" sc-camel-view-box="0 0 24 24" fill="none" stroke="#1F2937" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{t.icon}}"></path></svg></span>
+            <div style="flex: 1 1 260px; min-width: 0">
+              <div style="font-weight: 800">{{t.nome}} <span class="pill {{t.tagCls}}" style="margin-left: 6px; font-size: 12px; padding: 2px 10px">{{t.tag}}</span></div>
+              <div class="small">No Bitrix24: {{t.b24}} · {{t.quemTxt}} · {{t.saldoTxt}}{{t.anexoTxt}}</div>
+            </div>
+            <div style="display: flex; gap: 8px">
+              <button class="btn2" sc-camel-on-click="{{t.editar}}" aria-label="Editar {{t.nome}}" style="min-height: 40px; padding: 0 14px">Editar</button>
+              <button class="btn2" sc-camel-on-click="{{t.excluir}}" aria-label="Excluir {{t.nome}}" style="min-height: 40px; padding: 0 14px; color: #A92B22">Excluir</button>
+            </div>
+          </div>
+        </sc-for>
+      </section>
+      <section aria-labelledby="rg" class="card" style="display: flex; flex-direction: column; gap: 14px">
+        <h2 id="rg" class="h2">Regras de férias<button type="button" class="tip" aria-label="Padrão da CLT. Confirme com o seu jurídico ou contabilidade."><span aria-hidden="true">i</span><span class="tt" aria-hidden="true">Padrão da CLT. Confirme com o seu jurídico ou contabilidade.</span></button></h2>
+        <sc-for list="{{regras}}" as="r" hint-placeholder-count="3">
+          <label style="display: flex; justify-content: space-between; gap: 16px; align-items: center; cursor: pointer">
+            <span>{{r.t}}</span>
+            <input type="checkbox" checked="{{r.on}}" sc-camel-on-change="{{r.toggle}}" style="width: 22px; height: 22px; accent-color: #2F5BEA; flex-shrink: 0">
+          </label>
+        </sc-for>
+      </section>
+    </sc-if>
+
+    <sc-if value="{{tE}}" hint-placeholder-val="{{false}}">
+      <section aria-labelledby="pe" class="card">
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; align-items: center">
+          <div>
+            <h2 id="pe" class="h2">Pessoas</h2>
+            <p class="small" style="margin: 2px 0 0">{{pessoasResumo}}</p>
+          </div>
+          <div style="display: flex; gap: 10px; flex-wrap: wrap">
+            <button class="btn2">Adicionar pessoa</button>
+            <button class="btn" sc-camel-on-click="{{syncUsers}}" disabled="{{semApi}}">Trazer do Bitrix24</button>
+          </div>
+        </div>
+        <sc-for list="{{pessoas}}" as="p" hint-placeholder-count="5">
+          <div class="item">
+            <span class="av" style="background: #F1F3F7; color: #3D4555">{{p.ini}}</span>
+            <div style="flex: 1 1 200px; min-width: 0"><div style="font-weight: 800">{{p.n}}</div><div class="small">{{p.eq}} · gestor: {{p.g}}</div></div>
+            <span class="pill {{p.cls}}">{{p.o}}</span>
+          </div>
+        </sc-for>
+      </section>
+    </sc-if>
+  </main>
+  <sc-if value="{{toastOn}}" hint-placeholder-val="{{false}}">
+    <div class="toast" role="status" aria-live="polite">
+      <svg width="18" height="18" sc-camel-view-box="0 0 24 24" fill="none" stroke="#6EE7B7" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>
+      <span>{{toastMsg}}</span>
+      <sc-if value="{{toastAct}}" hint-placeholder-val="{{false}}"><button class="toast-act" sc-camel-on-click="{{toastDo}}">{{toastActLbl}}</button></sc-if>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script="" data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:1000}}">
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { tab: 'b', plano: 'pro', synced: false, regras: { a: true, b: true, c: true }, syncFeito: false, edit: null, form: null, removido: null, aForm: null,
+      acessos: [{ id: 'a1', gestor: 'cm', equipes: ['prod'], nivel: 'ver' }],
+      tipos: [
+        { id: 't1', nome: 'Férias anuais', b24: 'Férias anuais', icone: 'umb', cor: '#B9DB6B', quem: 'todos', saldo: 'ferias', anexo: false, padrao: true },
+        { id: 't2', nome: 'Outro', b24: 'Outro', icone: 'sofa', cor: '#7FD3C7', quem: 'todos', saldo: 'nao', anexo: false, padrao: true },
+        { id: 't3', nome: 'Viagem de negócios', b24: 'Viagem de negócios', icone: 'plane', cor: '#E3A8D6', quem: 'todos', saldo: 'nao', anexo: false, padrao: true },
+        { id: 't4', nome: 'Licença por doença', b24: 'Licença por doença', icone: 'thermo', cor: '#F2A27E', quem: 'todos', saldo: 'nao', anexo: true, padrao: true },
+        { id: 't5', nome: 'Licença de maternidade', b24: 'Licença de maternidade', icone: 'stroller', cor: '#A9C4F5', quem: 'todos', saldo: 'nao', anexo: true, padrao: true },
+        { id: 't6', nome: 'Licença sem vencimento', b24: 'Licença sem vencimento', icone: 'hour', cor: '#C3C9D2', quem: 'todos', saldo: 'nao', anexo: false, padrao: true },
+        { id: 't7', nome: 'Ausência sem permissão', b24: 'Ausência sem permissão', icone: 'calx', cor: '#F09A91', quem: 'admin', saldo: 'nao', anexo: false, padrao: true },
+        { id: 't8', nome: 'Calendários pessoais', b24: 'Calendários pessoais', icone: 'calheart', cor: '#E3E6EA', quem: 'admin', saldo: 'nao', anexo: false, padrao: true }
+      ] };
+  }
+  toast(msg, lbl, fn) {
+    var self = this;
+    clearTimeout(this._tt);
+    this.setState({ toast: { msg: msg, lbl: lbl || '', fn: fn || null } });
+    this._tt = setTimeout(function () { self.setState({ toast: null }); }, 4500);
+  }
+  renderVals() {
+    var self = this, S = this.state;
+    var lvl = { sem: 0, vibe: 1, pro: 2 }[S.plano];
+    var CHECK = 'M12 3a9 9 0 1 0 0 18a9 9 0 0 0 0-18zM8 12l3 3 5-6', LOCK = 'M5 11h14v10H5zM8 11V7a4 4 0 0 1 8 0v4';
+    var REC = [
+      ['Pedidos, aprovações e calendário', 'Funcionam em qualquer plano', 0],
+      ['Pessoas e equipes do Bitrix24', 'Trazidas da Estrutura da Empresa', 1],
+      ['Avisos no chat do Bitrix24', 'Cada mudança de etapa chega no chat', 1],
+      ['Gráfico de Ausência sincronizado', 'Aprovou no app, aparece no Bitrix24, e o contrário', 2]
+    ];
+    var PL = ['', 'Precisa do plano Vibe+', 'Precisa do Professional Vibe+'];
+    var Y = { t: 'Sim', fg: '#0E6B4C' }, N = { t: '—', fg: '#9AA1AE' }, E = { t: 'Só a equipe', fg: '#2449C4' }, L = { t: 'Se liberado', fg: '#8A4B00' };
+    var TABS = [['b', 'Bitrix24'], ['p', 'Quem vê o quê'], ['t', 'Tipos de ausência'], ['e', 'Pessoas']];
+    var log = [
+      { cls: 'info', dir: 'Enviado', reg: 'Férias de Bruno Teixeira, 11/01 a 22/01', q: 'hoje, 22:57' },
+      { cls: 'neutral', dir: 'Recebido', reg: 'Férias de Elisa Prado, 25/01 a 05/02', q: 'hoje, 22:41' },
+      { cls: 'neutral', dir: 'Recebido', reg: 'Falta de Otávio Reis, 05/01', q: 'hoje, 18:03' }
+    ];
+    if (S.synced) log.unshift({ cls: 'ok', dir: 'Conferido', reg: 'Tudo igual entre o app e o Bitrix24', q: 'agora' });
+    if (lvl === 1) log = [{ cls: 'neutral', dir: 'Recebido', reg: '38 pessoas e 7 equipes', q: 'hoje, 22:57' }];
+    var RG = [['a', 'Dividir as férias em até 3 partes (uma com pelo menos 14 dias, as outras com pelo menos 5)'], ['b', 'Não começar nos 2 dias antes de feriado ou do fim de semana'], ['c', 'Permitir vender até 1/3 das férias']];
+    var semApi = lvl === 0;
+    var GEST = { cm: ['Carlos Mendes', 'CM', 'tec'], rs: ['Rafael Souza', 'RS', 'prod'], va: ['Vinícius Alves', 'VA', 'com'] };
+    var EQ = { tec: 'Tecnologia', prod: 'Produto', com: 'Comercial' };
+    var setA = function (p) { self.setState({ aForm: Object.assign({}, self.state.aForm, p) }); };
+    var B24 = ['Férias anuais', 'Outro', 'Viagem de negócios', 'Licença por doença', 'Licença de maternidade', 'Licença sem vencimento', 'Ausência sem permissão', 'Calendários pessoais'];
+    var SAL = { ferias: 'usa saldo de férias', nao: 'não usa saldo' };
+    var ICONES = { umb: ['M3 11a9 9 0 0 1 18 0zM7.5 11C7.5 7 9.5 3.8 12 2M16.5 11C16.5 7 14.5 3.8 12 2M12 11l-2.5 9.5M4 21h16', 'Guarda-sol'], sofa: ['M5 10V8a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v2M3 12a2 2 0 0 1 4 0v2h10v-2a2 2 0 0 1 4 0v5H3zM5 17v2M19 17v2', 'Sofá'], plane: ['M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z', 'Avião'], thermo: ['M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0zM12 9v7', 'Termômetro'], stroller: ['M13 3a8 8 0 0 1 8 8h-8zM3 6h2.5l2 7H21a4 4 0 0 1-4 4H9.5M8 21a1.5 1.5 0 1 0 0-3a1.5 1.5 0 0 0 0 3zM18 21a1.5 1.5 0 1 0 0-3a1.5 1.5 0 0 0 0 3z', 'Carrinho de bebê'], hour: ['M6 2h12M6 22h12M17 2v4.2a2 2 0 0 1-.6 1.4L12 12l-4.4-4.4A2 2 0 0 1 7 6.2V2M7 22v-4.2a2 2 0 0 1 .6-1.4L12 12l4.4 4.4a2 2 0 0 1 .6 1.4V22', 'Ampulheta'], calx: ['M8 2v4M16 2v4M4 6h16v15H4zM4 10h16M10 14l4 4M14 14l-4 4', 'Calendário com X'], calheart: ['M8 2v4M16 2v4M4 6h16v15H4zM4 10h16M12 18.5s-3-1.8-3-3.6a1.5 1.5 0 0 1 3-.6a1.5 1.5 0 0 1 3 .6c0 1.8-3 3.6-3 3.6z', 'Calendário com coração'], cake: ['M4 21h16M5 21v-7h14v7M5 14c2 0 2-1.5 3.5-1.5S10.5 14 12 14s2-1.5 3.5-1.5S17 14 19 14M12 10V7M12 3.5c.8.8.8 1.7 0 2.5c-.8-.8-.8-1.7 0-2.5z', 'Bolo'], book: ['M4 4h6a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H4zM20 4h-6a3 3 0 0 0-3 3v13a2 2 0 0 1 2-2h7z', 'Livro'], heart: ['M12 21s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 5.5-7 10-7 10z', 'Coração'] };
+    var CORES = [['#B9DB6B', 'Verde-limão'], ['#7FD3C7', 'Verde-água'], ['#E3A8D6', 'Rosa'], ['#F2A27E', 'Laranja'], ['#A9C4F5', 'Azul'], ['#C3C9D2', 'Cinza'], ['#F09A91', 'Vermelho'], ['#F5C371', 'Amarelo'], ['#9FB4FF', 'Lilás']];
+    var setF = function (p) { self.setState({ form: Object.assign({}, self.state.form, p) }); };
+    var TS = this.state.toast;
+    return {
+      toastOn: !!TS, toastMsg: TS ? TS.msg : '', toastAct: !!(TS && TS.lbl), toastActLbl: TS ? TS.lbl : '',
+      toastDo: function () { var fn = TS && TS.fn; self.setState({ toast: null }); if (fn) fn(); },
+      tabs: TABS.map(function (t) { var on = S.tab === t[0]; return { n: t[1], sel: on, cls: on ? 'on' : '', go: function () { self.setState({ tab: t[0] }); } }; }),
+      tB: S.tab === 'b', tP: S.tab === 'p', tT: S.tab === 't', tE: S.tab === 'e',
+      plano: S.plano, onPlano: function (e) { self.setState({ plano: e.target.value }); },
+      recursos: REC.map(function (r) { var ok = lvl >= r[2]; return { n: r[0], d: ok ? '' : PL[r[2]], icon: ok ? CHECK : LOCK, ic: ok ? '#0E6B4C' : '#6B7280', fg: ok ? '#111827' : '#5B6475', bg: ok ? '#F2FAF6' : '#F6F7FB' }; }),
+      temSync: lvl >= 1, log: log, sync: function () { self.setState({ synced: true }); self.toast('Tudo igual entre o app e o Bitrix24.'); }, syncTxt: S.synced ? 'Sincronizado agora' : 'Sincronizar agora',
+      matriz: [
+        ['Pedir e acompanhar as próprias ausências', [Y, Y, Y]],
+        ['Ver o calendário de ausências', [N, E, Y]],
+        ['Ver ou aprovar equipes de outros gestores', [N, L, Y]],
+        ['Aprovar pedidos', [N, E, Y]],
+        ['Ver disponibilidade e painel', [N, E, Y]],
+        ['Lançar ausência para outra pessoa', [N, N, Y]],
+        ['Mudar etapas, tipos e regras', [N, N, Y]]
+      ].map(function (r) { return { f: r[0], c: r[1] }; }),
+      tipos: S.tipos.map(function (t) {
+        return { nome: t.nome, b24: t.b24, cor: t.cor, icon: ICONES[t.icone || 'sofa'][0], tag: t.padrao ? 'Padrão do Bitrix24' : 'Criado por você', tagCls: t.padrao ? 'info' : 'neutral',
+          quemTxt: t.quem === 'todos' ? 'todos podem pedir' : 'só o administrador lança', saldoTxt: SAL[t.saldo], anexoTxt: t.anexo ? ' · pede anexo' : '',
+          editar: function () { self.setState({ edit: t.id, form: Object.assign({}, t), removido: null }); },
+          excluir: function () { var i = self.state.tipos.findIndex(function (x) { return x.id === t.id; }); self.setState({ tipos: self.state.tipos.filter(function (x) { return x.id !== t.id; }), removido: null, edit: null, form: null }); self.toast(t.nome + ' saiu da lista do app.', 'Desfazer', function () { var l = self.state.tipos.slice(); l.splice(i, 0, t); self.setState({ tipos: l }); }); } };
+      }),
+      acessos: S.acessos.map(function (x, i) {
+        return { nome: GEST[x.gestor][0], ini: GEST[x.gestor][1], equipes: x.equipes.map(function (e) { return EQ[e]; }).join(', '),
+          nivelTxt: x.nivel === 'ver' ? 'Só visualizar' : 'Visualizar e aprovar', cls: x.nivel === 'ver' ? 'neutral' : 'info',
+          remover: function () { self.setState({ acessos: self.state.acessos.filter(function (y) { return y.id !== x.id; }) }); self.toast('Acesso de ' + GEST[x.gestor][0] + ' removido.', 'Desfazer', function () { var l = self.state.acessos.slice(); l.splice(i, 0, x); self.setState({ acessos: l }); }); } };
+      }),
+      semAcessos: S.acessos.length === 0, aAberto: !!S.aForm,
+      aForm: S.aForm || { gestor: 'cm', nivel: 'ver', equipes: [] },
+      gestoresOpts: Object.keys(GEST).map(function (k) { return { id: k, label: GEST[k][0] + ' · ' + EQ[GEST[k][2]] }; }),
+      equipesOpts: S.aForm ? Object.keys(EQ).filter(function (k) { return k !== GEST[S.aForm.gestor][2]; }).map(function (k) {
+        var on = S.aForm.equipes.indexOf(k) > -1;
+        return { label: EQ[k], on: on, border: on ? '#2F5BEA' : '#D9DEE7', toggle: function () { var l = self.state.aForm.equipes.slice(), i = l.indexOf(k); if (i > -1) l.splice(i, 1); else l.push(k); setA({ equipes: l }); } };
+      }) : [],
+      aSemEquipe: !(S.aForm && S.aForm.equipes.length),
+      onAGestor: function (e) { setA({ gestor: e.target.value, equipes: [] }); }, onANivel: function (e) { setA({ nivel: e.target.value }); },
+      novoAcesso: function () { self.setState({ aForm: { gestor: 'va', nivel: 'ver', equipes: [] } }); },
+      cancelarAcesso: function () { self.setState({ aForm: null }); },
+      salvarAcesso: function () { var fm = self.state.aForm; self.setState({ acessos: self.state.acessos.concat([Object.assign({ id: 'a' + Date.now() }, fm)]), aForm: null }); self.toast(GEST[fm.gestor][0] + ' agora acessa ' + fm.equipes.map(function (e) { return EQ[e]; }).join(' e ') + '.'); },
+      formAberto: !!S.form, formTitulo: S.edit === 'novo' ? 'Novo tipo de ausência' : 'Editar tipo',
+      form: S.form || { nome: '', b24: 'Outro', quem: 'todos', saldo: 'nao', anexo: false },
+      b24opts: B24, semNome: !(S.form && S.form.nome.trim()),
+      icones: Object.keys(ICONES).map(function (k) { var sel = !!S.form && S.form.icone === k; return { d: ICONES[k][0], nome: ICONES[k][1], sel: sel, bg: sel ? (S.form.cor || '#EEF2FE') : '#FFFFFF', ring: sel ? '#111827' : '#D9DEE7', pick: function () { setF({ icone: k }); } }; }),
+      cores: CORES.map(function (c) { var sel = !!S.form && S.form.cor === c[0]; return { hex: c[0], nome: c[1], sel: sel, ring: sel ? '#111827' : '#FFFFFF', pick: function () { setF({ cor: c[0] }); } }; }),
+      onNome: function (e) { setF({ nome: e.target.value }); }, onB24: function (e) { setF({ b24: e.target.value }); },
+      onQuem: function (e) { setF({ quem: e.target.value }); }, onSaldo: function (e) { setF({ saldo: e.target.value }); },
+      onAnexo: function () { setF({ anexo: !self.state.form.anexo }); },
+      novo: function () { self.setState({ edit: 'novo', removido: null, form: { nome: '', b24: 'Outro', icone: 'cake', cor: '#9FB4FF', quem: 'todos', saldo: 'nao', anexo: false } }); },
+      cancelarForm: function () { self.setState({ edit: null, form: null }); },
+      salvarForm: function () {
+        var st = self.state, fm = Object.assign({}, st.form, { nome: st.form.nome.trim() });
+        var lista = st.edit === 'novo' ? st.tipos.concat([Object.assign(fm, { id: 'n' + Date.now(), padrao: false })]) : st.tipos.map(function (x) { return x.id === st.edit ? Object.assign({}, x, fm) : x; });
+        self.setState({ tipos: lista, edit: null, form: null }); self.toast('Tipo salvo.');
+      },
+      temDesfazer: !!S.removido, removidoNome: S.removido ? S.removido.t.nome : '',
+      desfazer: function () { var rm = self.state.removido, l = self.state.tipos.slice(); l.splice(rm.i, 0, rm.t); self.setState({ tipos: l, removido: null }); },
+      regras: RG.map(function (r) { return { t: r[1], on: !!S.regras[r[0]], toggle: function () { var g = Object.assign({}, self.state.regras); g[r[0]] = !g[r[0]]; self.setState({ regras: g }); } }; }),
+      semApi: semApi, syncFeito: S.syncFeito && !semApi, syncUsers: function () { self.setState({ syncFeito: true }); self.toast('Pronto! 2 pessoas novas e 3 mudanças de equipe atualizadas.'); },
+      pessoasResumo: semApi ? 'Sem integração: adicione as pessoas aqui no app.' : '38 pessoas · 36 vieram do Bitrix24',
+      pessoas: [
+        ['AR', 'Ana Ribeiro', 'Tecnologia', 'Carlos Mendes', 'Bitrix24'], ['PF', 'Paula Freitas', 'Produto e Tecnologia', 'Rafael Souza e Carlos Mendes', 'Bitrix24'],
+        ['BR', 'Bianca Rocha', 'Comercial', 'Vinícius Alves', 'Bitrix24'], ['PS', 'Pedro Santana', 'Comercial', 'Vinícius Alves', 'Adicionado no app'],
+        ['LD', 'Lívia Duarte', 'Tecnologia', 'Carlos Mendes', 'Adicionado no app']
+      ].map(function (p) { var o = semApi ? 'Adicionado no app' : p[4]; return { ini: p[0], n: p[1], eq: p[2], g: p[3], o: o, cls: o === 'Bitrix24' ? 'info' : 'neutral' }; })
+    };
+  }
+}
+</script>
+
+
+</body></html>

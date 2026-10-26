@@ -25,6 +25,13 @@ const CHAVES_SENSIVEIS = [
   "authorization",
   "apikey",
   "api_key",
+  // Ausencias: texto livre pode conter dado de saude.
+  "motivo",
+  "justificativa",
+  "motivoprivado",
+  "motivo_privado",
+  "motivodecisao",
+  "motivo_decisao",
 ];
 
 /** Remove recursivamente campos sensiveis antes de serializar. */

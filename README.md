@@ -132,11 +132,33 @@ por instabilidade do portal.
 export ONNIRA_API_KEY=onnira_sk_...          # nunca comitar
 
 node scripts/onnira-deploy.mjs me            # confere a chave e a licenca
+node scripts/onnira-deploy.mjs modelos       # lista modelos habilitados para sua chave
 node scripts/onnira-deploy.mjs criar         # primeiro deploy
 node scripts/onnira-deploy.mjs status <ID>   # DEPLOYING | RUNNING | FAILED
 node scripts/onnira-deploy.mjs logs <ID>
 node scripts/onnira-deploy.mjs atualizar <ID>
 ```
+
+## Spike Bitrix24 (gate antes do domínio)
+
+```bash
+# somente leitura (padrão)
+BITRIX_TEST_WEBHOOK="https://SEU-PORTAL.bitrix24.com.br/rest/1/CODIGO/" \
+  node scripts/spike-bitrix.mjs
+
+# opcional: cria e remove um evento de teste 'absent'
+BITRIX_TEST_WEBHOOK="https://SEU-PORTAL.bitrix24.com.br/rest/1/CODIGO/" \
+  node scripts/spike-bitrix.mjs --permitir-escrita
+```
+
+Saída em `spike/AAAA-MM-DD-HHmm/`:
+- `evidencias.md` (tabela por endpoint, veredito, limitações, decisão)
+- `resultados.json` (detalhe bruto redigido)
+
+Regras do script:
+- não imprime nem grava webhook/token;
+- dados de teste apenas fictícios;
+- sem `--permitir-escrita`, nenhuma mutação no portal.
 
 O ZIP enviado exclui `node_modules`, `.next`, `.git`, `data/` e qualquer
 `.env` — nenhum segredo ou dado de cliente sai da maquina.

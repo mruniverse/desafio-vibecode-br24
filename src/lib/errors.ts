@@ -14,6 +14,10 @@ export type CodigoErro =
   | "LIMITE_API"
   | "PORTAL_INDISPONIVEL"
   | "RESPOSTA_INVALIDA"
+  | "VALIDACAO"
+  | "SALDO_INSUFICIENTE"
+  | "TRANSICAO_INVALIDA"
+  | "NAO_ENCONTRADO"
   | "ERRO_INTERNO";
 
 const MENSAGENS: Record<CodigoErro, string> = {
@@ -31,6 +35,12 @@ const MENSAGENS: Record<CodigoErro, string> = {
     "Nao conseguimos falar com o seu portal Bitrix24 agora. Verifique a conexao e tente de novo.",
   RESPOSTA_INVALIDA:
     "O Bitrix24 respondeu em um formato inesperado. Registramos o ocorrido para analise.",
+  VALIDACAO: "Alguns dados informados nao sao validos. Revise e tente de novo.",
+  SALDO_INSUFICIENTE:
+    "O saldo disponivel nao cobre este periodo.",
+  TRANSICAO_INVALIDA:
+    "Este pedido nao pode mudar para esse estado agora.",
+  NAO_ENCONTRADO: "Nao encontramos o que voce procura.",
   ERRO_INTERNO:
     "Algo deu errado do nosso lado. Registramos o ocorrido; tente novamente em instantes.",
 };
@@ -70,6 +80,13 @@ function statusPadrao(codigo: CodigoErro): number {
       return 401;
     case "SEM_PERMISSAO":
       return 403;
+    case "VALIDACAO":
+      return 422;
+    case "SALDO_INSUFICIENTE":
+    case "TRANSICAO_INVALIDA":
+      return 409;
+    case "NAO_ENCONTRADO":
+      return 404;
     case "LIMITE_API":
       return 429;
     case "PORTAL_INDISPONIVEL":
