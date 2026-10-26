@@ -6,7 +6,18 @@
 import { z } from "zod";
 import { MAX_DIAS_INTERVALO } from "./erros";
 
-const dataIso = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "data invalida");
+function dataReal(v: string): boolean {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(v);
+  if (!m) return false;
+  const d = new Date(Date.UTC(Number(m[1]), Number(m[2]) - 1, Number(m[3])));
+  return (
+    d.getUTCFullYear() === Number(m[1]) &&
+    d.getUTCMonth() === Number(m[2]) - 1 &&
+    d.getUTCDate() === Number(m[3])
+  );
+}
+
+const dataIso = z.string().refine(dataReal, "data invalida");
 const id = z.coerce.number().int().positive();
 
 function diasEntre(a: string, b: string): number {
@@ -37,11 +48,23 @@ export const decidirPedidoSchema = z
     decisao: z.enum(["aprovar", "recusar"]),
     motivoDecisao: z.string().trim().min(10).max(500).optional(),
     sugestao: z.object({ inicio: dataIso, fim: dataIso }).strict().optional(),
+    /** Controle otimista: versao do pedido que o gestor viu. */
+    versao: z.number().int().min(0),
+    /** Exigido quando o recalculo de diasUteis na aprovacao difere do congelado. */
+    confirmarRecalculo: z.boolean().optional(),
   })
   .strict()
   .refine((v) => v.decisao === "aprovar" || !!v.motivoDecisao, {
     message: "recusa exige motivo",
     path: ["motivoDecisao"],
+  })
+  .refine((v) => !v.sugestao || v.decisao === "recusar", {
+    message: "sugestao so com recusa",
+    path: ["sugestao"],
+  })
+  .refine((v) => !v.sugestao || v.sugestao.inicio <= v.sugestao.fim, {
+    message: "sugestao com fim anterior ao inicio",
+    path: ["sugestao"],
   });
 
 export const creditarSchema = z

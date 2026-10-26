@@ -6,6 +6,11 @@
  * entram por parametro. Sem `enum` (strip-types): uniao de strings.
  */
 
+/** Rotulo publico unico de tipo sensivel (DTOs, calendario, indicadores). */
+export const ROTULO_PUBLICO_SENSIVEL = "Ausência";
+/** Nome do evento no calendario do Bitrix. Nunca o tipo real. */
+export const NOME_EVENTO_BITRIX = "Ausente";
+
 export type DataISO = string; // YYYY-MM-DD
 export type InstanteISO = string; // YYYY-MM-DDTHH:MM:SS.sssZ
 
@@ -56,14 +61,17 @@ export interface Pessoa {
   bitrixUserId?: number;
 }
 
+/** Pedido.id e Lancamento.id: INTEGER AUTOINCREMENT. Pessoa/Equipe/Tipo.id: chave natural da seed. */
 export interface Pedido {
-  id: string;
+  id: number;
   pessoaId: string;
   tipoId: string;
   inicio: DataISO;
   fim: DataISO;
   /** Congelado na criacao, calculado no servidor. */
   diasUteis: number;
+  /** Debito por ano de competencia (pedido que cruza o ano divide). Congelado na criacao. */
+  diasDebitoPorAno: Record<string, number>;
   status: StatusPedido;
   sincronizacao: StatusSincronizacao;
   /** Visivel ao gestor. Proibida em tipo sensivel. */
@@ -77,6 +85,9 @@ export interface Pedido {
   criadoEm: InstanteISO;
   decididoPor?: string;
   decididoEm?: InstanteISO;
+  /** Dia a partir do qual o pedido deixa de contar (debito so ate canceladoEm-1). */
+  canceladoEm?: DataISO;
+  canceladoPor?: string;
   bitrixEventId?: string;
   ownerId?: number;
   secao?: number;
@@ -85,8 +96,10 @@ export interface Pedido {
 
 /** Credito ou ajuste. O debito e DERIVADO dos pedidos, nao persistido. */
 export interface Lancamento {
-  id: string;
+  id: number;
   pessoaId: string;
+  /** Ano de competencia do credito. */
+  ano: number;
   carteira: Carteira;
   tipo: "credito" | "ajuste";
   dias: number;

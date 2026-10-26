@@ -13,6 +13,12 @@ const schema = z.object({
   BITRIX_CLIENT_SECRET: z.string().optional(),
   DATABASE_PATH: z.string().default("./data/app.db"),
   LOG_LEVEL: z.enum(["debug", "info", "warn", "error"]).default("info"),
+  // Ausencias: modo demonstracao (identidade nao verificada). Desligado por padrao.
+  MODO_DEMO: z.enum(["0", "1"]).default("0"),
+  // Segredo para reprocessar a sincronizacao via POST /api/ausencias/sincronizar.
+  SYNC_SECRET: z.string().optional(),
+  // Escrita no calendario do portal REAL (so em portal marcado como teste).
+  BITRIX_ESCRITA: z.enum(["0", "1"]).default("0"),
 });
 
 export type Env = z.infer<typeof schema>;
@@ -33,6 +39,9 @@ export function getEnv(): Env {
     BITRIX_CLIENT_SECRET: process.env.BITRIX_CLIENT_SECRET,
     DATABASE_PATH: process.env.DATABASE_PATH,
     LOG_LEVEL: process.env.LOG_LEVEL,
+    MODO_DEMO: process.env.MODO_DEMO || undefined,
+    SYNC_SECRET: process.env.SYNC_SECRET || undefined,
+    BITRIX_ESCRITA: process.env.BITRIX_ESCRITA || undefined,
   });
 
   if (!parsed.success) {
