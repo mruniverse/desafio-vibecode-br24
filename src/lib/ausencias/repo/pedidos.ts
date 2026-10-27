@@ -45,6 +45,7 @@ interface LinhaPedido {
   fim: string;
   dias_uteis: number;
   dias_debito_por_ano: string;
+  dias_consumidos: string | null;
   status: StatusPedido;
   sincronizacao: StatusSincronizacao;
   justificativa: string | null;
@@ -80,6 +81,7 @@ function paraPedido(r: LinhaPedido, mostrarMotivoPrivado: boolean): Pedido {
     criadoEm: r.criado_em,
     versao: r.versao,
   };
+  if (r.dias_consumidos !== null) p.diasConsumidos = JSON.parse(r.dias_consumidos) as DataISO[];
   if (r.justificativa !== null) p.justificativa = r.justificativa;
   if (mostrarMotivoPrivado && r.motivo_privado_enc !== null) {
     p.motivoPrivado = decrypt(r.motivo_privado_enc);
@@ -435,26 +437,23 @@ export function listarAusenciasDaEquipe(
 
 /**
  * Dias que o pedido realmente OCUPOU (pedido_dia) estritamente antes de `antesDe`,
- * agrupados por ano. E a fonte do debito ja consumido no cancelamento: um feriado
- * cadastrado depois nao pode apagar dias que ja estavam ocupados.
+ * em ordem. E a fonte do debito ja consumido no cancelamento: um feriado cadastrado
+ * depois nao pode apagar nem mover dias que ja estavam ocupados.
  */
-export function contarDiasOcupadosAntes(
+export function listarDiasOcupadosAntes(
   portalMemberId: string,
   pedidoId: number,
   antesDe: DataISO,
-): Record<string, number> {
+): DataISO[] {
   exigirPortal(portalMemberId);
   const linhas = conexao()
     .prepare(
-      `SELECT substr(dia, 1, 4) AS ano, COUNT(*) AS n
-         FROM pedido_dia
+      `SELECT dia FROM pedido_dia
         WHERE portal_member_id = ? AND pedido_id = ? AND dia < ?
-        GROUP BY substr(dia, 1, 4)`,
+        ORDER BY dia`,
     )
-    .all(portalMemberId, pedidoId, antesDe) as { ano: string; n: number }[];
-  const saida: Record<string, number> = {};
-  for (const l of linhas) saida[l.ano] = l.n;
-  return saida;
+    .all(portalMemberId, pedidoId, antesDe) as { dia: string }[];
+  return linhas.map((l) => l.dia);
 }
 
 /** Dias uteis ocupados (pedido_dia) por membros da equipe, para cobertura. SEM escopo. */
@@ -607,6 +606,8 @@ export interface CancelamentoPedido {
   instante: InstanteISO;
   /** Debito recalculado (dias uteis em [inicio, min(fim, canceladoEm-1)]). */
   diasDebitoPorAno?: Record<string, number>;
+  /** Dias realmente consumidos (antes de canceladoEm), para o FIFO do saldo. */
+  diasConsumidos?: DataISO[];
   /** Controle otimista opcional. */
   versao?: number;
 }
@@ -633,6 +634,7 @@ export function cancelarPedido(portalMemberId: string, c: CancelamentoPedido): P
                 sincronizacao = CASE WHEN status = 'aprovada' THEN 'remocao_pendente' ELSE 'nao_aplicavel' END,
                 cancelado_em = @em, cancelado_por = @por,
                 dias_debito_por_ano = COALESCE(@ddpa, dias_debito_por_ano),
+                dias_consumidos = @dc,
                 versao = versao + 1
           WHERE portal_member_id = @m AND id = @id AND status IN ('pendente', 'aprovada')
             AND (@versao IS NULL OR versao = @versao)`,
@@ -643,6 +645,7 @@ export function cancelarPedido(portalMemberId: string, c: CancelamentoPedido): P
         em: c.canceladoEm,
         por: c.canceladoPor,
         ddpa: c.diasDebitoPorAno ? JSON.stringify(c.diasDebitoPorAno) : null,
+        dc: c.diasConsumidos ? JSON.stringify(c.diasConsumidos) : null,
         versao: c.versao ?? null,
       });
     if (r.changes !== 1) {

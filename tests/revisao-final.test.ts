@@ -61,6 +61,7 @@ test("saldo: as DATAS de consumo de um cancelado nao dependem do calendario atua
     id: 1, pessoaId: "ana", tipoId: "ferias", inicio: "2026-11-02", fim: "2026-11-13",
     status: "cancelada" as const, sincronizacao: "removido" as const, canceladoEm: "2026-11-05",
     diasDebitoPorAno: { "2026": 2 },
+    diasConsumidos: ["2026-11-02", "2026-11-03"], // gravadas no cancelamento a partir de pedido_dia
   };
   const lancamentos = [
     { id: 1, pessoaId: "ana", carteira: "ferias" as const, tipo: "credito" as const, dias: 1, motivo: "A", ano: 2026, venceEm: "2026-11-02", criadoPor: "marina", criadoEm: "2026-01-01T00:00:00.000Z" },
@@ -129,4 +130,37 @@ test("creditar sem `ano`: vencimento anterior a competencia aplicada e rejeitado
   );
   const n = getDb().prepare("SELECT COUNT(*) AS n FROM lancamento WHERE portal_member_id = ? AND motivo = 'Credito ja vencido na origem'").get(PORTAL_DEMO) as { n: number };
   assert.equal(n.n, 0);
+});
+
+// ---------------------------------------------------------------- re-revisao: FIFO com datas reais
+test("cancelar nao altera o saldo: lote vence entre dois dias consumidos nao consecutivos (06 e 09/11, lote vence 07/11)", async () => {
+  semearDemo({ hoje: "2026-11-10" });
+  const cal: CalendarioTrabalho = { diasNaoUteis: ["SA", "SU"], feriados: [], excecoesTrabalhadas: [] };
+  const porta: PortaBitrix = {
+    async calendarioTrabalho() { return cal; },
+    async buscarEvento() { return null; },
+    async criarEvento() { return { id: "fake" }; },
+    async removerEvento() {},
+    async notificar() {},
+  };
+  const servicos = (hoje: string) => {
+    const relogio: Relogio = { hoje: () => hoje, agora: () => `${hoje}T12:00:00.000Z` };
+    return criarServicosAusencias({ portalMemberId: PORTAL_DEMO, relogio, porta });
+  };
+  const camila = { pessoaId: "camila", papel: "colaborador" as const };
+  // Sem outros creditos: o unico lote vence em 07/11 e o dia 09/11 so pode ser excedente.
+  getDb().prepare("DELETE FROM lancamento WHERE portal_member_id = ? AND pessoa_id = 'camila' AND carteira = 'ferias'").run(PORTAL_DEMO);
+  const antes = servicos("2026-11-01");
+  antes.creditar({ pessoaId: "marina", papel: "admin" }, { pessoaId: "camila", carteira: "ferias", dias: 2, motivo: "Credito que vence antes do fim", ano: 2026, venceEm: "2026-11-07" });
+  const pedido = await antes.solicitar(camila, { tipoId: "ferias", inicio: "2026-11-06", fim: "2026-11-09", justificativa: "Preciso destes dias adicionais" });
+  await antes.decidir({ pessoaId: "carlos", papel: "gestor" }, pedido.id, { decisao: "aprovar", versao: pedido.versao });
+
+  const depois = servicos("2026-11-10");
+  const ferias = (sv: ReturnType<typeof servicos>) => sv.saldos(camila).find((x) => x.carteira === "ferias")!;
+  const antesDoCancelamento = ferias(depois);
+  await depois.cancelar({ pessoaId: "carlos", papel: "gestor" }, pedido.id);
+  const aposCancelamento = ferias(depois);
+  assert.equal(antesDoCancelamento.disponivel, -1, "06/11 usa o lote; 09/11 (lote vencido em 07/11) e excedente");
+  assert.deepEqual(aposCancelamento, antesDoCancelamento, "cancelar depois do uso nao pode mexer no saldo ja consumido");
+  assert.deepEqual(repo.lerPedidoInterno(PORTAL_DEMO, pedido.id)?.diasConsumidos, ["2026-11-06", "2026-11-09"]);
 });

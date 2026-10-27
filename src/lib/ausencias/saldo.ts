@@ -35,7 +35,8 @@ const CARTEIRAS: readonly Carteira[] = ["ferias", "folga"];
 export type PedidoDebito = Pick<
   Pedido,
   "id" | "pessoaId" | "tipoId" | "inicio" | "fim" | "status" | "diasDebitoPorAno" | "canceladoEm"
->;
+> &
+  Partial<Pick<Pedido, "diasConsumidos">>;
 
 export interface EntradaSaldo {
   pessoaId: string;
@@ -169,18 +170,12 @@ function lerDebitos(
         throw numeroInvalido(`pedido ${p.id}: diasDebitoPorAno invalido`);
       }
       const ultimoDoAno = vigente.fim.slice(0, 4) === ano ? vigente.fim : `${ano}-12-31`;
-      // Cancelado: `diasDebitoPorAno` ja foi regravado no cancelamento (dias realmente ocupados
-      // ate canceladoEm-1). Nem a QUANTIDADE nem as DATAS de consumo podem depender do calendario
-      // de hoje: um feriado cadastrado depois mudaria o FIFO de dias ja consumidos. As datas
-      // viram dias corridos a partir do inicio do periodo no ano (deterministico).
-      const dias =
-        p.status === "cancelada"
-          ? Array.from({ length: qtdBruta }, (_, k) => {
-              const inicioNoAno = vigente.inicio.slice(0, 4) === ano ? vigente.inicio : `${ano}-01-01`;
-              const d = somarDias(inicioNoAno, k);
-              return d > ultimoDoAno ? ultimoDoAno : d;
-            })
-          : (porAno.get(ano) ?? []);
+      // Cancelado com `diasConsumidos`: usa EXATAMENTE as datas gravadas no cancelamento (os
+      // dias que pedido_dia mostrava ocupados). Nem a quantidade nem as datas dependem do
+      // calendario de hoje: o vencimento de um lote cai entre dias, entao a data importa.
+      // Sem o campo (cancelado antes da migracao 005), cai no calendario como os demais.
+      const gravadas = p.status === "cancelada" ? p.diasConsumidos?.filter((d) => d.slice(0, 4) === ano) : undefined;
+      const dias = gravadas ?? porAno.get(ano) ?? [];
       const qtd = qtdBruta;
       for (let k = 0; k < qtd; k++) {
         saida.push({ data: dias[k] ?? dias[dias.length - 1] ?? ultimoDoAno, pedidoId: p.id, ano: Number(ano) });

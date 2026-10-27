@@ -72,6 +72,11 @@ export interface Pedido {
   diasUteis: number;
   /** Debito por ano de competencia (pedido que cruza o ano divide). Congelado na criacao. */
   diasDebitoPorAno: Record<string, number>;
+  /**
+   * So em pedido cancelado: dias realmente consumidos (antes de canceladoEm), gravados no
+   * cancelamento. O FIFO do saldo usa estas datas, nao o calendario de hoje.
+   */
+  diasConsumidos?: DataISO[];
   status: StatusPedido;
   sincronizacao: StatusSincronizacao;
   /** Visivel ao gestor. Proibida em tipo sensivel. */
