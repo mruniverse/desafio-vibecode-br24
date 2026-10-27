@@ -36,7 +36,7 @@ export type PedidoDebito = Pick<
   Pedido,
   "id" | "pessoaId" | "tipoId" | "inicio" | "fim" | "status" | "diasDebitoPorAno" | "canceladoEm"
 > &
-  Partial<Pick<Pedido, "diasConsumidos">>;
+  Partial<Pick<Pedido, "diasOcupados">>;
 
 export interface EntradaSaldo {
   pessoaId: string;
@@ -170,12 +170,12 @@ function lerDebitos(
         throw numeroInvalido(`pedido ${p.id}: diasDebitoPorAno invalido`);
       }
       const ultimoDoAno = vigente.fim.slice(0, 4) === ano ? vigente.fim : `${ano}-12-31`;
-      // Cancelado com `diasConsumidos`: usa EXATAMENTE as datas gravadas no cancelamento (os
-      // dias que pedido_dia mostrava ocupados). Nem a quantidade nem as datas dependem do
-      // calendario de hoje: o vencimento de um lote cai entre dias, entao a data importa.
-      // Sem o campo (cancelado antes da migracao 005), cai no calendario como os demais.
-      const gravadas = p.status === "cancelada" ? p.diasConsumidos?.filter((d) => d.slice(0, 4) === ano) : undefined;
-      const dias = gravadas ?? porAno.get(ano) ?? [];
+      // Datas de consumo = os dias que o pedido REALMENTE ocupa (pedido_dia). Se o calendario
+      // mudar depois (feriado retroativo), dias ja usados nao podem mudar de data: o vencimento
+      // de um lote cai entre dias, entao a data importa para o FIFO. Sem `diasOcupados`
+      // (pedido hipotetico da simulacao), usa o calendario atual.
+      const ocupados = p.diasOcupados?.filter((d) => d.slice(0, 4) === ano);
+      const dias = ocupados ?? porAno.get(ano) ?? [];
       const qtd = qtdBruta;
       for (let k = 0; k < qtd; k++) {
         saida.push({ data: dias[k] ?? dias[dias.length - 1] ?? ultimoDoAno, pedidoId: p.id, ano: Number(ano) });

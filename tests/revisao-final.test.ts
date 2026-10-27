@@ -61,7 +61,7 @@ test("saldo: as DATAS de consumo de um cancelado nao dependem do calendario atua
     id: 1, pessoaId: "ana", tipoId: "ferias", inicio: "2026-11-02", fim: "2026-11-13",
     status: "cancelada" as const, sincronizacao: "removido" as const, canceladoEm: "2026-11-05",
     diasDebitoPorAno: { "2026": 2 },
-    diasConsumidos: ["2026-11-02", "2026-11-03"], // gravadas no cancelamento a partir de pedido_dia
+    diasOcupados: ["2026-11-02", "2026-11-03"], // de pedido_dia (anteriores a canceladoEm)
   };
   const lancamentos = [
     { id: 1, pessoaId: "ana", carteira: "ferias" as const, tipo: "credito" as const, dias: 1, motivo: "A", ano: 2026, venceEm: "2026-11-02", criadoPor: "marina", criadoEm: "2026-01-01T00:00:00.000Z" },
@@ -162,5 +162,23 @@ test("cancelar nao altera o saldo: lote vence entre dois dias consumidos nao con
   const aposCancelamento = ferias(depois);
   assert.equal(antesDoCancelamento.disponivel, -1, "06/11 usa o lote; 09/11 (lote vencido em 07/11) e excedente");
   assert.deepEqual(aposCancelamento, antesDoCancelamento, "cancelar depois do uso nao pode mexer no saldo ja consumido");
-  assert.deepEqual(repo.lerPedidoInterno(PORTAL_DEMO, pedido.id)?.diasConsumidos, ["2026-11-06", "2026-11-09"]);
+});
+
+test("saldo: pedido APROVADO com feriado cadastrado depois nao muda o consumo (datas vem de pedido_dia)", () => {
+  const calSem = calendarioDoPortal({ diasNaoUteis: ["SA", "SU"], feriados: [], excecoesTrabalhadas: [] });
+  const calCom = calendarioDoPortal({ diasNaoUteis: ["SA", "SU"], feriados: ["2026-11-02"], excecoesTrabalhadas: [] });
+  const aprovado = {
+    id: 1, pessoaId: "ana", tipoId: "ferias", inicio: "2026-11-02", fim: "2026-11-03",
+    status: "aprovada" as const, sincronizacao: "sincronizado" as const,
+    diasDebitoPorAno: { "2026": 2 }, diasOcupados: ["2026-11-02", "2026-11-03"],
+  };
+  const lancamentos = [
+    { id: 1, pessoaId: "ana", carteira: "ferias" as const, tipo: "credito" as const, dias: 1, motivo: "A", ano: 2026, venceEm: "2026-11-02", criadoPor: "marina", criadoEm: "2026-01-01T00:00:00.000Z" },
+    { id: 2, pessoaId: "ana", carteira: "ferias" as const, tipo: "credito" as const, dias: 1, motivo: "B", ano: 2026, venceEm: "2026-11-03", criadoPor: "marina", criadoEm: "2026-01-01T00:00:00.000Z" },
+  ];
+  const base = { pessoaId: "ana", carteira: "ferias" as const, hoje: "2026-11-10", lancamentos, pedidos: [aprovado], tipos: TIPOS };
+  const a = saldo({ ...base, cal: calSem });
+  const b = saldo({ ...base, cal: calCom });
+  assert.equal(a.disponivel, 0);
+  assert.deepEqual(b, a);
 });

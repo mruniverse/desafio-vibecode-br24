@@ -592,13 +592,11 @@ export function criarServicosAusencias(deps: DepsServicos): ServicosAusenciasImp
           // que o pedido realmente ocupou (pedido_dia), nunca do calendario de agora. Nunca
           // maior que o debito congelado na criacao.
           const debito: Record<string, number> = {};
-          const consumidos: string[] = [];
           if (tipo.consomeSaldo) {
             for (const dia of listarDiasOcupadosAntes(m, pedido.id, hoje)) {
               const ano = dia.slice(0, 4);
               if ((debito[ano] ?? 0) >= (pedido.diasDebitoPorAno[ano] ?? 0)) continue;
               debito[ano] = (debito[ano] ?? 0) + 1;
-              consumidos.push(dia);
             }
           }
           cancelarPedido(m, {
@@ -607,7 +605,6 @@ export function criarServicosAusencias(deps: DepsServicos): ServicosAusenciasImp
             canceladoEm: hoje,
             instante: agora,
             diasDebitoPorAno: debito,
-            diasConsumidos: tipo.consomeSaldo ? consumidos : undefined,
             versao: pedido.versao,
           });
           const texto = `Pedido de ${dona.nome} (${rotuloPublicoDoTipo(tipo)}, ${periodoCurto(pedido.inicio, pedido.fim)}) foi cancelado.`;
