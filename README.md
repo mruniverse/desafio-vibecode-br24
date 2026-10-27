@@ -1,15 +1,16 @@
 # Aplicativo Br24 — Desafio Vibecode
 
-Aplicativo integrado ao **Bitrix24** pela API REST oficial, hospedado na
-**Onnira Cloud AI**. Desenvolvido para o Desafio Vibecode Br24 (Atomic Group).
+Aplicativo de Gestão de Férias e Ausências para o Desafio Vibecode Br24 (Atomic Group),
+com integração ao **Bitrix24** e hospedagem na **Onnira Cloud AI** planejadas e ainda
+não comprovadas em ambiente real.
 
 **Dupla:** Yuri Luz e Tiago Duarte
 **Nosso diferencial:** facilidade de uso — interface intuitiva, em portugues,
 responsiva, com configuracao guiada que qualquer cliente conclui sozinho.
 
-> O tema/aplicacao especifica e sorteada em 21/10 as 16h. Este repositorio ja
-> contem a base tecnica completa (integracao, seguranca, banco, UI, deploy);
-> o dominio do problema entra em cima dela.
+> Tema: Gestão de Férias e Ausências. O aplicativo está em desenvolvimento;
+> a demonstração atual usa dados fictícios e integração Bitrix simulada.
+> Persistência, identidade individual e publicação precisam ser verificadas antes do uso real.
 
 ---
 
@@ -19,7 +20,7 @@ responsiva, com configuracao guiada que qualquer cliente conclui sozinho.
 |---|---|---|
 | Framework | Next.js 15 (App Router) + TypeScript strict | Exigencia do desafio (Next.js/Node.js); App Router renderiza no servidor e nunca expoe token ao navegador |
 | Estilo | Tailwind CSS v4 + design system proprio em `globals.css` | Consistencia visual sem inventar valores por tela |
-| Banco | SQLite (`better-sqlite3`) em `/data` | Exigencia do desafio; sincrono e sem servidor, ideal para um app de portal |
+| Banco | SQLite (`better-sqlite3`), padrão `./data/app.db` | A persistência do diretório na Onnira ainda precisa ser confirmada |
 | Validacao | Zod | Erros de formulario campo a campo, em portugues |
 | Integracao | API REST oficial do Bitrix24 | Exigencia: sem API nem token do Vibecode |
 
@@ -73,9 +74,10 @@ Abra http://localhost:3000 — sem configuracao, o app leva direto ao wizard.
 
 ## Como o cliente conecta o portal
 
-O ponto de entrada do produto e a **Onnira Cloud AI**: o cliente instala o app
-la e, de dentro dele, conecta o proprio portal Bitrix24. O app nao roda
-embarcado em iframe do Bitrix, entao nao depende de placements.
+O ponto de entrada planejado do produto é a **Onnira Cloud AI**: o cliente
+acessaria o app hospedado e conectaria o próprio portal Bitrix24. O mecanismo de
+publicação em catálogo ainda não foi confirmado; não presumimos instalação por lá.
+O app não depende de placements nem de iframe no Bitrix.
 
 O wizard oferece dois modos, com divulgacao progressiva:
 
@@ -95,9 +97,9 @@ No Bitrix24: *Aplicativos > Desenvolvedores > Outro > Aplicativo local*.
 Cadastre como URL de redirecionamento o valor que o wizard mostra
 (`<URL do app>/api/bitrix/oauth/callback`), copie o ID e a chave secreta para o
 wizard e autorize.
-Beneficios que justificam os passos extras: **respeita a permissao de cada
-usuario**, identifica quem executou cada acao, autorizacao revogavel pelo
-portal e habilita uso embarcado dentro do Bitrix24.
+O fluxo OAuth da base técnica precisa ser validado para este produto. Não se deve
+presumir que ele já autentique individualmente cada usuário, aplique suas
+permissões ou habilite uso embarcado no Bitrix24.
 
 Em ambos os casos o app so marca a configuracao como concluida **depois de uma
 chamada REST real bem-sucedida** contra o portal.
@@ -110,9 +112,8 @@ chamada REST real bem-sucedida** contra o portal.
   com AES-256-GCM (`APP_ENCRYPTION_KEY`).
 - Os logs passam por redacao automatica: campos como `access_token`,
   `refresh_token` e `client_secret` nunca sao gravados.
-- Somente os escopos necessarios sao solicitados, e o app respeita as
-  permissoes do usuario no Bitrix24 (`user.admin`, `scope`), escondendo o que
-  ele nao pode fazer em vez de deixar a acao falhar.
+- Os escopos mínimos e o respeito às permissões individuais precisam ser
+  verificados contra um portal de teste; o webhook usa os direitos de quem o criou.
 - `ONAPPUNINSTALL` apaga os dados daquele portal (cascata no banco).
 - Multi-cliente por construcao: nada e chaveado por ID fixo de portal,
   usuario, campo ou funil — tudo e descoberto em tempo de execucao.
@@ -127,6 +128,12 @@ serve o valor anterior marcado como desatualizado — a tela nunca fica em branc
 por instabilidade do portal.
 
 ## Publicando na Onnira Cloud AI
+
+Consulte o [passo a passo de publicação e operação na Onnira](docs/publicacao-onnira.md),
+com os campos do formulário, variáveis, limitações atuais e checklist de segurança.
+As rotas de ausências usam SQLite (dados fictícios no modo demonstração) e um Bitrix24 simulado.
+Identidade real, persistência do disco na Onnira e integração com um portal Bitrix real
+ainda precisam de validação antes de qualquer uso com dados reais.
 
 ```bash
 export ONNIRA_API_KEY=onnira_sk_...          # nunca comitar
@@ -160,8 +167,9 @@ Regras do script:
 - dados de teste apenas fictícios;
 - sem `--permitir-escrita`, nenhuma mutação no portal.
 
-O ZIP enviado exclui `node_modules`, `.next`, `.git`, `data/` e qualquer
-`.env` — nenhum segredo ou dado de cliente sai da maquina.
+O script exclui padrões como `node_modules`, `.next`, `.git`, `data/` e
+`.env*`, mas isso não prova que o ZIP esteja livre de segredos. Inspecione seu
+conteúdo e arquivos antes de enviar; outros nomes podem conter dados sensíveis.
 
 Depois do deploy, defina no painel da Onnira: `APP_ENCRYPTION_KEY` e
 `APP_BASE_URL` (a URL publica do app).
