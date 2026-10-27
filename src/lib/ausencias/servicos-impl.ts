@@ -533,8 +533,14 @@ export function criarServicosAusencias(deps: DepsServicos): ServicosAusenciasImp
           if (cal) {
             const novo = calcular(dona, tipo, pedido.inicio, pedido.fim, cal, pedido.id);
             const total = novo.diasUteis;
+            const atuais = listarDiasOcupadosAntes(m, pedido.id, "9999-12-31");
+            const datasMudaram = atuais.length !== novo.dias.length || atuais.some((d, i) => d !== novo.dias[i]);
             if (total !== pedido.diasUteis && e.confirmarRecalculo !== true) {
               throw conflito(`Os dias úteis mudaram de ${pedido.diasUteis} para ${total}. Confirme o recálculo para aprovar.`);
+            }
+            // Mesma quantidade, mas outros dias: muda o FIFO e o vencimento do saldo. Tambem exige confirmacao.
+            if (datasMudaram && total === pedido.diasUteis && e.confirmarRecalculo !== true) {
+              throw conflito("Os dias úteis do período mudaram por alteração no calendário. Confirme o recálculo para aprovar.");
             }
             recalculo = {
               diasUteis: novo.diasUteis,

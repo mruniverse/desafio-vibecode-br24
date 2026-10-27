@@ -174,8 +174,9 @@ function lerDebitos(
       // mudar depois (feriado retroativo), dias ja usados nao podem mudar de data: o vencimento
       // de um lote cai entre dias, entao a data importa para o FIFO. Sem `diasOcupados`
       // (pedido hipotetico da simulacao), usa o calendario atual.
+      // Se quantidade e datas divergem (dado inconsistente), nao adivinha: cai no calendario.
       const ocupados = p.diasOcupados?.filter((d) => d.slice(0, 4) === ano);
-      const dias = ocupados ?? porAno.get(ano) ?? [];
+      const dias = ocupados && ocupados.length === qtdBruta ? ocupados : (porAno.get(ano) ?? []);
       const qtd = qtdBruta;
       for (let k = 0; k < qtd; k++) {
         saida.push({ data: dias[k] ?? dias[dias.length - 1] ?? ultimoDoAno, pedidoId: p.id, ano: Number(ano) });

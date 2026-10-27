@@ -355,7 +355,25 @@ export function listarPedidosDaPessoa(
         ORDER BY inicio, id`,
     )
     .all(portalMemberId, pessoaId, ...lista) as LinhaPedido[];
-  return linhas.map((r) => paraPedido(r, false));
+  const dias = diasOcupadosDaPessoa(portalMemberId, pessoaId);
+  return linhas.map((r) => {
+    const pedido = paraPedido(r, false);
+    pedido.diasOcupados = dias.get(r.id) ?? [];
+    return pedido;
+  });
+}
+
+/** pedido_dia agrupado por pedido: datas reais de consumo, independentes do calendario de hoje. */
+function diasOcupadosDaPessoa(portalMemberId: string, pessoaId: string): Map<number, DataISO[]> {
+  const dias = new Map<number, DataISO[]>();
+  for (const d of conexao()
+    .prepare("SELECT pedido_id, dia FROM pedido_dia WHERE portal_member_id = ? AND pessoa_id = ? ORDER BY dia")
+    .all(portalMemberId, pessoaId) as { pedido_id: number; dia: string }[]) {
+    const lista = dias.get(d.pedido_id);
+    if (lista) lista.push(d.dia);
+    else dias.set(d.pedido_id, [d.dia]);
+  }
+  return dias;
 }
 
 /** Pedido + carteira que consome (para o calculo de saldo). SEM escopo, sem motivo. */
@@ -373,16 +391,8 @@ export function listarDebitosDaPessoa(
         ORDER BY p.inicio, p.id`,
     )
     .all(portalMemberId, pessoaId) as (LinhaPedido & { carteira: Carteira })[];
-  // Datas reais de consumo: pedido_dia (pendente/aprovada: todos os dias; cancelada: so os
-  // anteriores a canceladoEm; recusada: nenhum). Nao depende do calendario de hoje.
-  const dias = new Map<number, DataISO[]>();
-  for (const d of conexao()
-    .prepare("SELECT pedido_id, dia FROM pedido_dia WHERE portal_member_id = ? AND pessoa_id = ? ORDER BY dia")
-    .all(portalMemberId, pessoaId) as { pedido_id: number; dia: string }[]) {
-    const lista = dias.get(d.pedido_id);
-    if (lista) lista.push(d.dia);
-    else dias.set(d.pedido_id, [d.dia]);
-  }
+  // Datas reais de consumo: pedido_dia (pendente/aprovada: todos; cancelada: anteriores a canceladoEm).
+  const dias = diasOcupadosDaPessoa(portalMemberId, pessoaId);
   return linhas.map((r) => {
     const pedido = paraPedido(r, false);
     pedido.diasOcupados = dias.get(r.id) ?? [];

@@ -182,3 +182,50 @@ test("saldo: pedido APROVADO com feriado cadastrado depois nao muda o consumo (d
   assert.equal(a.disponivel, 0);
   assert.deepEqual(b, a);
 });
+
+// ---------------------------------------------------------------- 4a revisao
+test("saldo: quantidade e datas divergentes nao produzem FIFO por repeticao da ultima data", () => {
+  const cal = calendarioDoPortal({ diasNaoUteis: ["SA", "SU"], feriados: [], excecoesTrabalhadas: [] });
+  const ped = {
+    id: 1, pessoaId: "ana", tipoId: "ferias", inicio: "2026-11-06", fim: "2026-11-09",
+    status: "aprovada" as const, sincronizacao: "sincronizado" as const,
+    diasDebitoPorAno: { "2026": 2 }, diasOcupados: ["2026-11-06"], // divergente: 1 data para 2 dias
+  };
+  const l = [{ id: 1, pessoaId: "ana", carteira: "ferias" as const, tipo: "credito" as const, dias: 1, motivo: "A", ano: 2026, venceEm: "2026-11-07", criadoPor: "m", criadoEm: "2026-01-01T00:00:00.000Z" }];
+  const r = saldo({ pessoaId: "ana", carteira: "ferias", hoje: "2026-11-10", lancamentos: l, pedidos: [ped], tipos: TIPOS, cal });
+  const ref = saldo({ pessoaId: "ana", carteira: "ferias", hoje: "2026-11-10", lancamentos: l, pedidos: [{ ...ped, diasOcupados: undefined }], tipos: TIPOS, cal });
+  assert.deepEqual(r, ref, "divergencia cai no calendario, deterministico");
+});
+
+test("aprovar exige confirmacao quando so as DATAS mudam (mesma quantidade) por mudanca no calendario", async () => {
+  semearDemo({ hoje: "2026-11-01" });
+  let cal: CalendarioTrabalho = { diasNaoUteis: ["SA", "SU"], feriados: [], excecoesTrabalhadas: [] };
+  const porta: PortaBitrix = {
+    async calendarioTrabalho() { return cal; },
+    async buscarEvento() { return null; },
+    async criarEvento() { return { id: "fake" }; },
+    async removerEvento() {},
+    async notificar() {},
+  };
+  const relogio: Relogio = { hoje: () => "2026-11-01", agora: () => "2026-11-01T12:00:00.000Z" };
+  const sv = criarServicosAusencias({ portalMemberId: PORTAL_DEMO, relogio, porta });
+  const pessoa = { pessoaId: "bruno", papel: "colaborador" as const };
+  const gestor = { pessoaId: "carlos", papel: "gestor" as const };
+  sv.creditar({ pessoaId: "marina", papel: "admin" }, { pessoaId: "bruno", carteira: "ferias", dias: 10, motivo: "Credito para o teste de datas", ano: 2026 });
+  const pedido = await sv.solicitar(pessoa, { tipoId: "ferias", inicio: "2026-11-02", fim: "2026-11-07", justificativa: "Ferias de teste das datas" });
+  // Calendario muda: 03/11 vira feriado e sabado 07/11 vira dia trabalhado -> 5 dias uteis, outras datas.
+  cal = { diasNaoUteis: ["SA", "SU"], feriados: ["2026-11-03"], excecoesTrabalhadas: ["2026-11-07"] };
+  const sv2 = criarServicosAusencias({ portalMemberId: PORTAL_DEMO, relogio, porta }); // cache novo
+  await assert.rejects(() => sv2.decidir(gestor, pedido.id, { decisao: "aprovar", versao: pedido.versao }), /Confirme/);
+  const ok = await sv2.decidir(gestor, pedido.id, { decisao: "aprovar", versao: pedido.versao, confirmarRecalculo: true });
+  assert.equal(ok.status, "aprovada");
+});
+
+test("listarPedidosDaPessoa (usado pelo painel) traz diasOcupados de pedido_dia", async () => {
+  const pedidos = repo.listarPedidosDaPessoa(PORTAL_DEMO, "bruno", ["aprovada"]);
+  assert.ok(pedidos.length > 0);
+  for (const p of pedidos) {
+    const reais = (getDb().prepare("SELECT dia FROM pedido_dia WHERE portal_member_id = ? AND pedido_id = ? ORDER BY dia").all(PORTAL_DEMO, p.id) as { dia: string }[]).map((r) => r.dia);
+    assert.deepEqual(p.diasOcupados, reais);
+  }
+});
