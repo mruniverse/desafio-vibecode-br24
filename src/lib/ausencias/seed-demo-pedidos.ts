@@ -248,10 +248,10 @@ export function semearPedidosDemo(opcoes: { hoje?: DataISO; cal?: CalendarioUtil
         const job = tomarProximoJob(m, decididoEm, somarHoras(decididoEm, 1), pedido.id);
         if (job) {
           if (s.sync === "falha") {
-            esgotarJob(m, job.id, "Portal de demonstração indisponível (simulado).", decididoEm, 3);
+            esgotarJob(m, job.id, "Portal de demonstração indisponível (simulado).", decididoEm, 3, job.geracao);
           } else {
             const dono = obterPessoa(m, pessoa.id);
-            concluirJob(m, job.id, decididoEm, { bitrixEventId: `demo-${pedido.id}`, ownerId: dono?.bitrixUserId });
+            concluirJob(m, job.id, decididoEm, { bitrixEventId: `demo-${pedido.id}`, ownerId: dono?.bitrixUserId }, job.geracao);
           }
         }
       }

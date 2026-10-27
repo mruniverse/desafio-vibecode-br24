@@ -165,15 +165,23 @@ function lerDebitos(
     const porAno = new Map<string, DataISO[]>();
     for (const d of uteis) porAno.set(d.slice(0, 4), [...(porAno.get(d.slice(0, 4)) ?? []), d]);
     for (const [ano, qtdBruta] of Object.entries(congelado)) {
-      if (!/^\d{4}$/.test(ano) || !Number.isInteger(qtdBruta) || qtdBruta < 0) {
+      if (!/^\d{4}$/.test(ano) || !Number.isInteger(qtdBruta) || qtdBruta < 0 || qtdBruta > 366) {
         throw numeroInvalido(`pedido ${p.id}: diasDebitoPorAno invalido`);
       }
-      const dias = porAno.get(ano) ?? [];
-      // Cancelado: `diasDebitoPorAno` ja foi regravado no cancelamento (so os dias
-      // ate canceladoEm-1, no calendario daquele momento). Nao recalcular aqui:
-      // um feriado cadastrado depois nao pode encolher o historico ja consumido.
-      const qtd = qtdBruta;
       const ultimoDoAno = vigente.fim.slice(0, 4) === ano ? vigente.fim : `${ano}-12-31`;
+      // Cancelado: `diasDebitoPorAno` ja foi regravado no cancelamento (dias realmente ocupados
+      // ate canceladoEm-1). Nem a QUANTIDADE nem as DATAS de consumo podem depender do calendario
+      // de hoje: um feriado cadastrado depois mudaria o FIFO de dias ja consumidos. As datas
+      // viram dias corridos a partir do inicio do periodo no ano (deterministico).
+      const dias =
+        p.status === "cancelada"
+          ? Array.from({ length: qtdBruta }, (_, k) => {
+              const inicioNoAno = vigente.inicio.slice(0, 4) === ano ? vigente.inicio : `${ano}-01-01`;
+              const d = somarDias(inicioNoAno, k);
+              return d > ultimoDoAno ? ultimoDoAno : d;
+            })
+          : (porAno.get(ano) ?? []);
+      const qtd = qtdBruta;
       for (let k = 0; k < qtd; k++) {
         saida.push({ data: dias[k] ?? dias[dias.length - 1] ?? ultimoDoAno, pedidoId: p.id, ano: Number(ano) });
       }

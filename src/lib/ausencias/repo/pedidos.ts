@@ -433,6 +433,30 @@ export function listarAusenciasDaEquipe(
   });
 }
 
+/**
+ * Dias que o pedido realmente OCUPOU (pedido_dia) estritamente antes de `antesDe`,
+ * agrupados por ano. E a fonte do debito ja consumido no cancelamento: um feriado
+ * cadastrado depois nao pode apagar dias que ja estavam ocupados.
+ */
+export function contarDiasOcupadosAntes(
+  portalMemberId: string,
+  pedidoId: number,
+  antesDe: DataISO,
+): Record<string, number> {
+  exigirPortal(portalMemberId);
+  const linhas = conexao()
+    .prepare(
+      `SELECT substr(dia, 1, 4) AS ano, COUNT(*) AS n
+         FROM pedido_dia
+        WHERE portal_member_id = ? AND pedido_id = ? AND dia < ?
+        GROUP BY substr(dia, 1, 4)`,
+    )
+    .all(portalMemberId, pedidoId, antesDe) as { ano: string; n: number }[];
+  const saida: Record<string, number> = {};
+  for (const l of linhas) saida[l.ano] = l.n;
+  return saida;
+}
+
 /** Dias uteis ocupados (pedido_dia) por membros da equipe, para cobertura. SEM escopo. */
 export function listarDiasOcupadosDaEquipe(
   portalMemberId: string,

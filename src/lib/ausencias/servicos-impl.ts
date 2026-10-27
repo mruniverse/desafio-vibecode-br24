@@ -57,6 +57,7 @@ import {
   cancelarPedido,
   definirMinimoEquipe,
   emTransacao,
+  contarDiasOcupadosAntes,
   gravarNotificacao,
   lancamentosDaEquipe,
   lancamentosDaPessoa,
@@ -78,7 +79,7 @@ import {
   salvarEtapa,
 } from "./repo";
 import type { DecisaoPedido } from "./repo";
-import { diasDebitoPorAno as calcularDebitoPorAno, saldo as calcularSaldo, simularPedido } from "./saldo";
+import { saldo as calcularSaldo, simularPedido } from "./saldo";
 import {
   creditarSchema,
   criarPedidoSchema,
@@ -582,24 +583,21 @@ export function criarServicosAusencias(deps: DepsServicos): ServicosAusenciasImp
       if (!podeCancelar(ator(s), dona, pedido, hoje, listarEquipes(m))) throw negadoComoInexistente();
 
       const tipo = listarTipos(m).find((t) => t.id === pedido.tipoId) as Tipo;
-      const cal = await carregarCalendario();
-      // Estorno so dos dias >= hoje: o debito passa a valer ate `hoje - 1`.
-      const debito: Record<string, number> = {};
-      if (tipo.consomeSaldo) {
-        const ultimo = somarDias(hoje, -1);
-        const fimVigente = ultimo < pedido.fim ? ultimo : pedido.fim;
-        const passado = fimVigente < pedido.inicio ? {} : calcularDebitoPorAno(pedido.inicio, fimVigente, cal);
-        for (const [ano, dias] of Object.entries(passado)) {
-          // Alteracoes no calendario nao podem aumentar o debito congelado.
-          const limitado = Math.min(dias, pedido.diasDebitoPorAno[ano] ?? 0);
-          if (limitado > 0) debito[ano] = limitado;
-        }
-      }
       const eraAprovada = pedido.status === "aprovada";
       const agora = relogio.agora();
       const destinos: DestinoBitrix[] = [];
       try {
         emTransacao(() => {
+          // Estorno so dos dias >= hoje: o debito passa a valer ate `hoje - 1`, e vem dos dias
+          // que o pedido realmente ocupou (pedido_dia), nunca do calendario de agora. Nunca
+          // maior que o debito congelado na criacao.
+          const debito: Record<string, number> = {};
+          if (tipo.consomeSaldo) {
+            for (const [ano, dias] of Object.entries(contarDiasOcupadosAntes(m, pedido.id, hoje))) {
+              const limitado = Math.min(dias, pedido.diasDebitoPorAno[ano] ?? 0);
+              if (limitado > 0) debito[ano] = limitado;
+            }
+          }
           cancelarPedido(m, {
             pedidoId: pedido.id,
             canceladoPor: s.pessoa.id,
@@ -733,10 +731,14 @@ export function criarServicosAusencias(deps: DepsServicos): ServicosAusenciasImp
       if (alvo.id === s.pessoa.id) throw semPermissao("Ninguém credita dias para si mesmo.");
       if (!podeCreditar(ator(s), alvo, listarEquipes(m))) throw semPermissao();
       const agora = relogio.agora();
+      const ano = e.ano ?? Number(relogio.hoje().slice(0, 4));
+      if (e.venceEm !== undefined && Number(e.venceEm.slice(0, 4)) < ano) {
+        throw erroCampo("venceEm", "O vencimento não pode ser anterior ao ano do crédito.");
+      }
       emTransacao(() => {
         const l = criarLancamento(m, {
           pessoaId: alvo.id,
-          ano: e.ano ?? Number(relogio.hoje().slice(0, 4)),
+          ano,
           carteira: e.carteira,
           tipo: "credito",
           dias: e.dias,

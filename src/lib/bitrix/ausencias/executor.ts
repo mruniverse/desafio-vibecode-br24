@@ -99,6 +99,8 @@ export async function executarSincronizacao(
       sincronizacao: "falha_manual",
       erro: mensagemSegura(`job invalido: ${invalido}`),
       tentativas: Number.isFinite(job?.tentativas) ? job.tentativas : 0,
+      // Nenhuma chamada a porta aconteceu: nao ha evento pendente de aparecer.
+      semEscrita: true,
     };
   }
   // Copia so os campos do contrato: nada alem disso atravessa a porta.

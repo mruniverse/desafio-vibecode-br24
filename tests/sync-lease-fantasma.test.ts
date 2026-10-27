@@ -63,12 +63,12 @@ test("criacao atrasada bloqueia remocao ate poder ser compensada, mesmo apos lea
   liberar();
   const criado = await criacao;
   assert.equal(criado.sincronizacao, "ok");
-  repo.concluirJob(m, add!.id, depois, { bitrixEventId: criado.bitrixEventId });
+  repo.concluirJob(m, add!.id, depois, { bitrixEventId: criado.bitrixEventId }, add!.geracao);
   const remove = repo.tomarProximoJob(m, depois, "2026-10-26T15:00:00.000Z");
   assert.equal(remove?.operacao, "remover");
   const removido = await executarSincronizacao(porta(false), { ...dados, operacao: "remover", bitrixEventId: criado.bitrixEventId });
   assert.equal(removido.sincronizacao, "removido");
-  repo.concluirJob(m, remove!.id, depois);
+  repo.concluirJob(m, remove!.id, depois, undefined, remove!.geracao);
   assert.equal(repo.lerPedidoInterno(m, p.id)?.sincronizacao, "removido");
   assert.equal(fake.eventos().length, 0, "nenhum evento fantasma");
 });
@@ -83,7 +83,7 @@ test("resultado incerto continua bloqueado mesmo apos cancelamento e reprocessam
   repo.decidirPedido(m, { pedidoId: p.id, versao: p.versao, decisao: "aprovar", decididoPor: "carlos", decididoEm: agora });
   const add = repo.tomarProximoJob(m, agora, "2026-10-26T13:00:00.000Z");
   assert.equal(add?.operacao, "adicionar");
-  repo.registrarAddIncerto(m, add!.id, agora);
+  repo.registrarAddIncerto(m, add!.id, agora, add!.geracao);
   repo.cancelarPedido(m, { pedidoId: p.id, canceladoPor: "ana", canceladoEm: "2026-10-26", instante: agora });
   repo.reprocessarJobs(m, agora, p.id);
   assert.equal(repo.tomarProximoJob(m, "2026-10-26T14:00:00.000Z", "2026-10-26T15:00:00.000Z"), null);

@@ -41,7 +41,9 @@ test("cancelamento limita debito passado ao congelado por ano mesmo com mudanca 
   await servicos("2027-01-06").cancelar({ pessoaId: "carlos", papel: "gestor" }, pedido.id);
   const cancelado = repo.lerPedidoInterno(PORTAL_DEMO, pedido.id);
   assert.equal(cancelado?.status, "cancelada");
-  assert.deepEqual(cancelado?.diasDebitoPorAno, { "2026": 1, "2027": 2 });
+  // Dias realmente ocupados ate 05/01: 28/12 e 01/01. Os dias 04 e 05/01 eram feriado quando o pedido
+  // foi aprovado (nao foram ocupados); remover o feriado depois nao os transforma em dias consumidos.
+  assert.deepEqual(cancelado?.diasDebitoPorAno, { "2026": 1, "2027": 1 });
 });
 
 test("pedido com saldo de outra competencia exige justificativa e aceita excedente justificado", async () => {

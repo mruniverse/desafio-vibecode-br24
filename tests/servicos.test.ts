@@ -621,7 +621,7 @@ test("cancelar aprovada: libera dias futuros, enfileira remover; cancelar de nov
 test("sync_job: adicionar -> remover serial, 3 falhas => falha_manual, reprocessar reabre", () => {
   // Escoa os jobs deixados por testes anteriores (a fila e por portal).
   for (let j = repo.tomarProximoJob(M, AGORA, AGORA); j; j = repo.tomarProximoJob(M, AGORA, AGORA)) {
-    repo.concluirJob(M, j.id, AGORA);
+    repo.concluirJob(M, j.id, AGORA, undefined, j.geracao);
   }
   const s = semana(32);
   const p = repo.criarPedido(M, novo("bruno", "ferias", s.inicio, s.fim));
@@ -640,17 +640,17 @@ test("sync_job: adicionar -> remover serial, 3 falhas => falha_manual, reprocess
   // Com lease valido ninguem mais pega o job (nem o do mesmo pedido).
   assert.equal(repo.tomarProximoJob(M, AGORA, lease), null);
 
-  assert.equal(repo.falharJob(M, j1.id, "timeout\nem varias linhas", AGORA), "falha");
+  assert.equal(repo.falharJob(M, j1.id, "timeout\nem varias linhas", AGORA, undefined, j1.geracao), "falha");
   assert.equal(repo.lerPedidoInterno(M, p.id)?.sincronizacao, "falha");
   assert.equal(repo.obterJob(M, j1.id)?.ultimoErro, "timeout em varias linhas");
 
   const j2 = repo.tomarProximoJob(M, AGORA, lease);
   assert.equal(j2?.id, j1.id);
   assert.equal(j2?.tentativas, 2);
-  repo.falharJob(M, j1.id, "erro 2", AGORA);
+  repo.falharJob(M, j1.id, "erro 2", AGORA, undefined, j2!.geracao);
   const j3 = repo.tomarProximoJob(M, AGORA, lease);
   assert.equal(j3?.tentativas, 3);
-  assert.equal(repo.falharJob(M, j1.id, "erro 3", AGORA), "falha_manual");
+  assert.equal(repo.falharJob(M, j1.id, "erro 3", AGORA, undefined, j3!.geracao), "falha_manual");
   assert.equal(repo.lerPedidoInterno(M, p.id)?.sincronizacao, "falha_manual");
   assert.equal(repo.tomarProximoJob(M, depois, lease), null, "falha_manual nao e retomado sozinho");
   assert.equal(repo.listarLogSincronizacao(M).find((l) => l.pedidoId === p.id)?.estado, "falha_manual");
@@ -659,7 +659,7 @@ test("sync_job: adicionar -> remover serial, 3 falhas => falha_manual, reprocess
   assert.equal(repo.lerPedidoInterno(M, p.id)?.sincronizacao, "pendente");
   const j4 = repo.tomarProximoJob(M, depois, lease);
   assert.equal(j4?.tentativas, 1);
-  repo.concluirJob(M, j4!.id, depois, { bitrixEventId: "evt-ficticio-1", ownerId: 7, secao: 3 });
+  repo.concluirJob(M, j4!.id, depois, { bitrixEventId: "evt-ficticio-1", ownerId: 7, secao: 3 }, j4!.geracao);
   const ok = repo.lerPedidoInterno(M, p.id);
   assert.equal(ok?.sincronizacao, "ok");
   assert.equal(ok?.bitrixEventId, "evt-ficticio-1");
@@ -668,9 +668,9 @@ test("sync_job: adicionar -> remover serial, 3 falhas => falha_manual, reprocess
   repo.cancelarPedido(M, { pedidoId: p.id, canceladoPor: "carlos", canceladoEm: "2026-10-26", instante: depois });
   const r = repo.tomarProximoJob(M, depois, lease);
   assert.equal(r?.operacao, "remover");
-  repo.concluirJob(M, r!.id, depois);
+  repo.concluirJob(M, r!.id, depois, undefined, r!.geracao);
   assert.equal(repo.lerPedidoInterno(M, p.id)?.sincronizacao, "removido");
-  assert.equal(erroDe(() => repo.concluirJob(M, r!.id, depois)).subcodigo, "TRANSICAO_INVALIDA");
+  assert.equal(erroDe(() => repo.concluirJob(M, r!.id, depois, undefined, r!.geracao)).subcodigo, "TRANSICAO_INVALIDA");
 });
 
 // --- jobs obsoletos: cancelamento mata a criacao (evento fantasma) ---------
@@ -678,7 +678,7 @@ test("sync_job: adicionar -> remover serial, 3 falhas => falha_manual, reprocess
 /** Escoa a fila do portal para o teste comecar limpo. */
 function escoarFila(): void {
   for (let j = repo.tomarProximoJob(M, AGORA, AGORA); j; j = repo.tomarProximoJob(M, AGORA, AGORA)) {
-    repo.concluirJob(M, j.id, AGORA);
+    repo.concluirJob(M, j.id, AGORA, undefined, j.geracao);
   }
 }
 
@@ -700,7 +700,7 @@ test("reprocessar nao reabre `adicionar` de pedido cancelado (nada de evento fan
   for (let i = 0; i < 3; i += 1) {
     const j = repo.tomarProximoJob(M, AGORA, lease);
     assert.equal(j?.operacao, "adicionar");
-    repo.falharJob(M, j!.id, `erro ${i + 1}`, AGORA);
+    repo.falharJob(M, j!.id, `erro ${i + 1}`, AGORA, undefined, j!.geracao);
   }
   assert.equal(repo.obterJobDoPedido(M, p.id, "adicionar")?.estado, "falha_manual");
 
@@ -716,7 +716,7 @@ test("reprocessar nao reabre `adicionar` de pedido cancelado (nada de evento fan
   // E o que a fila entrega e a remocao, nunca a criacao.
   const seguinte = repo.tomarProximoJob(M, depois, lease);
   assert.equal(seguinte?.operacao, "remover", "o remover nao pode ficar preso atras do adicionar descartado");
-  repo.concluirJob(M, seguinte!.id, depois);
+  repo.concluirJob(M, seguinte!.id, depois, undefined, seguinte!.geracao);
   assert.equal(repo.tomarProximoJob(M, depois, lease), null);
 });
 
@@ -729,7 +729,7 @@ test("`adicionar` em falha vira descartado quando o pedido e cancelado, sem repr
   // Uma falha so: o job continua elegivel (tentativas < 3) e seria retomado.
   const j1 = repo.tomarProximoJob(M, AGORA, lease);
   assert.equal(j1?.operacao, "adicionar");
-  assert.equal(repo.falharJob(M, j1!.id, "timeout", AGORA), "falha");
+  assert.equal(repo.falharJob(M, j1!.id, "timeout", AGORA, undefined, j1!.geracao), "falha");
 
   repo.cancelarPedido(M, { pedidoId: p.id, canceladoPor: "carlos", canceladoEm: "2026-10-26", instante: depois });
 
@@ -737,7 +737,7 @@ test("`adicionar` em falha vira descartado quando o pedido e cancelado, sem repr
   assert.equal(seguinte?.operacao, "remover", "tomou o adicionar de um pedido ja cancelado");
   assert.equal(repo.obterJobDoPedido(M, p.id, "adicionar")?.estado, "falha_manual");
   assert.match(repo.obterJobDoPedido(M, p.id, "adicionar")?.ultimoErro ?? "", /cancelad|aprovad/i);
-  repo.concluirJob(M, seguinte!.id, depois);
+  repo.concluirJob(M, seguinte!.id, depois, undefined, seguinte!.geracao);
 });
 
 test("corrida: cancelamento entre reprocessar e tomar nao vira evento fantasma", () => {
@@ -748,7 +748,7 @@ test("corrida: cancelamento entre reprocessar e tomar nao vira evento fantasma",
 
   for (let i = 0; i < 3; i += 1) {
     const j = repo.tomarProximoJob(M, AGORA, lease);
-    repo.falharJob(M, j!.id, `erro ${i + 1}`, AGORA);
+    repo.falharJob(M, j!.id, `erro ${i + 1}`, AGORA, undefined, j!.geracao);
   }
   // Processo A reabre enquanto o pedido ainda esta aprovado (legitimo).
   assert.equal(repo.reprocessarJobs(M, depois, p.id), 1);
@@ -761,7 +761,7 @@ test("corrida: cancelamento entre reprocessar e tomar nao vira evento fantasma",
   const seguinte = repo.tomarProximoJob(M, depois, lease);
   assert.equal(seguinte?.operacao, "remover");
   assert.equal(repo.obterJobDoPedido(M, p.id, "adicionar")?.estado, "falha_manual");
-  repo.concluirJob(M, seguinte!.id, depois);
+  repo.concluirJob(M, seguinte!.id, depois, undefined, seguinte!.geracao);
   assert.equal(repo.lerPedidoInterno(M, p.id)?.sincronizacao, "removido");
 });
 

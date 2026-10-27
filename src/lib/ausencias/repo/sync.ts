@@ -81,10 +81,17 @@ function statusAlvo(op: OperacaoSync): "aprovada" | "cancelada" {
 }
 
 /**
- * Fencing: com `geracao` informada, so o dono da tentativa mais recente grava.
- * Devolve o predicado SQL a acrescentar ao UPDATE (parametro `@ger`).
+ * Fencing OBRIGATORIO: so o dono da tentativa mais recente grava o resultado.
+ * Predicado SQL a acrescentar ao UPDATE (parametro `@ger`).
  */
-const FENCING = "AND (@ger IS NULL OR geracao = @ger)";
+const FENCING = "AND geracao = @ger";
+
+function exigirGeracao(geracao: unknown): number {
+  if (typeof geracao !== "number" || !Number.isInteger(geracao) || geracao < 1) {
+    throw new ErroDominio("NUMERO_INVALIDO", "geracao da tentativa e obrigatoria (inteiro >= 1)");
+  }
+  return geracao;
+}
 
 function erroTentativaAntiga(jobId: number): ErroDominio {
   return new ErroDominio("TRANSICAO_INVALIDA", `sync_job ${jobId}: tentativa antiga (geracao desatualizada) ou fora de andamento`);
@@ -303,10 +310,11 @@ export function concluirJob(
   portalMemberId: string,
   jobId: number,
   agora: InstanteISO,
-  resultado?: { bitrixEventId?: string; ownerId?: number; secao?: number },
-  geracao?: number,
+  resultado: { bitrixEventId?: string; ownerId?: number; secao?: number } | undefined,
+  geracao: number,
 ): void {
   exigirPortal(portalMemberId);
+  exigirGeracao(geracao);
   emTransacao(() => {
     const job = obterJob(portalMemberId, jobId);
     if (!job) throw new ErroDominio("NAO_ENCONTRADO", `sync_job ${jobId} inexistente`);
@@ -316,7 +324,7 @@ export function concluirJob(
                 ultimo_erro = NULL, atualizado_em = @agora
           WHERE portal_member_id = @m AND id = @id AND estado = 'em_andamento' ${FENCING}`,
       )
-      .run({ m: portalMemberId, id: jobId, agora, ger: geracao ?? null });
+      .run({ m: portalMemberId, id: jobId, agora, ger: geracao });
     if (r.changes !== 1) throw erroTentativaAntiga(jobId);
     if (job.operacao === "adicionar" && resultado?.bitrixEventId) {
       // Preserva o ID mesmo se houve cancelamento durante a chamada remota.
@@ -346,10 +354,11 @@ export function falharJob(
   jobId: number,
   erro: string,
   agora: InstanteISO,
-  proximaEm?: InstanteISO,
-  geracao?: number,
+  proximaEm: InstanteISO | undefined,
+  geracao: number,
 ): EstadoJob {
   exigirPortal(portalMemberId);
+  exigirGeracao(geracao);
   return emTransacao(() => {
     const job = obterJob(portalMemberId, jobId);
     if (!job) throw new ErroDominio("NAO_ENCONTRADO", `sync_job ${jobId} inexistente`);
@@ -368,7 +377,7 @@ export function falharJob(
         prox: manual ? null : (proximaEm ?? null),
         erro: limparErro(erro),
         agora,
-        ger: geracao ?? null,
+        ger: geracao,
       });
     if (r.changes !== 1) throw erroTentativaAntiga(jobId);
     espelharNoPedido(portalMemberId, job.pedidoId, job.operacao, novo);
@@ -387,9 +396,10 @@ export function esgotarJob(
   erro: string,
   agora: InstanteISO,
   tentativas: number,
-  geracao?: number,
+  geracao: number,
 ): void {
   exigirPortal(portalMemberId);
+  exigirGeracao(geracao);
   emTransacao(() => {
     const job = obterJob(portalMemberId, jobId);
     if (!job) throw new ErroDominio("NAO_ENCONTRADO", `sync_job ${jobId} inexistente`);
@@ -405,7 +415,7 @@ export function esgotarJob(
         tent: Math.max(0, Math.trunc(tentativas)),
         erro: limparErro(erro),
         agora,
-        ger: geracao ?? null,
+        ger: geracao,
       });
     if (r.changes !== 1) throw erroTentativaAntiga(jobId);
     espelharNoPedido(portalMemberId, job.pedidoId, job.operacao, "falha_manual");
@@ -413,11 +423,12 @@ export function esgotarJob(
 }
 
 /** Resultado de add incerto: bloqueia retomada e remocao conclusiva. */
-export function registrarAddIncerto(portalMemberId: string, jobId: number, agora: InstanteISO, geracao?: number): void {
+export function registrarAddIncerto(portalMemberId: string, jobId: number, agora: InstanteISO, geracao: number): void {
   exigirPortal(portalMemberId);
+  exigirGeracao(geracao);
   emTransacao(() => {
     const job = obterJob(portalMemberId, jobId);
-    if (!job || job.operacao !== "adicionar" || job.estado !== "em_andamento" || (geracao !== undefined && job.geracao !== geracao)) {
+    if (!job || job.operacao !== "adicionar" || job.estado !== "em_andamento" || job.geracao !== geracao) {
       throw erroTentativaAntiga(jobId);
     }
     conexao().prepare(`UPDATE sync_job SET estado = 'falha_manual', lease_ate = NULL,

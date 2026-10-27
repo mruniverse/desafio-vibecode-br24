@@ -21,7 +21,7 @@ import { intervaloVigente } from "./estados";
 import type { Equipe, Pedido, Pessoa } from "./tipos";
 
 /** Campos do pedido que a cobertura le. `Pedido` satisfaz. */
-export type PedidoCobertura = Pick<Pedido, "pessoaId" | "inicio" | "fim" | "status" | "sincronizacao" | "canceladoEm">;
+export type PedidoCobertura = Pick<Pedido, "pessoaId" | "inicio" | "fim" | "status" | "sincronizacao" | "canceladoEm"> & Partial<Pick<Pedido, "decididoEm">>;
 
 export interface EntradaCobertura {
   equipe: Equipe;
@@ -96,7 +96,11 @@ export function intervaloQueConta(
     throw new ErroDominio("NUMERO_INVALIDO", "contarPendentes deve ser booleano");
   }
   if (p.status === "pendente" && !contarPendentes) return null;
-  if (p.status === "cancelada" && p.sincronizacao === "nao_aplicavel" && !contarPendentes) return null;
+  // Cancelado ainda pendente (nunca decidido) nao conta sem `contarPendentes`. Quem JA foi
+  // decidido conta ate canceladoEm, qualquer que seja o estado da sincronizacao. Sem
+  // `decididoEm` (dados sem esse campo), `nao_aplicavel` continua indicando "nunca aprovado".
+  const foiPendente = p.decididoEm === undefined && p.sincronizacao === "nao_aplicavel";
+  if (p.status === "cancelada" && foiPendente && !contarPendentes) return null;
   return intervaloVigente(p);
 }
 

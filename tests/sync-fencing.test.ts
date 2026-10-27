@@ -42,7 +42,7 @@ test("fencing: resultado de tentativa antiga (lease vencido) nao sobrescreve a t
   vincularBitrix();
   const p = aprovado("2027-03-01", "2027-03-02");
   const add = repo.tomarProximoJob(m, T0, "2026-10-26T13:00:00.000Z");
-  repo.concluirJob(m, add!.id, T0, { bitrixEventId: "evt-1", ownerId: 1 });
+  repo.concluirJob(m, add!.id, T0, { bitrixEventId: "evt-1", ownerId: 1 }, add!.geracao);
   repo.cancelarPedido(m, { pedidoId: p.id, canceladoPor: "ana", canceladoEm: "2026-10-26", instante: T0 });
 
   const antiga = repo.tomarProximoJob(m, T0, "2026-10-26T13:00:00.000Z"); // processo A
