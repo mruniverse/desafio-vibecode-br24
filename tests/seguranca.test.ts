@@ -178,8 +178,13 @@ test("o logger remove campos sensiveis antes de gravar", () => {
 
 test("segredo adulterado no banco nao decifra silenciosamente", () => {
   const cifrado = encrypt("valor-original");
-  // Troca um caractere do ciphertext: a tag GCM precisa reprovar.
-  const adulterado = cifrado.slice(0, -2) + (cifrado.endsWith("A") ? "B" : "A");
+  // Inverte um byte do payload (nao so um caractere base64, cujos bits de
+  // preenchimento podem nao mudar o conteudo): a tag GCM precisa reprovar.
+  const partes = cifrado.split(".");
+  const bytes = Buffer.from(partes[3], "base64");
+  bytes[0] ^= 0xff;
+  partes[3] = bytes.toString("base64");
+  const adulterado = partes.join(".");
 
   assert.throws(() => decrypt(adulterado));
   assert.equal(decrypt(cifrado), "valor-original");
