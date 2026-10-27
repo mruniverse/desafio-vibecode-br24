@@ -42,6 +42,8 @@ export function DecisaoPedido({ pedido, alternativas, onAtualizar }: DecisaoPedi
   const [erroMotivo, setErroMotivo] = React.useState<string | null>(null);
   const [erroGeral, setErroGeral] = React.useState<string | null>(null);
   const [enviando, setEnviando] = React.useState<"aprovar" | "recusar" | "sugerir" | null>(null);
+  /** Texto do conflito de recálculo (calendário mudou): pede confirmação explícita antes de aprovar. */
+  const [recalculo, setRecalculo] = React.useState<string | null>(null);
   const formRef = React.useRef<HTMLFormElement>(null);
 
   React.useEffect(() => {
@@ -81,15 +83,25 @@ export function DecisaoPedido({ pedido, alternativas, onAtualizar }: DecisaoPedi
     else setErroGeral(erro.mensagem);
   }
 
-  async function aprovar() {
+  async function aprovar(confirmarRecalculo = false) {
     setEnviando("aprovar");
     setErroGeral(null);
-    const r = await api.decidir(pedido.id, { decisao: "aprovar", versao: pedido.versao });
+    const r = await api.decidir(pedido.id, {
+      decisao: "aprovar",
+      versao: pedido.versao,
+      ...(confirmarRecalculo ? { confirmarRecalculo: true } : {}),
+    });
     setEnviando(null);
     if (!r.ok) {
+      // Calendário mudou desde o pedido: mostra o aviso e deixa o gestor confirmar, em vez de recarregar a fila.
+      if (r.status === 409 && /mudaram/.test(r.erro.mensagem)) {
+        setRecalculo(r.erro.mensagem);
+        return;
+      }
       tratarErro(r.erro, r.status);
       return;
     }
+    setRecalculo(null);
     toast.sucesso(`Pedido de ${primeiro} aprovado.`);
     onAtualizar();
   }
@@ -148,11 +160,12 @@ export function DecisaoPedido({ pedido, alternativas, onAtualizar }: DecisaoPedi
         >
           Sugerir outra data
         </Button>
-        <Button onClick={() => void aprovar()} loading={enviando === "aprovar"} disabled={ocupado}>
-          Aprovar
+        <Button onClick={() => void aprovar(recalculo !== null)} loading={enviando === "aprovar"} disabled={ocupado}>
+          {recalculo ? "Confirmar e aprovar" : "Aprovar"}
         </Button>
       </div>
 
+      {recalculo ? <Alert tipo="alerta">{recalculo}</Alert> : null}
       {erroGeral && modo === null ? <Alert tipo="erro">{erroGeral}</Alert> : null}
 
       {modo ? (
