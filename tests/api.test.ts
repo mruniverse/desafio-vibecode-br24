@@ -12,14 +12,26 @@
  */
 import assert from "node:assert/strict";
 import crypto from "node:crypto";
-import { beforeEach, describe, test } from "node:test";
+import { after, beforeEach, describe, test } from "node:test";
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
 
+const dir = fs.mkdtempSync(path.join(os.tmpdir(), "br24-api-"));
+process.env.DATABASE_PATH = path.join(dir, "api.db");
+process.env.BITRIX_ESCRITA = "0";
 const CHAVE = crypto.randomBytes(32).toString("base64");
 process.env.APP_ENCRYPTION_KEY = CHAVE;
 process.env.APP_BASE_URL = "http://localhost:3000";
 process.env.MODO_DEMO = "1";
 
 const { reiniciarDemo } = await import("../src/app/api/ausencias/_servicos.ts");
+const { esquecerPreparoDemo } = await import("../src/lib/ausencias/boot.ts");
+const { removerPortal } = await import("../src/lib/db/portals.ts");
+const { getDb } = await import("../src/lib/db/index.ts");
+const { fakeDoProcesso } = await import("../src/lib/bitrix/ausencias/index.ts");
+function limparDemo() { removerPortal("demo:ficticio"); esquecerPreparoDemo(); reiniciarDemo(); fakeDoProcesso().reiniciar(); }
+after(() => { getDb().close(); fs.rmSync(dir, { recursive: true, force: true }); });
 const { reiniciarLimiteDeTaxa, COOKIE_SESSAO, SELO_DEMO } = await import("../src/app/api/ausencias/_sessao.ts");
 
 const rSessao = await import("../src/app/api/ausencias/sessao-demo/route.ts");
@@ -124,7 +136,7 @@ async function visaoAdmin(id: number): Promise<string> {
 }
 
 beforeEach(() => {
-  reiniciarDemo();
+  limparDemo();
   reiniciarLimiteDeTaxa();
   process.env.MODO_DEMO = "1";
 });
@@ -510,7 +522,7 @@ describe("recurso de outro dono: 404 nas rotas [id], 403 nas demais, sem mudanca
     // Os liberados passam (cada um em estado limpo para nao depender da ordem).
     for (const [nome, h, metodo, caminho, corpo, , liberados2] of casos) {
       for (const quem of liberados2) {
-        reiniciarDemo();
+        limparDemo();
         const r = await chamar(h, metodo, caminho, { cookie: await entrarComo(quem), corpo }, "tec");
         assert.equal(r.status, 200, `${nome} / ${quem}: ${r.texto}`);
       }
@@ -817,11 +829,11 @@ describe("fluxo de pedido", () => {
   test("reprocessar sincronizacao (admin) conserta a falha semeada", async () => {
     const marina = await entrarComo("marina");
     const log = (await chamar(rLog.GET, "GET", "/sincronizacao", { cookie: marina })).env.dados as { estado: string }[];
-    assert.ok(log.some((l) => l.estado === "falha"));
+    assert.ok(log.some((l) => l.estado === "falha_manual"));
     const r = await chamar(rReprocessar.POST, "POST", "/sincronizacao/reprocessar", { cookie: marina });
     assert.equal(r.status, 200, r.texto);
     const depois = (await chamar(rLog.GET, "GET", "/sincronizacao", { cookie: marina })).env.dados as { estado: string; erro?: string }[];
-    assert.equal(depois.filter((l) => l.estado === "falha" && l.erro).length, 1, "o historico da falha continua no log");
+    assert.ok(depois.some((l) => l.estado === "ok"), "job reprocessado fica concluido");
     const diego = await pedidoDe(await entrarComo("diego"), (p) => p.status === "aprovada");
     assert.equal((diego as PedidoJson & { sincronizacao: string }).sincronizacao, "ok");
   });

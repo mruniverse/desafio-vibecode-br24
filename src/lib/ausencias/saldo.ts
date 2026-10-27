@@ -17,8 +17,8 @@
  * Pedido `cancelada` ainda debita os dias uteis ANTES de `canceladoEm`
  * ([inicio, min(fim, canceladoEm-1)]), nunca mais que o congelado; `recusada` nao debita.
  *
- * Excedente (dias de debito sem credito que os cubra) vira numero negativo em
- * `disponivel` e sinaliza `excedeSaldo` na simulacao: e permitido, com justificativa.
+ * Excedente sao dias sem credito que os cubra; a simulacao sinaliza esse
+ * excedente mesmo quando creditos de outros anos deixam o saldo agregado positivo.
  */
 import { somarDias, validarData, type DataISO } from "./datas";
 import { diasUteisEntre, type CalendarioUtil } from "./dias-uteis";
@@ -169,8 +169,10 @@ function lerDebitos(
         throw numeroInvalido(`pedido ${p.id}: diasDebitoPorAno invalido`);
       }
       const dias = porAno.get(ano) ?? [];
-      // Cancelado: nunca debita mais que o congelado nem mais que os dias vigentes.
-      const qtd = p.status === "cancelada" ? Math.min(qtdBruta, dias.length) : qtdBruta;
+      // Cancelado: `diasDebitoPorAno` ja foi regravado no cancelamento (so os dias
+      // ate canceladoEm-1, no calendario daquele momento). Nao recalcular aqui:
+      // um feriado cadastrado depois nao pode encolher o historico ja consumido.
+      const qtd = qtdBruta;
       const ultimoDoAno = vigente.fim.slice(0, 4) === ano ? vigente.fim : `${ano}-12-31`;
       for (let k = 0; k < qtd; k++) {
         saida.push({ data: dias[k] ?? dias[dias.length - 1] ?? ultimoDoAno, pedidoId: p.id, ano: Number(ano) });
@@ -242,7 +244,7 @@ export interface ResultadoSimulacao {
   /** `null` quando o tipo nao consome saldo (`consomeSaldo: null`). */
   saldoAntes: number | null;
   saldoDepois: number | null;
-  /** `saldoDepois < 0`. Excedente e permitido, com justificativa. */
+  /** O pedido aumenta o debito sem credito que o cubra. Excedente e permitido, com justificativa. */
   excedeSaldo: boolean;
 }
 
@@ -261,7 +263,7 @@ export function simularPedido(entrada: EntradaSimulacao): ResultadoSimulacao {
     return { diasUteis, diasDebitoPorAno: porAno, saldoAntes: null, saldoDepois: null, excedeSaldo: false };
   }
   const base = { ...entrada, pessoaId, carteira: tipo.consomeSaldo };
-  const antes = saldo(base).disponivel;
+  const antes = saldo(base);
   const hipotetico: PedidoDebito = {
     id: Number.MAX_SAFE_INTEGER,
     pessoaId,
@@ -271,6 +273,6 @@ export function simularPedido(entrada: EntradaSimulacao): ResultadoSimulacao {
     status: "pendente",
     diasDebitoPorAno: porAno,
   };
-  const depois = saldo({ ...base, pedidos: [...entrada.pedidos, hipotetico] }).disponivel;
-  return { diasUteis, diasDebitoPorAno: porAno, saldoAntes: antes, saldoDepois: depois, excedeSaldo: depois < 0 };
+  const depois = saldo({ ...base, pedidos: [...entrada.pedidos, hipotetico] });
+  return { diasUteis, diasDebitoPorAno: porAno, saldoAntes: antes.disponivel, saldoDepois: depois.disponivel, excedeSaldo: depois.excedente > antes.excedente };
 }

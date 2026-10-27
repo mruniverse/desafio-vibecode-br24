@@ -226,7 +226,7 @@ function PedidosAguardando({ equipeId, nomeEquipe }: { equipeId: string; nomeEqu
       <CardHeader
         nivel="h3"
         titulo="Pedidos aguardando o gestor"
-        descricao="Quando aprovados, vão direto para o Gráfico de Ausências do Bitrix24."
+        descricao="Quando aprovados, entram na fila de sincronização com o Bitrix24. Na demonstração, a sincronização é simulada."
       />
       {estado.status === "carregando" ? (
         <CardBody aria-busy="true" aria-live="polite" className="flex flex-col gap-3">

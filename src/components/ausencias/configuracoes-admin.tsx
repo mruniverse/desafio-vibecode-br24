@@ -66,20 +66,20 @@ function Secao<T>({
 
 const PLANOS: { plano: string; efeito: string }[] = [
   { plano: "Free ou Essencial", efeito: "Sem integração com o Gráfico de Ausências." },
-  { plano: "Basic ou Standard (Vibe+)", efeito: "Pedidos aprovados aparecem no calendário da pessoa no Bitrix24." },
+  { plano: "Basic ou Standard (Vibe+)", efeito: "Previsto: pedidos aprovados no calendário da pessoa no Bitrix24 (ainda não validado em portal real)." },
   {
     plano: "Professional (Vibe+) ou superior",
-    efeito: "Pedidos aprovados aparecem no Gráfico de Ausências. Sincronização nos dois sentidos: em breve.",
+    efeito: "Previsto: pedidos aprovados no Gráfico de Ausências (ainda não validado em portal real).",
   },
 ];
 
 const ESTADO_SINC: Record<string, { rotulo: string; tom: BadgeTom }> = {
-  ok: { rotulo: "Enviado", tom: "sucesso" },
+  ok: { rotulo: "Registrado (simulado)", tom: "sucesso" },
   falha: { rotulo: "Falhou", tom: "perigo" },
   falha_manual: { rotulo: "Falhou", tom: "perigo" },
   removido: { rotulo: "Removido", tom: "neutro" },
   pendente: { rotulo: "Na fila", tom: "alerta" },
-  em_andamento: { rotulo: "Enviando", tom: "alerta" },
+  em_andamento: { rotulo: "Em andamento", tom: "alerta" },
   remocao_pendente: { rotulo: "Remoção na fila", tom: "alerta" },
 };
 
@@ -123,7 +123,7 @@ function SecaoBitrix() {
         <CardHeader nivel="h3" titulo="Bitrix24" descricao="Como o Revezza conversa com o seu portal." />
         <CardBody className="flex flex-col gap-4">
           <Alert tipo="info" titulo="Conexão">
-            Modo demonstração com Bitrix24 simulado (nenhuma escrita no portal real).
+            Modo demonstração com Bitrix24 simulado: nenhuma escrita é feita no portal real. Os registros abaixo mostram o que seria enviado.
           </Alert>
           <div>
             <h4 className="text-sm font-semibold text-strong">O que muda em cada plano do Bitrix24</h4>
@@ -146,7 +146,7 @@ function SecaoBitrix() {
 
       <Secao
         titulo="Últimas sincronizações"
-        descricao="O que o Revezza enviou ao calendário do Bitrix24."
+        descricao="O que o Revezza registrou para o calendário do Bitrix24. Na demonstração, nada chega a um portal real."
         estado={estado}
         onTentarDeNovo={tentarDeNovo}
       >

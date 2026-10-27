@@ -258,14 +258,40 @@ test("saldo: aprovada com sincronizacao em falha continua debitando (depende so 
 });
 
 test("saldo: cancelamento usa canceladoEm (estorna so dias uteis >= canceladoEm)", () => {
-  const cancelada = (canceladoEm: string) =>
-    ped(1, "ana", "2026-11-02", "2026-11-13", { status: "cancelada", sincronizacao: "removido", canceladoEm });
+  // Como o servico faz no cancelamento: regrava o debito so ate canceladoEm-1.
+  const cancelada = (canceladoEm: string) => {
+    const ultimo = somarDias(canceladoEm, -1);
+    const fimVigente = ultimo < "2026-11-13" ? ultimo : "2026-11-13";
+    const debito = fimVigente < "2026-11-02" ? {} : diasDebitoPorAno("2026-11-02", fimVigente, CAL);
+    return ped(1, "ana", "2026-11-02", "2026-11-13", {
+      status: "cancelada",
+      sincronizacao: "removido",
+      canceladoEm,
+      diasDebitoPorAno: debito,
+    });
+  };
   const lanc = [cred(1, 22)];
   assert.equal(saldo(entradaSaldo([cancelada("2026-11-02")], lanc)).disponivel, 22); // antes do primeiro dia
   assert.equal(saldo(entradaSaldo([cancelada("2026-10-26")], lanc)).disponivel, 22);
   assert.equal(saldo(entradaSaldo([cancelada("2026-11-06")], lanc)).disponivel, 18); // 02,03,04,05 ja usados
   assert.equal(saldo(entradaSaldo([cancelada("2026-11-14")], lanc)).disponivel, 12); // depois do fim: nada estorna
   assert.equal(saldo(entradaSaldo([cancelada("2026-12-01")], lanc)).disponivel, 12);
+});
+
+test("saldo: debito persistido no cancelamento nao muda se o calendario mudar depois (feriado retroativo)", () => {
+  // Cancelada em 04/11: 02 e 03/11 (2 dias uteis) ja consumidos e gravados em diasDebitoPorAno.
+  const cancelada = ped(1, "ana", "2026-11-02", "2026-11-13", {
+    status: "cancelada",
+    sincronizacao: "removido",
+    canceladoEm: "2026-11-04",
+    diasDebitoPorAno: { "2026": 2 },
+  });
+  const lanc = [cred(1, 22)];
+  assert.equal(saldo(entradaSaldo([cancelada], lanc)).disponivel, 20);
+  // Feriado cadastrado depois, dentro dos dias ja gozados: o historico nao pode encolher.
+  const calComFeriado = calendarioDoPortal({ diasNaoUteis: ["SA", "SU"], feriados: ["12-25", "01-01", "2026-11-02"], excecoesTrabalhadas: [] });
+  const depois = saldo({ ...entradaSaldo([cancelada], lanc), cal: calComFeriado });
+  assert.equal(depois.disponivel, 20, "o debito congelado no cancelamento e a autoridade");
 });
 
 test("saldo: fronteira venceEm = hoje conta; no dia seguinte vence", () => {
@@ -330,6 +356,13 @@ test("saldo: excedente deixa o disponivel negativo; ajuste soma e ajuste negativ
   assert.equal(saldo(entradaSaldo([], [cred(1, 10), cred(2, -3, { tipo: "ajuste" })])).disponivel, 7);
   assert.equal(saldo(entradaSaldo([], [cred(1, 2), cred(2, -3, { tipo: "ajuste" })])).disponivel, -1);
   assert.equal(saldo(entradaSaldo([], [])).disponivel, 0);
+});
+
+test("saldo: credito de outra competencia nao cobre pedido nem dispensa justificativa", () => {
+  const base = { ...entradaSaldo([], [cred(1, 5, { ano: 2027 })]), tipoId: "ferias", inicio: "2026-11-02", fim: "2026-11-05" };
+  const simulacao = simularPedido(base);
+  assert.equal(simulacao.saldoDepois, 1);
+  assert.equal(simulacao.excedeSaldo, true);
 });
 
 test("saldo: simularPedido calcula antes/depois, excedente e tipo sem saldo", () => {

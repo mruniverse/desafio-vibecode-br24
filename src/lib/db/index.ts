@@ -37,11 +37,13 @@ function aplicarMigracoes(db: Conexao) {
 
   for (const migracao of MIGRACOES) {
     if (!migracao.sql.trim()) continue; // reservada, ainda sem conteudo
-    if (jaAplicada.get(migracao.nome)) continue;
     db.transaction(() => {
+      // O lock de escrita deve anteceder a checagem para outros processos
+      // observarem a migração que acabou de ser aplicada.
+      if (jaAplicada.get(migracao.nome)) return;
       db.exec(migracao.sql);
       registrar.run(migracao.nome);
-    })();
+    }).immediate();
   }
 }
 

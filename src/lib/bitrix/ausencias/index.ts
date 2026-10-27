@@ -2,8 +2,10 @@
  * Porta Bitrix de ausencias: fabrica + reexports.
  *
  * Padrao: FAKE em memoria (rotulado "simulado"). A porta REAL so e escolhida
- * com `BITRIX_ESCRITA=1`; mesmo assim a escrita ainda exige portal de teste se
- * `portalDeTeste` for informado.
+ * com `BITRIX_ESCRITA=1`; escolher a porta real NAO concede escrita: cada
+ * escrita ainda passa pelo gate fail-closed do `BitrixReal` (confirmacao de
+ * portal de teste via `real.portalDeTeste`). Leitura
+ * no portal real continua liberada.
  */
 import type { PortaBitrix } from "../../ausencias/portas";
 import { BitrixReal } from "./real";

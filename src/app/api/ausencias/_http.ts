@@ -8,6 +8,7 @@ import { z } from "zod";
 import { rota } from "@/lib/api";
 import type { ServicosAusencias } from "@/lib/ausencias/servicos";
 import { idDeRota } from "@/lib/ausencias/schemas";
+import { ehDataISO } from "@/lib/ausencias/datas";
 import type { SessaoDemo } from "@/lib/ausencias/tipos";
 import { erroCampo, naoEncontrado } from "./_erros";
 import { exigirSessao } from "./_sessao";
@@ -32,7 +33,9 @@ export async function comSessao<T>(
 ): Promise<NextResponse> {
   const res = await rota(evento, async () => {
     const sessao = exigirSessao(req);
-    return fn(sessao, obterServicos());
+    const servicos = obterServicos();
+    await servicos.aquecerCalendario();
+    return fn(sessao, servicos);
   });
   return semCache(res);
 }
@@ -63,14 +66,7 @@ export async function idDaRota(ctx: ContextoId): Promise<number> {
   return lido.data;
 }
 
-function dataReal(v: string): boolean {
-  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(v);
-  if (!m) return false;
-  const d = new Date(Date.UTC(Number(m[1]), Number(m[2]) - 1, Number(m[3])));
-  return d.getUTCFullYear() === Number(m[1]) && d.getUTCMonth() === Number(m[2]) - 1 && d.getUTCDate() === Number(m[3]);
-}
-
-const dataIso = z.string().refine(dataReal, "data invalida");
+const dataIso = z.string().refine(ehDataISO, "data invalida");
 const idEquipe = z.string().min(1).max(64);
 
 /**

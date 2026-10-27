@@ -48,7 +48,17 @@ export interface ResultadoSincronizacao {
   erro?: string;
   /** Total acumulado (job.tentativas + as feitas agora). */
   tentativas: number;
+  /**
+   * `true` so quando a falha de um `adicionar` aconteceu ANTES de qualquer escrita
+   * possivel (leitura falhou, escrita bloqueada, entrada invalida): nao ha evento
+   * pendente de aparecer no Bitrix, entao nao e criacao incerta. Ausente/false =
+   * pode ter havido escrita; tratar como incerto.
+   */
+  semEscrita?: boolean;
 }
+
+/** Erros lancados pela porta ANTES de qualquer requisicao de escrita. */
+const CODIGOS_PRE_ESCRITA: ReadonlySet<string> = new Set(["ESCRITA_BLOQUEADA", "ENTRADA_INVALIDA"]);
 
 export interface OpcoesExecutor {
   maxTentativas?: number;
@@ -129,6 +139,8 @@ async function executar(
   const max = opcoes.maxTentativas ?? MAX_TENTATIVAS_SINCRONIZACAO;
   let tentativas = job.tentativas;
   let ultimoErro = "";
+  // Alguma tentativa chegou a enviar a criacao (e nao foi barrada antes de sair)?
+  let escritaPossivel = false;
 
   if (tentativas >= max) {
     return {
@@ -140,31 +152,36 @@ async function executar(
 
   while (tentativas < max) {
     tentativas += 1;
+    const marca = { iniciouEscrita: false };
     try {
       if (job.operacao === "adicionar") {
-        const r = await adicionar(porta, job);
+        const r = await adicionar(porta, job, marca);
         return { sincronizacao: "ok", bitrixEventId: r.id, secao: r.secao, tentativas };
       }
       await remover(porta, job);
       return { sincronizacao: "removido", tentativas };
     } catch (erro) {
       ultimoErro = mensagemSegura(erro);
+      const barradaAntes = ehErroPortaBitrix(erro) && CODIGOS_PRE_ESCRITA.has(erro.codigo);
+      if (marca.iniciouEscrita && !barradaAntes) escritaPossivel = true;
       if (ehErroPortaBitrix(erro) && !erro.transitorio) {
-        return { sincronizacao: "falha_manual", erro: ultimoErro, tentativas };
+        return { sincronizacao: "falha_manual", erro: ultimoErro, tentativas, semEscrita: !escritaPossivel };
       }
       if (tentativas < max && opcoes.pausa) await opcoes.pausa(tentativas);
     }
   }
-  return { sincronizacao: "falha_manual", erro: ultimoErro, tentativas };
+  return { sincronizacao: "falha_manual", erro: ultimoErro, tentativas, semEscrita: !escritaPossivel };
 }
 
 async function adicionar(
   porta: PortaBitrix,
   job: JobSincronizacao,
+  marca: { iniciouEscrita: boolean },
 ): Promise<{ id: string; secao?: number }> {
   const marcador = montarMarcador(job.pedidoId);
   const existente = await porta.buscarEvento(marcador, job.ownerId, job.inicio, job.fim);
   if (existente) return { id: existente.id };
+  marca.iniciouEscrita = true;
   return porta.criarEvento({
     marcador,
     ownerId: job.ownerId,

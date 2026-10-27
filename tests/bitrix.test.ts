@@ -288,7 +288,7 @@ test("payload do fake nunca contem justificativa/motivo (sentinela)", async () =
 
 test("adaptador real: parametros REST do add nao carregam a sentinela e usam so o marcador", async () => {
   const { chamar, chamadas } = restEspiao({ "calendar.event.add": 321, "calendar.event.getbyid": { SECTION_ID: "9" } });
-  const real = new BitrixReal({ chamar, env: { BITRIX_ESCRITA: "1" } });
+  const real = new BitrixReal({ chamar, env: { BITRIX_ESCRITA: "1" }, portalDeTeste: () => true });
   const r = await real.criarEvento({
     marcador: "[BR24:12]",
     ownerId: 5,
@@ -326,7 +326,7 @@ test("BBCode e escapado: nenhum colchete cru chega ao Bitrix", async () => {
   assert.ok(escaparBBCode("a\u0000b\u0007c").indexOf("\u0000") === -1);
 
   const { chamar, chamadas } = restEspiao({ "im.notify.system.add": 1 });
-  const real = new BitrixReal({ chamar, env: { BITRIX_ESCRITA: "1" } });
+  const real = new BitrixReal({ chamar, env: { BITRIX_ESCRITA: "1" }, portalDeTeste: () => true });
   await real.notificar(5, hostil);
   const envio = chamadas.find((c) => c.metodo === "im.notify.system.add");
   assert.ok(envio);
@@ -372,6 +372,51 @@ test("portalDeTeste=false bloqueia mesmo com BITRIX_ESCRITA=1; leitura segue lib
   assert.equal(chamadas.length, 1);
 });
 
+test("fail closed: sem confirmacao de portal de teste a escrita e bloqueada com BITRIX_ESCRITA=1", async () => {
+  // Chamador que ESQUECEU `portalDeTeste`: nao pode virar licenca de escrita
+  // num portal de cliente. Omissao = nao confirmado = bloqueado.
+  const { chamar, chamadas } = restEspiao({ "calendar.event.add": 321, "im.notify.system.add": 1 });
+  const real = new BitrixReal({ chamar, env: { BITRIX_ESCRITA: "1" } });
+  const evento = { marcador: "[BR24:12]", ownerId: 5, inicio: "2026-11-09", fim: "2026-11-09", nome: NOME_EVENTO_BITRIX } as const;
+  await assert.rejects(real.criarEvento(evento), codigo("ESCRITA_BLOQUEADA"));
+  await assert.rejects(real.removerEvento("10", 5), codigo("ESCRITA_BLOQUEADA"));
+  await assert.rejects(real.notificar(5, "oi"), codigo("ESCRITA_BLOQUEADA"));
+  assert.equal(chamadas.length, 0, "nenhuma chamada de rede antes do gate");
+});
+
+test("fail closed: confirmacao que nega, lanca ou demora nao libera; so `true` libera", async () => {
+  const base = { BITRIX_ESCRITA: "1" } as const;
+  for (const portalDeTeste of [
+    () => false,
+    async () => false,
+    () => {
+      throw new Error("portal indisponivel");
+    },
+    async () => {
+      throw new Error("portal indisponivel");
+    },
+    () => undefined as unknown as boolean,
+  ]) {
+    const { chamar, chamadas } = restEspiao({ "im.notify.system.add": 1 });
+    const real = new BitrixReal({ chamar, env: base, portalDeTeste });
+    await assert.rejects(real.notificar(5, "oi"), codigo("ESCRITA_BLOQUEADA"));
+    assert.equal(chamadas.length, 0);
+  }
+  const ok = restEspiao({ "im.notify.system.add": 1 });
+  await new BitrixReal({ chamar: ok.chamar, env: base, portalDeTeste: async () => true }).notificar(5, "oi");
+  assert.equal(ok.chamadas.length, 1);
+});
+
+test("escolherPorta nao concede escrita implicita: porta real sem confirmacao bloqueia", async () => {
+  const { chamar, chamadas } = restEspiao({ "im.notify.system.add": 1, "calendar.event.get": [] });
+  const porta = escolherPorta({ env: { BITRIX_ESCRITA: "1" }, real: { chamar } });
+  assert.equal(porta.modo, "real");
+  await assert.rejects(porta.notificar(5, "oi"), codigo("ESCRITA_BLOQUEADA"));
+  // Leitura continua liberada: o gate e so de escrita.
+  assert.equal(await porta.buscarEvento("[BR24:12]", 5, "2026-11-09", "2026-11-13"), null);
+  assert.equal(chamadas.length, 1);
+});
+
 test("escolherPorta: fake por padrao; real so com BITRIX_ESCRITA=1", () => {
   const fake = new FakeBitrix();
   assert.equal(escolherPorta({ env: {}, fake }), fake);
@@ -406,7 +451,7 @@ test("real: removerEvento com NOT_FOUND e sucesso; credencial revogada de verdad
   });
   // Leitura de confirmacao passa => o evento nao existe => sucesso.
   const ok = restEspiao({ "calendar.settings.get": {} }, { "calendar.event.delete": notFound });
-  await new BitrixReal({ chamar: ok.chamar, env: { BITRIX_ESCRITA: "1" } }).removerEvento("10", 5);
+  await new BitrixReal({ chamar: ok.chamar, env: { BITRIX_ESCRITA: "1" }, portalDeTeste: () => true }).removerEvento("10", 5);
   assert.deepEqual(ok.chamadas.map((c) => c.metodo), ["calendar.event.delete", "calendar.settings.get"]);
 
   // Leitura de confirmacao tambem falha => credencial ruim => erro.
@@ -416,14 +461,14 @@ test("real: removerEvento com NOT_FOUND e sucesso; credencial revogada de verdad
   });
   const ruim = restEspiao({}, { "calendar.event.delete": notFound, "calendar.settings.get": revogado });
   await assert.rejects(
-    new BitrixReal({ chamar: ruim.chamar, env: { BITRIX_ESCRITA: "1" } }).removerEvento("10", 5),
+    new BitrixReal({ chamar: ruim.chamar, env: { BITRIX_ESCRITA: "1" }, portalDeTeste: () => true }).removerEvento("10", 5),
     codigo("CREDENCIAIS_INVALIDAS"),
   );
 
   // Erro que nao e NOT_FOUND propaga sem confirmacao.
   const queda = restEspiao({}, { "calendar.event.delete": Object.assign(new Error("Timeout de 10000ms ao chamar portal-ficticio.example.com"), { codigo: "PORTAL_INDISPONIVEL", mensagemUsuario: "Nao conseguimos falar com o seu portal." }) });
   await assert.rejects(
-    new BitrixReal({ chamar: queda.chamar, env: { BITRIX_ESCRITA: "1" } }).removerEvento("10", 5),
+    new BitrixReal({ chamar: queda.chamar, env: { BITRIX_ESCRITA: "1" }, portalDeTeste: () => true }).removerEvento("10", 5),
     (e: unknown) => e instanceof ErroPortaBitrix && e.codigo === "TRANSITORIO" && e.transitorio,
   );
   assert.deepEqual(queda.chamadas.map((c) => c.metodo), ["calendar.event.delete"]);
@@ -475,7 +520,7 @@ test("converterCalendario: padrao SA,SU sem week_holidays; aceita D.M.AAAA; entr
 
 test("real: entradas invalidas lancam ENTRADA_INVALIDA sem rede", async () => {
   const { chamar, chamadas } = restEspiao({});
-  const real = new BitrixReal({ chamar, env: { BITRIX_ESCRITA: "1" } });
+  const real = new BitrixReal({ chamar, env: { BITRIX_ESCRITA: "1" }, portalDeTeste: () => true });
   await assert.rejects(real.buscarEvento("12", 5, "2026-11-09", "2026-11-13"), codigo("ENTRADA_INVALIDA"));
   await assert.rejects(real.buscarEvento("[BR24:12]", 0, "2026-11-09", "2026-11-13"), codigo("ENTRADA_INVALIDA"));
   await assert.rejects(real.buscarEvento("[BR24:12]", 5, "2026-02-31", "2026-03-01"), codigo("ENTRADA_INVALIDA"));

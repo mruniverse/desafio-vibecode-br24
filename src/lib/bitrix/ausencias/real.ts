@@ -2,9 +2,12 @@
  * BitrixReal: adaptador REAL de PortaBitrix sobre o cliente REST existente.
  *
  * Seguranca:
- *  - ESCRITA (criar/remover evento, notificar) so com `BITRIX_ESCRITA=1`
- *    (e, se informado, `portalDeTeste()` verdadeiro). Sem isso lanca
- *    ErroPortaBitrix `ESCRITA_BLOQUEADA` ANTES de qualquer chamada de rede.
+ *  - ESCRITA (criar/remover evento, notificar) exige DOIS gates, nesta ordem:
+ *    1) `BITRIX_ESCRITA=1`;
+ *    2) confirmacao de que o portal alvo e um portal de TESTE.
+ *    O gate 2 e FAIL-CLOSED: a omissao ou callback que nega, lanca
+ *    ou devolve valor nao booleano bloqueia a escrita. Sem isso lanca ErroPortaBitrix `ESCRITA_BLOQUEADA` ANTES de
+ *    qualquer chamada de rede. Leitura nunca passa por esses gates.
  *  - O evento leva `name='Ausente'` e `description` so com `[BR24:<pedidoId>]`.
  *    Tipo, justificativa e motivo nunca chegam a esta camada.
  *  - Mensagens de erro passam por `sanitizarMensagem` (sem URL de webhook).
@@ -38,10 +41,13 @@ export type ChamadaRest = (
 export interface OpcoesBitrixReal {
   /** Chamada REST. Default: `callRest` do cliente existente no portal ativo. */
   chamar?: ChamadaRest;
-  /** Ambiente (default `process.env`). So `BITRIX_ESCRITA` e lido. */
+  /** Ambiente (default `process.env`). Le `BITRIX_ESCRITA`. */
   env?: Record<string, string | undefined>;
-  /** Se informado, escrita exige tambem `true` aqui (portal marcado de teste). */
-  portalDeTeste?: () => boolean;
+  /**
+   * Confirmacao explicita de que o portal alvo e de teste. So `true` libera a
+   * escrita; `false`, excecao, valor nao-booleano ou OMISSAO bloqueiam.
+   */
+  portalDeTeste?: () => boolean | Promise<boolean>;
   /** Offset ISO-8601 de `from`/`to`. Default `-03:00` (Brasilia). */
   offset?: string;
   /** Relogio em ms (cache do calendario). */
@@ -60,7 +66,7 @@ export class BitrixReal implements PortaBitrix {
 
   private chamarRest: ChamadaRest;
   private env: Record<string, string | undefined>;
-  private portalDeTeste: (() => boolean) | undefined;
+  private portalDeTeste: (() => boolean | Promise<boolean>) | undefined;
   private offset: string;
   private agoraMs: () => number;
   private anoReferencia: () => number;
@@ -80,18 +86,31 @@ export class BitrixReal implements PortaBitrix {
     this.ttlMs = opcoes.ttlCalendarioMs ?? TTL_PADRAO_MS;
   }
 
-  private exigirEscrita(): void {
+  /**
+   * Gate de escrita. Fail-closed: so segue com `BITRIX_ESCRITA=1` E confirmacao
+   * afirmativa de portal de teste. Roda ANTES de qualquer chamada de rede.
+   */
+  private async exigirEscrita(): Promise<void> {
     if (this.env.BITRIX_ESCRITA !== "1") {
       throw new ErroPortaBitrix(
         "ESCRITA_BLOQUEADA",
         "Escrita no portal Bitrix24 desligada: defina BITRIX_ESCRITA=1 (apenas em portal de teste).",
       );
     }
-    if (this.portalDeTeste && !this.portalDeTeste()) {
+    if (!(await this.confirmarPortalDeTeste())) {
       throw new ErroPortaBitrix(
         "ESCRITA_BLOQUEADA",
-        "Escrita bloqueada: o portal ativo nao esta marcado como portal de teste.",
+        "Escrita bloqueada: o portal ativo nao esta confirmado como portal de teste.",
       );
+    }
+  }
+
+  /** `true` so com confirmacao afirmativa; excecao ou duvida = `false`. */
+  private async confirmarPortalDeTeste(): Promise<boolean> {
+    try {
+      return this.portalDeTeste ? (await this.portalDeTeste()) === true : false;
+    } catch {
+      return false; // nao conseguiu confirmar => nao escreve
     }
   }
 
@@ -138,7 +157,7 @@ export class BitrixReal implements PortaBitrix {
   }
 
   async criarEvento(evento: EventoCalendarioBitrix): Promise<{ id: string; secao?: number }> {
-    this.exigirEscrita();
+    await this.exigirEscrita();
     exigirMarcador(evento.marcador);
     exigirInteiroPositivo(evento.ownerId, "ownerId");
     exigirIntervalo(evento.inicio, evento.fim);
@@ -180,7 +199,7 @@ export class BitrixReal implements PortaBitrix {
   }
 
   async removerEvento(id: string, ownerId: number): Promise<void> {
-    this.exigirEscrita();
+    await this.exigirEscrita();
     exigirInteiroPositivo(ownerId, "ownerId");
     if (typeof id !== "string" || !/^\d+$/.test(id)) {
       throw new ErroPortaBitrix("ENTRADA_INVALIDA", "id do evento invalido");
@@ -213,7 +232,7 @@ export class BitrixReal implements PortaBitrix {
   }
 
   async notificar(bitrixUserId: number, mensagem: string): Promise<void> {
-    this.exigirEscrita();
+    await this.exigirEscrita();
     exigirInteiroPositivo(bitrixUserId, "bitrixUserId");
     // Sem TAG: tag repetida apaga as outras notificacoes com a mesma tag.
     await this.rest("im.notify.system.add", {

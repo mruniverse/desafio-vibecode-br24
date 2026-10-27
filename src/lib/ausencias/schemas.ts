@@ -74,8 +74,14 @@ export const creditarSchema = z
     dias: z.number().int().min(1).max(60),
     motivo: z.string().trim().min(10).max(300),
     venceEm: dataIso.optional(),
+    /** Ano de competencia do credito. Omitido = ano atual (comportamento anterior). */
+    ano: z.number().int().min(2000).max(2100).optional(),
   })
-  .strict();
+  .strict()
+  .refine((v) => v.ano === undefined || v.venceEm === undefined || Number(v.venceEm.slice(0, 4)) >= v.ano, {
+    message: "o vencimento nao pode ser anterior ao ano de competencia",
+    path: ["venceEm"],
+  });
 
 /** Variaveis permitidas nas mensagens das etapas. */
 export const VARIAVEIS_ETAPA = ["nome", "periodo", "tipoPublico", "prazo"] as const;
