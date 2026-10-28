@@ -511,6 +511,18 @@ test("real: calendarioTrabalho converte year_holidays D.M em MM-DD, com cache", 
   assert.equal(chamadas.length, 2); // expirou
 });
 
+test("real: calendarioTrabalho({ fresco: true }) ignora o cache e o atualiza", async () => {
+  const { chamar, chamadas } = restEspiao({ "calendar.settings.get": { year_holidays: "1.01", week_holidays: ["SA", "SU"] } });
+  const real = new BitrixReal({ chamar, env: {}, agoraMs: () => 1_000, anoReferencia: () => 2026, ttlCalendarioMs: 60_000 });
+  await real.calendarioTrabalho();
+  await real.calendarioTrabalho();
+  assert.equal(chamadas.length, 1); // cache valido
+  await real.calendarioTrabalho({ fresco: true });
+  assert.equal(chamadas.length, 2); // fresco foi ao portal mesmo com cache valido
+  await real.calendarioTrabalho();
+  assert.equal(chamadas.length, 2); // e o resultado fresco voltou ao cache
+});
+
 test("converterCalendario: padrao SA,SU sem week_holidays; aceita D.M.AAAA; entrada vazia", () => {
   const c = converterCalendario({ year_holidays: "1.5.2027" }, 2026);
   assert.deepEqual(c, { diasNaoUteis: ["SA", "SU"], feriados: ["2027-05-01"], excecoesTrabalhadas: [] });
