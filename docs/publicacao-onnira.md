@@ -61,7 +61,7 @@ persistência confirmada, não execute criação automaticamente.
 | `APP_BASE_URL` | URL pública do app, usada no fluxo OAuth. | Configure com a URL HTTPS atribuída após o deploy e valide a atualização. |
 | `DATABASE_PATH` | Caminho do arquivo SQLite. | Use somente um caminho que a Onnira confirme ser persistente e gravável; o padrão do app é `./data/app.db`, mas sua persistência na plataforma não foi confirmada. |
 | `MODO_DEMO` | Habilita seleção de pessoas fictícias sem identidade verificada. | Padrão `0`; use `1` exclusivamente para demonstração sem dados reais. O selo deve permanecer visível. |
-| `BITRIX_ESCRITA` | Autoriza chamadas de escrita no calendário Bitrix. | Mantenha `0`. A correção local exige confirmação explícita de portal de teste, mas ainda não foi integrada e validada contra um portal real. |
+| `BITRIX_ESCRITA` | Autoriza chamadas de escrita no calendário Bitrix. | Mantenha `0`. O código exige `BITRIX_ESCRITA=1` e confirmação explícita de portal de teste, mas isso nunca foi validado contra um portal real. |
 | `SYNC_SECRET` | Variável reservada para eventual mecanismo de reprocessamento. | Ainda não protege a rota atual: o reprocessamento usa sessão. Não anunciar proteção por segredo até implementá-la e testá-la. |
 | `BITRIX_CLIENT_ID`, `BITRIX_CLIENT_SECRET` | Credenciais OAuth opcionais. | Não exigidas para demo simulada; fluxo real de identidade ainda requer validação. |
 
@@ -101,3 +101,11 @@ não é necessária como variável do aplicativo apenas para executar o Revezza.
 - [ ] Permissões, identidade, plano Bitrix, escopos e integração real foram comprovados antes de dados reais.
 - [ ] Política de pausa/rollback e custo de hospedagem conhecidos.
 - [ ] Requisitos do Banco de Aplicações/Marketplace confirmados separadamente com a organização.
+
+
+## Comportamento a conhecer antes de demonstrar
+
+- **Aprovar consulta o calendário do Bitrix na hora**, sem cache e sem alternativa. Se a consulta falhar, a aprovação devolve 503 ("Não conseguimos confirmar o calendário de trabalho agora") e o pedido continua pendente. Em modo demo isso não ocorre, pois o Bitrix é simulado.
+- **Se o calendário mudou desde o pedido** (feriado novo, por exemplo), a aprovação pede confirmação mostrando os dias contados agora; o botão vira "Confirmar e aprovar".
+- Todo evento de ausência vai ao Bitrix como **dia inteiro** (decisão da reunião de 27/10).
+- O Bitrix só aponta conflito para eventos de calendário, não para tarefas.
