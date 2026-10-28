@@ -216,8 +216,24 @@ test("aprovar exige confirmacao quando so as DATAS mudam (mesma quantidade) por 
   // Calendario muda: 03/11 vira feriado e sabado 07/11 vira dia trabalhado -> 5 dias uteis, outras datas.
   cal = { diasNaoUteis: ["SA", "SU"], feriados: ["2026-11-03"], excecoesTrabalhadas: ["2026-11-07"] };
   const sv2 = criarServicosAusencias({ portalMemberId: PORTAL_DEMO, relogio, porta }); // cache novo
-  await assert.rejects(() => sv2.decidir(gestor, pedido.id, { decisao: "aprovar", versao: pedido.versao }), /Confirme/);
-  const ok = await sv2.decidir(gestor, pedido.id, { decisao: "aprovar", versao: pedido.versao, confirmarRecalculo: true });
+  let assinatura = "";
+  try {
+    await sv2.decidir(gestor, pedido.id, { decisao: "aprovar", versao: pedido.versao });
+    assert.fail("devia exigir confirmacao");
+  } catch (e) {
+    assert.match((e as Error).message, /Confirme/);
+    assinatura = (e as { extras?: Record<string, string> }).extras?.recalculo ?? "";
+  }
+  assert.ok(assinatura.length > 0, "o 409 devolve a assinatura do recalculo");
+  // boolean/qualquer outro valor nao confirma
+  await assert.rejects(() => sv2.decidir(gestor, pedido.id, { decisao: "aprovar", versao: pedido.versao, confirmarRecalculo: "x" }), /Confirme/);
+  // o calendario muda DE NOVO antes do clique de confirmar: a assinatura antiga nao vale mais
+  cal = { diasNaoUteis: ["SA", "SU"], feriados: ["2026-11-03", "2026-11-04"], excecoesTrabalhadas: ["2026-11-07"] };
+  const sv3 = criarServicosAusencias({ portalMemberId: PORTAL_DEMO, relogio, porta });
+  await assert.rejects(() => sv3.decidir(gestor, pedido.id, { decisao: "aprovar", versao: pedido.versao, confirmarRecalculo: assinatura }), /Confirme/);
+  cal = { diasNaoUteis: ["SA", "SU"], feriados: ["2026-11-03"], excecoesTrabalhadas: ["2026-11-07"] };
+  const sv4 = criarServicosAusencias({ portalMemberId: PORTAL_DEMO, relogio, porta });
+  const ok = await sv4.decidir(gestor, pedido.id, { decisao: "aprovar", versao: pedido.versao, confirmarRecalculo: assinatura });
   assert.equal(ok.status, "aprovada");
 });
 

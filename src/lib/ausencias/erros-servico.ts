@@ -9,9 +9,13 @@ import { z } from "zod";
 import { AppError, type CodigoErro } from "@/lib/errors";
 
 export class ErroServico extends AppError {
-  constructor(codigo: CodigoErro, statusHttp: number, mensagem: string) {
+  /** Dados NAO sensiveis que a tela precisa para reagir (ex.: assinatura do recalculo). */
+  readonly extras?: Record<string, string>;
+
+  constructor(codigo: CodigoErro, statusHttp: number, mensagem: string, extras?: Record<string, string>) {
     super(codigo, { statusHttp, tecnico: mensagem });
     Object.defineProperty(this, "mensagemUsuario", { value: mensagem, enumerable: true });
+    this.extras = extras;
   }
 }
 
@@ -24,8 +28,8 @@ export function semPermissao(mensagem = "Você não tem permissão para esta aç
   return new ErroServico("SEM_PERMISSAO", 403, mensagem);
 }
 
-export function conflito(mensagem: string): ErroServico {
-  return new ErroServico("TRANSICAO_INVALIDA", 409, mensagem);
+export function conflito(mensagem: string, extras?: Record<string, string>): ErroServico {
+  return new ErroServico("TRANSICAO_INVALIDA", 409, mensagem, extras);
 }
 
 /** 422 apontando o campo: o `rota()` devolve `campos` para a tela destacar o input. */

@@ -50,8 +50,11 @@ export const decidirPedidoSchema = z
     sugestao: z.object({ inicio: dataIso, fim: dataIso }).strict().optional(),
     /** Controle otimista: versao do pedido que o gestor viu. */
     versao: z.number().int().min(0),
-    /** Exigido quando o recalculo de diasUteis na aprovacao difere do congelado. */
-    confirmarRecalculo: z.boolean().optional(),
+    /**
+     * Assinatura do recalculo que o gestor viu (devolvida no 409). Exigida quando o recalculo na
+     * aprovacao difere do congelado; so vale se for IGUAL ao recalculo atual.
+     */
+    confirmarRecalculo: z.string().min(1).max(500).optional(),
   })
   .strict()
   .refine((v) => v.decisao === "aprovar" || !!v.motivoDecisao, {

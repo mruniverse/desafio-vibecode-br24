@@ -535,12 +535,18 @@ export function criarServicosAusencias(deps: DepsServicos): ServicosAusenciasImp
             const total = novo.diasUteis;
             const atuais = listarDiasOcupadosAntes(m, pedido.id, "9999-12-31");
             const datasMudaram = atuais.length !== novo.dias.length || atuais.some((d, i) => d !== novo.dias[i]);
-            if (total !== pedido.diasUteis && e.confirmarRecalculo !== true) {
-              throw conflito(`Os dias úteis mudaram de ${pedido.diasUteis} para ${total}. Confirme o recálculo para aprovar.`);
-            }
-            // Mesma quantidade, mas outros dias: muda o FIFO e o vencimento do saldo. Tambem exige confirmacao.
-            if (datasMudaram && total === pedido.diasUteis && e.confirmarRecalculo !== true) {
-              throw conflito("Os dias úteis do período mudaram por alteração no calendário. Confirme o recálculo para aprovar.");
+            if (total !== pedido.diasUteis || datasMudaram) {
+              // A confirmacao so vale para o recalculo EXATO que o gestor viu: se o calendario mudar
+              // de novo entre o aviso e o clique, a assinatura muda e a confirmacao e recusada.
+              const assinatura = `${total}|${novo.dias.join(",")}`;
+              if (e.confirmarRecalculo !== assinatura) {
+                throw conflito(
+                  total !== pedido.diasUteis
+                    ? `Os dias úteis mudaram de ${pedido.diasUteis} para ${total}. Confirme o recálculo para aprovar.`
+                    : "Os dias úteis do período mudaram por alteração no calendário. Confirme o recálculo para aprovar.",
+                  { recalculo: assinatura },
+                );
+              }
             }
             recalculo = {
               diasUteis: novo.diasUteis,

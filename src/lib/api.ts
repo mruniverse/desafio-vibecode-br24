@@ -16,7 +16,10 @@ export function ok<T>(dados: T, status = 200) {
 }
 
 export function erro(e: AppError) {
-  return NextResponse.json(corpoErro(e), { status: e.statusHttp });
+  const corpo = corpoErro(e);
+  const extras = (e as { extras?: Record<string, string> }).extras;
+  const final = extras ? { ...corpo, erro: { ...corpo.erro, extras } } : corpo;
+  return NextResponse.json(final, { status: e.statusHttp });
 }
 
 /** Envolve o handler de uma rota, normalizando qualquer excecao. */

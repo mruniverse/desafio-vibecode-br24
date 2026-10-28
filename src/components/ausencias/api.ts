@@ -31,6 +31,8 @@ export interface ErroApi {
   mensagem: string;
   /** 422: mensagem por campo, para destacar o input certo. */
   campos?: Record<string, string>;
+  /** Dados de apoio não sensíveis (ex.: `recalculo`, a assinatura a reenviar para confirmar). */
+  extras?: Record<string, string>;
 }
 
 export type Resp<T> = { ok: true; dados: T } | { ok: false; erro: ErroApi; status: number };

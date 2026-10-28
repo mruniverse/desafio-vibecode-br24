@@ -43,7 +43,7 @@ export function DecisaoPedido({ pedido, alternativas, onAtualizar }: DecisaoPedi
   const [erroGeral, setErroGeral] = React.useState<string | null>(null);
   const [enviando, setEnviando] = React.useState<"aprovar" | "recusar" | "sugerir" | null>(null);
   /** Texto do conflito de recálculo (calendário mudou): pede confirmação explícita antes de aprovar. */
-  const [recalculo, setRecalculo] = React.useState<string | null>(null);
+  const [recalculo, setRecalculo] = React.useState<{ mensagem: string; assinatura: string } | null>(null);
   const formRef = React.useRef<HTMLFormElement>(null);
 
   React.useEffect(() => {
@@ -60,6 +60,7 @@ export function DecisaoPedido({ pedido, alternativas, onAtualizar }: DecisaoPedi
   }
 
   function abrir(novo: Exclude<Modo, null>) {
+    setRecalculo(null); // recusar/sugerir descarta a confirmação pendente de aprovar
     setModo(novo);
     setErroMotivo(null);
     setErroGeral(null);
@@ -83,24 +84,27 @@ export function DecisaoPedido({ pedido, alternativas, onAtualizar }: DecisaoPedi
     else setErroGeral(erro.mensagem);
   }
 
-  async function aprovar(confirmarRecalculo = false) {
+  async function aprovar() {
+    if (enviando !== null) return; // duplo clique
     setEnviando("aprovar");
     setErroGeral(null);
     const r = await api.decidir(pedido.id, {
       decisao: "aprovar",
       versao: pedido.versao,
-      ...(confirmarRecalculo ? { confirmarRecalculo: true } : {}),
+      ...(recalculo ? { confirmarRecalculo: recalculo.assinatura } : {}),
     });
-    setEnviando(null);
     if (!r.ok) {
-      // Calendário mudou desde o pedido: mostra o aviso e deixa o gestor confirmar, em vez de recarregar a fila.
-      if (r.status === 409 && /mudaram/.test(r.erro.mensagem)) {
-        setRecalculo(r.erro.mensagem);
+      setEnviando(null);
+      // Calendário mudou desde o pedido: mostra o recálculo (novo, se mudou de novo) e deixa o gestor confirmar.
+      const assinatura = r.status === 409 ? r.erro.extras?.recalculo : undefined;
+      if (assinatura) {
+        setRecalculo({ mensagem: r.erro.mensagem, assinatura });
         return;
       }
       tratarErro(r.erro, r.status);
       return;
     }
+    // Mantém os botões travados (`enviando`) até a fila recarregar: evita nova decisão sobre pedido já decidido.
     setRecalculo(null);
     toast.sucesso(`Pedido de ${primeiro} aprovado.`);
     onAtualizar();
@@ -160,12 +164,12 @@ export function DecisaoPedido({ pedido, alternativas, onAtualizar }: DecisaoPedi
         >
           Sugerir outra data
         </Button>
-        <Button onClick={() => void aprovar(recalculo !== null)} loading={enviando === "aprovar"} disabled={ocupado}>
+        <Button onClick={() => void aprovar()} loading={enviando === "aprovar"} disabled={ocupado}>
           {recalculo ? "Confirmar e aprovar" : "Aprovar"}
         </Button>
       </div>
 
-      {recalculo ? <Alert tipo="alerta">{recalculo}</Alert> : null}
+      {recalculo ? <Alert tipo="alerta">{recalculo.mensagem}</Alert> : null}
       {erroGeral && modo === null ? <Alert tipo="erro">{erroGeral}</Alert> : null}
 
       {modo ? (
