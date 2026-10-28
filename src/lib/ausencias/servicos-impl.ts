@@ -15,6 +15,7 @@
  *
  * Sem enum/namespace/propriedade de parametro (strip-types dos testes).
  */
+import { createHash } from "node:crypto";
 import { escaparBBCode } from "@/lib/bitrix/ausencias/util";
 import type { OpcoesExecutor } from "@/lib/bitrix/ausencias/executor";
 import { logger } from "@/lib/logger";
@@ -164,9 +165,10 @@ export function criarServicosAusencias(deps: DepsServicos): ServicosAusenciasImp
 
   /* ------------------------------------------------------------ calendario */
 
-  async function carregarCalendario(): Promise<CalendarioUtil> {
+  /** `fresco`: ignora o cache (a decisao de aprovar nao pode usar um calendario velho). */
+  async function carregarCalendario(fresco = false): Promise<CalendarioUtil> {
     const agoraMs = Date.now();
-    if (cache && agoraMs < cache.ate) return cache.cal;
+    if (!fresco && cache && agoraMs < cache.ate) return cache.cal;
     try {
       const cal = calendarioDoPortal(await porta.calendarioTrabalho());
       ultimoBom = cal;
@@ -523,7 +525,7 @@ export function criarServicosAusencias(deps: DepsServicos): ServicosAusenciasImp
       const agora = relogio.agora();
 
       // A busca assíncrona fica fora da transação; o saldo será lido sob o lock.
-      const cal = aprovar ? await carregarCalendario() : null;
+      const cal = aprovar ? await carregarCalendario(true) : null;
 
       const chaveEtapa = aprovar ? "confirmado" : "recusado";
       const destinos: DestinoBitrix[] = [];
@@ -538,12 +540,16 @@ export function criarServicosAusencias(deps: DepsServicos): ServicosAusenciasImp
             if (total !== pedido.diasUteis || datasMudaram) {
               // A confirmacao so vale para o recalculo EXATO que o gestor viu: se o calendario mudar
               // de novo entre o aviso e o clique, a assinatura muda e a confirmacao e recusada.
-              const assinatura = `${total}|${novo.dias.join(",")}`;
+              // Hash curto (cabe no schema mesmo para periodos longos); as datas vao na mensagem.
+              const assinatura = createHash("sha256").update(`${total}|${novo.dias.join(",")}`).digest("hex").slice(0, 32);
               if (e.confirmarRecalculo !== assinatura) {
+                const lista = novo.dias.map((d) => `${d.slice(8, 10)}/${d.slice(5, 7)}`).join(", ");
                 throw conflito(
-                  total !== pedido.diasUteis
-                    ? `Os dias úteis mudaram de ${pedido.diasUteis} para ${total}. Confirme o recálculo para aprovar.`
-                    : "Os dias úteis do período mudaram por alteração no calendário. Confirme o recálculo para aprovar.",
+                  `${
+                    total !== pedido.diasUteis
+                      ? `Os dias úteis mudaram de ${pedido.diasUteis} para ${total}.`
+                      : "Os dias úteis do período mudaram por alteração no calendário."
+                  } Dias contados agora: ${lista || "nenhum"}. Confirme o recálculo para aprovar.`,
                   { recalculo: assinatura },
                 );
               }

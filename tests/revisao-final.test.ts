@@ -215,7 +215,7 @@ test("aprovar exige confirmacao quando so as DATAS mudam (mesma quantidade) por 
   const pedido = await sv.solicitar(pessoa, { tipoId: "ferias", inicio: "2026-11-02", fim: "2026-11-07", justificativa: "Ferias de teste das datas" });
   // Calendario muda: 03/11 vira feriado e sabado 07/11 vira dia trabalhado -> 5 dias uteis, outras datas.
   cal = { diasNaoUteis: ["SA", "SU"], feriados: ["2026-11-03"], excecoesTrabalhadas: ["2026-11-07"] };
-  const sv2 = criarServicosAusencias({ portalMemberId: PORTAL_DEMO, relogio, porta }); // cache novo
+  const sv2 = sv; // mesma instancia: o calendario do pedido esta em cache; aprovar tem de ignora-lo
   let assinatura = "";
   try {
     await sv2.decidir(gestor, pedido.id, { decisao: "aprovar", versao: pedido.versao });
@@ -229,10 +229,10 @@ test("aprovar exige confirmacao quando so as DATAS mudam (mesma quantidade) por 
   await assert.rejects(() => sv2.decidir(gestor, pedido.id, { decisao: "aprovar", versao: pedido.versao, confirmarRecalculo: "x" }), /Confirme/);
   // o calendario muda DE NOVO antes do clique de confirmar: a assinatura antiga nao vale mais
   cal = { diasNaoUteis: ["SA", "SU"], feriados: ["2026-11-03", "2026-11-04"], excecoesTrabalhadas: ["2026-11-07"] };
-  const sv3 = criarServicosAusencias({ portalMemberId: PORTAL_DEMO, relogio, porta });
+  const sv3 = sv;
   await assert.rejects(() => sv3.decidir(gestor, pedido.id, { decisao: "aprovar", versao: pedido.versao, confirmarRecalculo: assinatura }), /Confirme/);
   cal = { diasNaoUteis: ["SA", "SU"], feriados: ["2026-11-03"], excecoesTrabalhadas: ["2026-11-07"] };
-  const sv4 = criarServicosAusencias({ portalMemberId: PORTAL_DEMO, relogio, porta });
+  const sv4 = sv;
   const ok = await sv4.decidir(gestor, pedido.id, { decisao: "aprovar", versao: pedido.versao, confirmarRecalculo: assinatura });
   assert.equal(ok.status, "aprovada");
 });
@@ -244,4 +244,27 @@ test("listarPedidosDaPessoa (usado pelo painel) traz diasOcupados de pedido_dia"
     const reais = (getDb().prepare("SELECT dia FROM pedido_dia WHERE portal_member_id = ? AND pedido_id = ? ORDER BY dia").all(PORTAL_DEMO, p.id) as { dia: string }[]).map((r) => r.dia);
     assert.deepEqual(p.diasOcupados, reais);
   }
+});
+
+test("confirmacao de recalculo funciona em periodo longo (assinatura cabe no schema)", async () => {
+  semearDemo({ hoje: "2026-11-01" });
+  let cal: CalendarioTrabalho = { diasNaoUteis: ["SA", "SU"], feriados: [], excecoesTrabalhadas: [] };
+  const porta: PortaBitrix = {
+    async calendarioTrabalho() { return cal; },
+    async buscarEvento() { return null; },
+    async criarEvento() { return { id: "fake" }; },
+    async removerEvento() {},
+    async notificar() {},
+  };
+  const relogio: Relogio = { hoje: () => "2026-11-01", agora: () => "2026-11-01T12:00:00.000Z" };
+  const sv = criarServicosAusencias({ portalMemberId: PORTAL_DEMO, relogio, porta });
+  sv.creditar({ pessoaId: "marina", papel: "admin" }, { pessoaId: "diego", carteira: "ferias", dias: 30, motivo: "Credito para periodo longo", ano: 2026 });
+  const pedido = await sv.solicitar({ pessoaId: "diego", papel: "colaborador" }, { tipoId: "ferias", inicio: "2026-11-02", fim: "2027-01-29", justificativa: "Periodo longo de teste" });
+  cal = { diasNaoUteis: ["SA", "SU"], feriados: ["2026-11-03"], excecoesTrabalhadas: [] };
+  let assinatura = "";
+  try { await sv.decidir({ pessoaId: "carlos", papel: "gestor" }, pedido.id, { decisao: "aprovar", versao: pedido.versao }); assert.fail("x"); }
+  catch (e) { assinatura = (e as { extras?: Record<string, string> }).extras?.recalculo ?? ""; assert.match((e as Error).message, /Dias contados agora: 02\/11, 04\/11/); }
+  assert.ok(assinatura.length > 0 && assinatura.length <= 64);
+  const ok = await sv.decidir({ pessoaId: "carlos", papel: "gestor" }, pedido.id, { decisao: "aprovar", versao: pedido.versao, confirmarRecalculo: assinatura });
+  assert.equal(ok.status, "aprovada");
 });

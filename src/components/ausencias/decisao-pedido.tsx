@@ -76,7 +76,8 @@ export function DecisaoPedido({ pedido, alternativas, onAtualizar }: DecisaoPedi
 
   /** 409 = alguém mudou/decidiu antes de você: avisa e recarrega a fila. */
   function tratarErro(erro: ErroApi, status: number) {
-    if (status === 409) {
+    // 409: alguém mudou/decidiu antes; 404: o pedido já saiu da fila (decidido por outra pessoa).
+    if (status === 409 || status === 404) {
       onAtualizar(erro.mensagem);
       return;
     }
@@ -132,8 +133,8 @@ export function DecisaoPedido({ pedido, alternativas, onAtualizar }: DecisaoPedi
       sugestao: alt ? { inicio: alt.inicio, fim: alt.fim } : undefined,
       versao: pedido.versao,
     });
-    setEnviando(null);
     if (!r.ok) {
+      setEnviando(null);
       tratarErro(r.erro, r.status);
       return;
     }
