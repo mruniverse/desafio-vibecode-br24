@@ -268,3 +268,31 @@ test("confirmacao de recalculo funciona em periodo longo (assinatura cabe no sch
   const ok = await sv.decidir({ pessoaId: "carlos", papel: "gestor" }, pedido.id, { decisao: "aprovar", versao: pedido.versao, confirmarRecalculo: assinatura });
   assert.equal(ok.status, "aprovada");
 });
+
+test("aprovar NAO usa fallback: se o calendario fresco falha, a aprovacao para (503) e o pedido segue pendente", async () => {
+  semearDemo({ hoje: "2026-11-01" });
+  let falhar = false;
+  let pedidoFresco = 0;
+  const porta: PortaBitrix = {
+    async calendarioTrabalho(op) {
+      if (op?.fresco) pedidoFresco++;
+      if (falhar) throw new Error("portal fora");
+      return { diasNaoUteis: ["SA", "SU"], feriados: [], excecoesTrabalhadas: [] };
+    },
+    async buscarEvento() { return null; },
+    async criarEvento() { return { id: "fake" }; },
+    async removerEvento() {},
+    async notificar() {},
+  };
+  const relogio: Relogio = { hoje: () => "2026-11-01", agora: () => "2026-11-01T12:00:00.000Z" };
+  const sv = criarServicosAusencias({ portalMemberId: PORTAL_DEMO, relogio, porta });
+  sv.creditar({ pessoaId: "marina", papel: "admin" }, { pessoaId: "elisa", carteira: "ferias", dias: 10, motivo: "Credito para teste do portal fora", ano: 2026 });
+  const pedido = await sv.solicitar({ pessoaId: "elisa", papel: "colaborador" }, { tipoId: "ferias", inicio: "2026-11-09", fim: "2026-11-11", justificativa: "Teste portal fora do ar" });
+  falhar = true;
+  await assert.rejects(() => sv.decidir({ pessoaId: "carlos", papel: "gestor" }, pedido.id, { decisao: "aprovar", versao: pedido.versao }), /calendário/);
+  assert.ok(pedidoFresco >= 1, "a aprovacao pediu calendario fresco a porta");
+  assert.equal(repo.lerPedidoInterno(PORTAL_DEMO, pedido.id)?.status, "pendente");
+  falhar = false;
+  const ok = await sv.decidir({ pessoaId: "carlos", papel: "gestor" }, pedido.id, { decisao: "aprovar", versao: pedido.versao });
+  assert.equal(ok.status, "aprovada");
+});

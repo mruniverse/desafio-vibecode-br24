@@ -34,7 +34,8 @@ export interface PortaBitrix {
   criarEvento(evento: EventoCalendarioBitrix): Promise<{ id: string; secao?: number }>;
   /** NOT_FOUND conta como sucesso. */
   removerEvento(id: string, ownerId: number): Promise<void>;
-  calendarioTrabalho(): Promise<CalendarioTrabalho>;
+  /** `fresco`: ignora qualquer cache da porta (a aprovacao confirma datas com o calendario de agora). */
+  calendarioTrabalho(opcoes?: { fresco?: boolean }): Promise<CalendarioTrabalho>;
   notificar(bitrixUserId: number, mensagem: string): Promise<void>;
 }
 

@@ -79,6 +79,10 @@ export function DecisaoPedido({ pedido, alternativas, onAtualizar }: DecisaoPedi
     // 409: alguém mudou/decidiu antes; 404: o pedido já saiu da fila (decidido por outra pessoa).
     if (status === 409 || status === 404) {
       onAtualizar(erro.mensagem);
+      // Mantém os botões travados enquanto a fila recarrega (o detalhe remonta pela key da nova versão).
+      // Guarda: se a fila não trocar este pedido, destrava depois de alguns segundos.
+      setEnviando("aprovar");
+      window.setTimeout(() => setEnviando(null), 6000);
       return;
     }
     if (erro.campos?.motivoDecisao) setErroMotivo(erro.campos.motivoDecisao);

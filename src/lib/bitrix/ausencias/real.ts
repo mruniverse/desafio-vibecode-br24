@@ -219,9 +219,9 @@ export class BitrixReal implements PortaBitrix {
     }
   }
 
-  async calendarioTrabalho(): Promise<CalendarioTrabalho> {
+  async calendarioTrabalho(opcoes?: { fresco?: boolean }): Promise<CalendarioTrabalho> {
     const agora = this.agoraMs();
-    if (this.cache && this.cache.ate > agora) return copiar(this.cache.valor);
+    if (!opcoes?.fresco && this.cache && this.cache.ate > agora) return copiar(this.cache.valor);
     const bruto = await this.rest("calendar.settings.get", {});
     if (bruto === null || typeof bruto !== "object" || Array.isArray(bruto)) {
       throw new ErroPortaBitrix("RESPOSTA_INVALIDA", "calendar.settings.get: resposta inesperada");

@@ -45,7 +45,7 @@ import { diasEntre, somarDias, somarHoras } from "./datas";
 import { calendarioDoPortal, diasUteisEntre } from "./dias-uteis";
 import type { CalendarioUtil } from "./dias-uteis";
 import { ErroDominio } from "./erros";
-import { conflito, erroCampo, negadoComoInexistente, semPermissao } from "./erros-servico";
+import { ErroServico, conflito, erroCampo, negadoComoInexistente, semPermissao } from "./erros-servico";
 import { intervaloVigente } from "./estados";
 import { indicadores } from "./indicadores";
 import { melhorJanela } from "./janela";
@@ -165,10 +165,32 @@ export function criarServicosAusencias(deps: DepsServicos): ServicosAusenciasImp
 
   /* ------------------------------------------------------------ calendario */
 
-  /** `fresco`: ignora o cache (a decisao de aprovar nao pode usar um calendario velho). */
-  async function carregarCalendario(fresco = false): Promise<CalendarioUtil> {
+  /**
+   * Calendario EXATO para aprovar: ignora o cache do servico e o da porta e NAO cai em fallback.
+   * Se a consulta falhar, a aprovacao para (nao debita/aprova com calendario desatualizado).
+   */
+  async function carregarCalendarioExato(): Promise<CalendarioUtil> {
+    try {
+      const cal = calendarioDoPortal(await porta.calendarioTrabalho({ fresco: true }));
+      ultimoBom = cal;
+      cache = { cal, ate: Date.now() + TTL_CALENDARIO_MS };
+      return cal;
+    } catch (erro) {
+      logger.warn({
+        evento: "ausencias.calendario.exato_falhou",
+        detalhe: { motivo: erro instanceof Error ? erro.name : "erro" },
+      });
+      throw new ErroServico(
+        "PORTAL_INDISPONIVEL",
+        503,
+        "Não conseguimos confirmar o calendário de trabalho agora. Tente aprovar novamente em instantes.",
+      );
+    }
+  }
+
+  async function carregarCalendario(): Promise<CalendarioUtil> {
     const agoraMs = Date.now();
-    if (!fresco && cache && agoraMs < cache.ate) return cache.cal;
+    if (cache && agoraMs < cache.ate) return cache.cal;
     try {
       const cal = calendarioDoPortal(await porta.calendarioTrabalho());
       ultimoBom = cal;
@@ -525,7 +547,7 @@ export function criarServicosAusencias(deps: DepsServicos): ServicosAusenciasImp
       const agora = relogio.agora();
 
       // A busca assíncrona fica fora da transação; o saldo será lido sob o lock.
-      const cal = aprovar ? await carregarCalendario(true) : null;
+      const cal = aprovar ? await carregarCalendarioExato() : null;
 
       const chaveEtapa = aprovar ? "confirmado" : "recusado";
       const destinos: DestinoBitrix[] = [];
